@@ -3,44 +3,1822 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kei Studio</title>
-  <meta name="description" content="Kei Studioの個人開発アプリ紹介サイト" />
-  <link rel="stylesheet" href="style.css" />
+  <title>keistudio by keishinnishiura</title>
+  <meta name="description" content="keistudio by keishinnishiura — 個人開発中のプロダクト進捗とQiita記事を掲載するデベロッパーサイト" />
+  <meta property="og:title" content="keistudio by keishinnishiura" />
+  <meta property="og:description" content="開発中のプロダクト進捗とQiita記事を掲載する、洗練されたデベロッパーサイト。" />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0a0f14" />
+  <style>
+    :root {
+      --bg: #090d12;
+      --bg-soft: #0f141b;
+      --panel: rgba(255,255,255,0.04);
+      --panel-strong: rgba(255,255,255,0.06);
+      --line: rgba(255,255,255,0.1);
+      --line-strong: rgba(255,255,255,0.16);
+      --text: #f5f7fb;
+      --muted: #9aa8b8;
+      --muted-2: #7f8b99;
+      --accent: #86d8ff;
+      --accent-2: #8f7cff;
+      --accent-3: #9ff3d2;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max: 1240px;
+      --ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(134, 216, 255, 0.12), transparent 26%),
+        radial-gradient(circle at 82% 18%, rgba(143, 124, 255, 0.12), transparent 24%),
+        radial-gradient(circle at 60% 72%, rgba(159, 243, 210, 0.08), transparent 25%),
+        linear-gradient(180deg, #06090d 0%, #090d12 48%, #0a1016 100%);
+      min-height: 100vh;
+      letter-spacing: -0.02em;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .noise,
+    .grid,
+    .water-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .water-canvas {
+      z-index: 0;
+      opacity: 0.7;
+      mix-blend-mode: screen;
+    }
+
+    .grid {
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: radial-gradient(circle at center, rgba(0,0,0,0.9), transparent 80%);
+      opacity: 0.18;
+    }
+
+    .noise {
+      z-index: 1;
+      opacity: 0.06;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.7) 0.4px, transparent 0.6px),
+        radial-gradient(circle at 80% 40%, rgba(255,255,255,0.6) 0.4px, transparent 0.7px),
+        radial-gradient(circle at 40% 70%, rgba(255,255,255,0.4) 0.6px, transparent 0.9px);
+      background-size: 200px 200px, 260px 260px, 320px 320px;
+    }
+
+    .site {
+      position: relative;
+      z-index: 2;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(180deg, rgba(7,11,16,0.82), rgba(7,11,16,0.48));
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .topbar__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 76px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand__mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(134,216,255,0.25), rgba(143,124,255,0.2));
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 16px 40px rgba(0,0,0,0.2);
+    }
+
+    .brand__mark::before,
+    .brand__mark::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(10px);
+    }
+
+    .brand__mark::before {
+      width: 32px;
+      height: 32px;
+      background: rgba(134,216,255,0.7);
+      top: -4px;
+      left: -3px;
+    }
+
+    .brand__mark::after {
+      width: 26px;
+      height: 26px;
+      background: rgba(143,124,255,0.7);
+      right: -4px;
+      bottom: -3px;
+    }
+
+    .brand__text {
+      display: grid;
+      gap: 2px;
+    }
+
+    .brand__text strong {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .brand__text span {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav a {
+      padding: 10px 14px;
+      border-radius: 999px;
+      color: var(--muted);
+      transition: 0.35s var(--ease);
+    }
+
+    .nav a:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .nav .nav__cta {
+      color: #071018;
+      background: linear-gradient(135deg, var(--accent), #b7ecff);
+      font-weight: 700;
+      box-shadow: 0 14px 30px rgba(134,216,255,0.18);
+    }
+
+    .hero {
+      padding: 56px 0 28px;
+    }
+
+    .hero__shell {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      box-shadow: var(--shadow);
+      border-radius: 40px;
+      padding: 34px;
+    }
+
+    .hero__glow,
+    .hero__glow-2 {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(52px);
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .hero__glow {
+      width: 280px;
+      height: 280px;
+      background: rgba(134,216,255,0.34);
+      top: -80px;
+      right: 10%;
+    }
+
+    .hero__glow-2 {
+      width: 240px;
+      height: 240px;
+      background: rgba(143,124,255,0.26);
+      bottom: -100px;
+      left: 6%;
+    }
+
+    .hero__layout {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 26px;
+      align-items: stretch;
+    }
+
+    .hero__copy {
+      padding: 16px 6px 10px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #dce9f6;
+      font-size: 0.88rem;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-3));
+      box-shadow: 0 0 18px rgba(134,216,255,0.8);
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 6.2rem);
+      line-height: 0.95;
+      margin: 0;
+      font-weight: 750;
+      letter-spacing: -0.05em;
+    }
+
+    .hero h1 span {
+      display: block;
+      color: rgba(245,247,251,0.72);
+      font-weight: 500;
+    }
+
+    .hero__lead {
+      max-width: 660px;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+      line-height: 1.85;
+      color: #c3ced9;
+      margin: 24px 0 0;
+    }
+
+    .hero__actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 999px;
+      transition: transform 0.35s var(--ease), border-color 0.35s var(--ease), background 0.35s var(--ease), color 0.35s var(--ease);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .button::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.22), transparent 26%);
+      opacity: 0;
+      transition: opacity 0.35s var(--ease);
+      z-index: -1;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.22);
+    }
+
+    .button:hover::after { opacity: 1; }
+
+    .button--primary {
+      color: #061018;
+      background: linear-gradient(135deg, #d8f5ff 0%, var(--accent) 55%, #8be1ff 100%);
+      border-color: transparent;
+      box-shadow: 0 18px 34px rgba(134,216,255,0.18);
+    }
+
+    .button--ghost {
+      background: rgba(255,255,255,0.035);
+      color: #eef4fb;
+    }
+
+    .hero__meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .meta-card {
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .meta-card strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .meta-card span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .hero__visual {
+      position: relative;
+      min-height: 560px;
+      padding: 10px;
+    }
+
+    .floating-panel {
+      position: absolute;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .device {
+      inset: 24px 42px 20px 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transform: rotate(-6deg);
+    }
+
+    .device__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .device__camera {
+      width: 110px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.55);
+      margin: 0 auto 6px;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .device__screen {
+      flex: 1;
+      border-radius: 24px;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 24% 18%, rgba(134,216,255,0.15), transparent 28%),
+        radial-gradient(circle at 70% 12%, rgba(143,124,255,0.18), transparent 26%),
+        linear-gradient(180deg, rgba(10,14,18,0.98), rgba(14,19,26,0.98));
+      border: 1px solid rgba(255,255,255,0.08);
+      display: grid;
+      gap: 14px;
+    }
+
+    .mini-label {
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted-2);
+    }
+
+    .product-card {
+      border-radius: 22px;
+      padding: 18px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .product-card h3 {
+      margin: 10px 0 8px;
+      font-size: 1.35rem;
+    }
+
+    .product-card p {
+      margin: 0;
+      color: #b8c4cf;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .product-chip-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-size: 0.76rem;
+      color: #eaf2fb;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .progress-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .progress-card__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .progress-bar {
+      position: relative;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .progress-bar span {
+      display: block;
+      width: 72%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 24px rgba(134,216,255,0.32);
+    }
+
+    .signal-card {
+      right: 0;
+      bottom: 14px;
+      width: 230px;
+      padding: 16px;
+      transform: rotate(5deg);
+    }
+
+    .signal-card__dots {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .signal-card__dots span {
+      display: block;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85), rgba(134,216,255,0.3));
+      opacity: calc(0.3 + var(--i) * 0.1);
+      filter: blur(calc(var(--i) * 0.1px));
+    }
+
+    .section {
+      padding: 28px 0;
+    }
+
+    .section__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .section__label {
+      display: inline-block;
+      margin-bottom: 12px;
+      font-size: 0.82rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .section__title {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.35rem);
+      letter-spacing: -0.05em;
+    }
+
+    .section__desc {
+      max-width: 560px;
+      color: var(--muted);
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .status-board {
+      position: relative;
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 34px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      overflow: hidden;
+    }
+
+    .status-board::before {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 auto;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(143,124,255,0.18), transparent 70%);
+      pointer-events: none;
+      filter: blur(10px);
+    }
+
+    .status-summary {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .status-summary h3 {
+      margin: 0;
+      font-size: clamp(1.4rem, 2vw, 2rem);
+    }
+
+    .status-summary p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 740px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(134,216,255,0.08);
+      color: #e8f8ff;
+      border: 1px solid rgba(134,216,255,0.18);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-badge::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 20px rgba(134,216,255,0.9);
+    }
+
+    .flow {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    .flow::before {
+      content: "";
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      top: 34px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.16), rgba(255,255,255,0.08));
+      z-index: 0;
+    }
+
+    .flow-step {
+      position: relative;
+      z-index: 1;
+      min-width: 200px;
+    }
+
+    .flow-step__dot {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      display: grid;
+      place-items: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      color: var(--muted);
+      backdrop-filter: blur(12px);
+      transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.45s var(--ease);
+    }
+
+    .flow-step__card {
+      border-radius: 24px;
+      padding: 18px;
+      min-height: 170px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.45s var(--ease), border-color 0.45s var(--ease), background 0.45s var(--ease), box-shadow 0.45s var(--ease);
+    }
+
+    .flow-step__card small {
+      display: block;
+      color: var(--muted-2);
+      font-size: 0.77rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+
+    .flow-step__card h4 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+    }
+
+    .flow-step__card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 0.95rem;
+    }
+
+    .flow-step:hover .flow-step__dot,
+    .flow-step:hover .flow-step__card {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .flow-step--done .flow-step__dot {
+      color: #eafbf6;
+      border-color: rgba(159,243,210,0.18);
+      background: linear-gradient(180deg, rgba(159,243,210,0.16), rgba(255,255,255,0.04));
+    }
+
+    .flow-step--done .flow-step__card {
+      border-color: rgba(159,243,210,0.12);
+    }
+
+    .flow-step--current .flow-step__dot {
+      color: #061018;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 0 8px rgba(134,216,255,0.08), 0 0 36px rgba(134,216,255,0.25);
+    }
+
+    .flow-step--current .flow-step__card {
+      background: linear-gradient(180deg, rgba(134,216,255,0.08), rgba(255,255,255,0.03));
+      border-color: rgba(134,216,255,0.2);
+      box-shadow: 0 20px 50px rgba(7,18,28,0.35);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.025));
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .card--hover {
+      transition: transform 0.45s var(--ease), border-color 0.45s var(--ease), box-shadow 0.45s var(--ease);
+    }
+
+    .card--hover:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.32);
+    }
+
+    .qr-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .qr-mark {
+      width: 62px;
+      height: 62px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(134,216,255,0.18));
+      border: 1px solid rgba(255,255,255,0.12);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: #ebf7ff;
+    }
+
+    .qr-title h3 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .qr-title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 600px;
+    }
+
+    .preview {
+      margin-top: 18px;
+      border-radius: 24px;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 10% 14%, rgba(134,216,255,0.12), transparent 24%),
+        radial-gradient(circle at 84% 10%, rgba(143,124,255,0.12), transparent 18%),
+        linear-gradient(180deg, rgba(8,12,17,0.95), rgba(12,18,25,0.95));
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .preview__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .preview__dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .preview__dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+    }
+
+    .preview__layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 16px;
+    }
+
+    .preview__sidebar,
+    .preview__content {
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      padding: 16px;
+    }
+
+    .preview__menu {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .preview__menu span,
+    .preview__row,
+    .preview__metric {
+      display: block;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .preview__menu span {
+      height: 42px;
+    }
+
+    .preview__content {
+      display: grid;
+      gap: 16px;
+    }
+
+    .preview__hero {
+      min-height: 138px;
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(135deg, rgba(134,216,255,0.08), rgba(143,124,255,0.08));
+    }
+
+    .preview__hero strong {
+      display: block;
+      font-size: 1.18rem;
+      margin-bottom: 8px;
+    }
+
+    .preview__hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .preview__metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .preview__metric {
+      height: 94px;
+      padding: 14px;
+    }
+
+    .preview__metric::before,
+    .preview__row::before {
+      content: "";
+      display: block;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.14);
+    }
+
+    .preview__metric::before {
+      width: 56%;
+      height: 12px;
+      margin-bottom: 10px;
+    }
+
+    .preview__row {
+      height: 56px;
+    }
+
+    .stack-card {
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .stack-list span {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #eaf0f7;
+      font-size: 0.9rem;
+    }
+
+    .small-note {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 0.95rem;
+    }
+
+    .qiita-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 22px;
+      margin-top: 20px;
+    }
+
+    .article-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .article {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), background 0.4s var(--ease);
+    }
+
+    .article:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.045);
+    }
+
+    .article__content {
+      min-width: 0;
+    }
+
+    .article__content small {
+      display: block;
+      color: var(--muted-2);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      margin-bottom: 8px;
+    }
+
+    .article__content h4 {
+      margin: 0 0 10px;
+      font-size: 1.08rem;
+      line-height: 1.45;
+    }
+
+    .article__meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .article__meta span {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .article__arrow {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .article-skeleton {
+      height: 106px;
+      border-radius: 22px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      background-size: 200% 100%;
+      animation: shimmer 1.6s linear infinite;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .aside-box {
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .stat-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 15px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat-row span { color: var(--muted); }
+    .stat-row strong { font-size: 1.04rem; }
+
+    .contact-strip {
+      margin-top: 22px;
+      padding: 24px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .contact-strip h3 {
+      margin: 0 0 8px;
+      font-size: 1.5rem;
+    }
+
+    .contact-strip p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .footer {
+      padding: 28px 0 60px;
+      color: var(--muted);
+    }
+
+    .footer__inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 22px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+      will-change: opacity, transform;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width: 1100px) {
+      .hero__layout,
+      .overview-grid,
+      .qiita-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero__visual {
+        min-height: 440px;
+      }
+
+      .device {
+        inset: 20px 54px 10px 20px;
+      }
+
+      .signal-card {
+        width: 220px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .topbar__inner {
+        min-height: 72px;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero__shell,
+      .status-board,
+      .card,
+      .contact-strip {
+        border-radius: 26px;
+      }
+
+      .hero__shell { padding: 22px; }
+      .status-board { padding: 20px; }
+      .card { padding: 20px; }
+
+      .hero__meta,
+      .preview__metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .status-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .preview__layout {
+        grid-template-columns: 1fr;
+      }
+
+      .flow {
+        gap: 14px;
+      }
+
+      .flow::before {
+        left: 40px;
+        right: 40px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(var(--max), calc(100% - 20px));
+      }
+
+      .hero {
+        padding-top: 18px;
+      }
+
+      .hero__lead {
+        line-height: 1.75;
+      }
+
+      .hero__actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .device {
+        inset: 14px;
+        transform: none;
+      }
+
+      .signal-card {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        margin-top: 12px;
+        transform: none;
+      }
+
+      .hero__visual {
+        min-height: auto;
+        padding: 0;
+      }
+
+      .flow {
+        display: flex;
+        padding-bottom: 4px;
+      }
+
+      .flow::before {
+        left: 40px;
+        right: 40px;
+        top: 34px;
+      }
+
+      .flow-step {
+        min-width: 260px;
+      }
+
+      .article {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .contact-strip {
+        align-items: start;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header class="header">
-    <div class="container">
-      <p class="logo">Kei Studio</p>
-    </div>
-  </header>
+  <canvas class="water-canvas" id="waterCanvas"></canvas>
+  <div class="grid"></div>
+  <div class="noise"></div>
 
-  <main>
-    <section class="hero">
-      <div class="container">
-        <p class="hero-subtitle">Indie App Developer</p>
-        <h1 class="hero-title">Kei Studio</h1>
-        <p class="hero-text">
-          個人開発アプリを紹介するデベロッパーサイトです。
-        </p>
-        <a class="hero-button" href="#status">開発状況を見る</a>
+  <div class="site">
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <a href="#top" class="brand" aria-label="keistudio top">
+          <div class="brand__mark" aria-hidden="true"></div>
+          <div class="brand__text">
+            <strong>keistudio</strong>
+            <span>by keishinnishiura</span>
+          </div>
+        </a>
+
+        <nav class="nav">
+          <a href="#product">Product</a>
+          <a href="#status">Progress</a>
+          <a href="#qiita">Qiita</a>
+          <a href="#contact" class="nav__cta">Connect</a>
+        </nav>
       </div>
-    </section>
+    </header>
 
-    <section class="status" id="status">
-      <div class="container">
-        <p class="section-label">Development Status</p>
-        <h2 class="section-title">現在の開発フロー</h2>
-        <div class="timeline">
-          <div class="step done">Idea</div>
-          <div class="step done">Planning</div>
-          <div class="step current">Development</div>
-          <div class="step">Testing</div>
-          <div class="step">Release</div>
+    <main id="top">
+      <section class="hero">
+        <div class="container">
+          <div class="hero__shell reveal">
+            <div class="hero__glow"></div>
+            <div class="hero__glow-2"></div>
+
+            <div class="hero__layout">
+              <div class="hero__copy">
+                <div class="eyebrow">Independent app design & development</div>
+                <h1>keistudio <span>by keishinnishiura</span></h1>
+                <p class="hero__lead">
+                  静かに、鋭く、長く使われるプロダクトをつくるための個人開発スタジオ。
+                  現在は <strong>QReader</strong> を中心に、設計・実装・改善の流れを公開しながら開発しています。
+                </p>
+
+                <div class="hero__actions">
+                  <a class="button button--primary" href="#status">QReader の進捗を見る</a>
+                  <a class="button button--ghost" href="#qiita">Qiita の記事を見る</a>
+                </div>
+
+                <div class="hero__meta">
+                  <div class="meta-card">
+                    <strong>01</strong>
+                    <span>Focused product lineup</span>
+                  </div>
+                  <div class="meta-card">
+                    <strong>72%</strong>
+                    <span>Current development completion</span>
+                  </div>
+                  <div class="meta-card">
+                    <strong>Qiita</strong>
+                    <span>Latest notes & technical writing</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hero__visual">
+                <div class="floating-panel device card--hover">
+                  <div class="device__camera"></div>
+                  <div class="device__top">
+                    <span>QReader</span>
+                    <span>Preview Build</span>
+                  </div>
+                  <div class="device__screen">
+                    <div class="mini-label">currently building</div>
+                    <div class="product-card">
+                      <div class="mini-label">reading experience</div>
+                      <h3>QReader</h3>
+                      <p>
+                        読むことに集中できる、軽くて静かなリーダー体験。
+                        情報取得のノイズを減らし、継続して使いたくなる設計を目指しています。
+                      </p>
+                      <div class="product-chip-row">
+                        <span class="chip">Minimal UI</span>
+                        <span class="chip">Reading Flow</span>
+                        <span class="chip">Save & Resume</span>
+                      </div>
+                    </div>
+
+                    <div class="progress-card">
+                      <div class="progress-card__head">
+                        <span class="mini-label">current phase</span>
+                        <strong>Development</strong>
+                      </div>
+                      <div class="progress-bar"><span></span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="floating-panel signal-card card--hover">
+                  <div class="mini-label">hover reaction</div>
+                  <h3 style="margin:10px 0 4px; font-size:1.1rem;">liquid signal</h3>
+                  <p style="margin:0; color:var(--muted); line-height:1.7; font-size:0.92rem;">
+                    ポインタの動きに反応して、水面みたいな光がゆっくり流れる演出。
+                  </p>
+                  <div class="signal-card__dots">
+                    <span style="--i:1"></span>
+                    <span style="--i:2"></span>
+                    <span style="--i:3"></span>
+                    <span style="--i:4"></span>
+                    <span style="--i:2"></span>
+                    <span style="--i:3"></span>
+                    <span style="--i:4"></span>
+                    <span style="--i:5"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
 
-  <script src="main.js"></script>
+      <section class="section" id="status">
+        <div class="container">
+          <div class="section__head reveal">
+            <div>
+              <span class="section__label">Progress Flow</span>
+              <h2 class="section__title">開発中のプロダクト進捗</h2>
+            </div>
+            <p class="section__desc">
+              横向きフローで現在地が一目でわかるように設計。
+              完了した工程、進行中の工程、次に進む工程を滑らかにつなげて見せます。
+            </p>
+          </div>
+
+          <div class="status-board reveal">
+            <div class="status-summary">
+              <div>
+                <h3>QReader is now in active development.</h3>
+                <p>
+                  情報の読みやすさ、保存しやすさ、あとから戻りやすい体験を整理中。
+                  現在はUIの微調整と主要フローの実装を進めつつ、リリース前の品質を高めています。
+                </p>
+              </div>
+              <div class="status-badge">Current / Development</div>
+            </div>
+
+            <div class="flow" aria-label="QReader development flow">
+              <article class="flow-step flow-step--done">
+                <div class="flow-step__dot">01</div>
+                <div class="flow-step__card">
+                  <small>Phase</small>
+                  <h4>Concept</h4>
+                  <p>QReader の方向性、価値、世界観を定義。読む行為を邪魔しない思想を設計。</p>
+                </div>
+              </article>
+
+              <article class="flow-step flow-step--done">
+                <div class="flow-step__dot">02</div>
+                <div class="flow-step__card">
+                  <small>Phase</small>
+                  <h4>Structure</h4>
+                  <p>情報設計、主要画面、遷移、必要な機能群を整理。体験の骨格を決める工程。</p>
+                </div>
+              </article>
+
+              <article class="flow-step flow-step--current">
+                <div class="flow-step__dot">03</div>
+                <div class="flow-step__card">
+                  <small>Phase</small>
+                  <h4>Development</h4>
+                  <p>現在地。主要機能の実装とUXの細部を調整しながら、完成度を引き上げている段階。</p>
+                </div>
+              </article>
+
+              <article class="flow-step">
+                <div class="flow-step__dot">04</div>
+                <div class="flow-step__card">
+                  <small>Phase</small>
+                  <h4>Refinement</h4>
+                  <p>操作感の磨き込み、表示速度、細かなUIの一貫性、文章表現の最終調整を行う工程。</p>
+                </div>
+              </article>
+
+              <article class="flow-step">
+                <div class="flow-step__dot">05</div>
+                <div class="flow-step__card">
+                  <small>Phase</small>
+                  <h4>Release</h4>
+                  <p>公開準備、ストア用素材、最終チェック。静かに強い第一印象をつくるローンチへ。</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="product">
+        <div class="container">
+          <div class="section__head reveal">
+            <div>
+              <span class="section__label">Featured Product</span>
+              <h2 class="section__title">QReader</h2>
+            </div>
+            <p class="section__desc">
+              見せたいのは派手さではなく、静かな完成度。
+              UI・導線・情報密度を丁寧に整えることで、長く使いたくなる読書体験をつくるプロダクトです。
+            </p>
+          </div>
+
+          <div class="overview-grid">
+            <article class="card card--hover reveal">
+              <div class="qr-head">
+                <div style="display:flex; gap:16px; align-items:flex-start;">
+                  <div class="qr-mark">Q</div>
+                  <div class="qr-title">
+                    <h3>QReader</h3>
+                    <p>
+                      記事を読む、あとで読む、もう一度読む。
+                      その流れを無理なく続けられるように、ノイズを削ぎ落としたリーダー体験を設計しています。
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="preview">
+                <div class="preview__top">
+                  <div class="preview__dots"><span></span><span></span><span></span></div>
+                  <span>interface preview</span>
+                </div>
+
+                <div class="preview__layout">
+                  <div class="preview__sidebar">
+                    <div class="mini-label">Workspace</div>
+                    <div class="preview__menu">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+
+                  <div class="preview__content">
+                    <div class="preview__hero">
+                      <strong>Quiet reading, better recall.</strong>
+                      <p>
+                        余白と視線移動を設計し直すことで、読む体験に集中できるようにする。
+                      </p>
+                    </div>
+
+                    <div class="preview__metrics">
+                      <div class="preview__metric"></div>
+                      <div class="preview__metric"></div>
+                      <div class="preview__metric"></div>
+                    </div>
+
+                    <div class="preview__row"></div>
+                    <div class="preview__row"></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <aside class="card stack-card card--hover reveal">
+              <div>
+                <span class="section__label" style="margin-bottom:10px;">Design Notes</span>
+                <h3 style="margin:0 0 10px; font-size:1.65rem;">Built for focus</h3>
+                <p class="small-note">
+                  見せ方は静かに、挙動は気持ちよく。スクロール、視線、保存、再訪を中心に体験を磨いています。
+                </p>
+              </div>
+
+              <div>
+                <div class="mini-label" style="margin-bottom:10px;">Highlights</div>
+                <div class="stack-list">
+                  <span>Minimal interface</span>
+                  <span>Readable layout</span>
+                  <span>Low-friction save flow</span>
+                  <span>Progressive refinement</span>
+                </div>
+              </div>
+
+              <div>
+                <div class="mini-label" style="margin-bottom:10px;">Stack</div>
+                <div class="stack-list">
+                  <span>HTML</span>
+                  <span>CSS</span>
+                  <span>JavaScript</span>
+                  <span>Qiita API</span>
+                  <span>GitHub Pages</span>
+                </div>
+              </div>
+
+              <div>
+                <div class="mini-label" style="margin-bottom:10px;">Tone</div>
+                <p class="small-note">
+                  Sidecar のように、静かで上品で、情報の置き方に芯があるデザインを意識しています。
+                </p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="qiita">
+        <div class="container">
+          <div class="section__head reveal">
+            <div>
+              <span class="section__label">Qiita Feed</span>
+              <h2 class="section__title">Qiita Articles</h2>
+            </div>
+            <p class="section__desc">
+              Qiita API から最新記事を取得して表示。
+              リリース後もコードを書き換えず、記事更新に合わせて自然に情報が育つ構成です。
+            </p>
+          </div>
+
+          <div class="qiita-grid">
+            <section class="card reveal">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px; flex-wrap:wrap;">
+                <div>
+                  <div class="mini-label">Latest posts</div>
+                  <h3 style="margin:8px 0 0; font-size:1.6rem;">From Qiita</h3>
+                </div>
+                <a class="button button--ghost" id="qiitaProfileLink" href="https://qiita.com/your_qiita_id" target="_blank" rel="noopener noreferrer">Qiita Profile</a>
+              </div>
+
+              <div class="article-list" id="qiitaArticles">
+                <div class="article-skeleton"></div>
+                <div class="article-skeleton"></div>
+                <div class="article-skeleton"></div>
+              </div>
+            </section>
+
+            <aside class="card aside-box reveal">
+              <div>
+                <div class="mini-label">API Setup</div>
+                <h3 style="margin:8px 0 10px; font-size:1.5rem;">One edit before publish</h3>
+                <p class="small-note">
+                  このテンプレは公開ユーザー記事を取得する前提。<br />
+                  <code style="color:#eaf6ff;">QIITA_USER_ID</code> を自分の Qiita ユーザーIDに置き換えるだけで動きます。
+                </p>
+              </div>
+
+              <div class="stat-grid">
+                <div class="stat-row"><span>fetch source</span><strong>/api/v2/users/:user_id/items</strong></div>
+                <div class="stat-row"><span>display count</span><strong>latest 6 posts</strong></div>
+                <div class="stat-row"><span>mode</span><strong>public read</strong></div>
+              </div>
+
+              <p class="small-note">
+                非認証でも GET で公開データの取得ができるので、GitHub Pages のような静的サイトでも組み込みやすい設計です。
+              </p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="contact">
+        <div class="container">
+          <div class="contact-strip reveal">
+            <div>
+              <h3>keistudio by keishinnishiura</h3>
+              <p>
+                個人開発、設計、UI、文章、進捗の見せ方まで一つの体験として整える。
+                ここからさらに磨き込んで公開できます。
+              </p>
+            </div>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <a class="button button--primary" href="https://github.com/keishin-nishiura" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="button button--ghost" href="https://qiita.com/your_qiita_id" id="qiitaContactLink" target="_blank" rel="noopener noreferrer">Qiita</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div>© <span id="year"></span> keistudio by keishinnishiura</div>
+        <div>Quiet products. Thoughtful details.</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const QIITA_USER_ID = 'your_qiita_id';
+    const QIITA_POST_LIMIT = 6;
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.querySelectorAll('.button').forEach((button) => {
+      button.addEventListener('pointermove', (event) => {
+        const rect = button.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+        button.style.setProperty('--mx', x + '%');
+        button.style.setProperty('--my', y + '%');
+      });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach((element) => observer.observe(element));
+
+    async function loadQiitaArticles() {
+      const list = document.getElementById('qiitaArticles');
+      const profileLink = document.getElementById('qiitaProfileLink');
+      const contactLink = document.getElementById('qiitaContactLink');
+
+      profileLink.href = `https://qiita.com/${QIITA_USER_ID}`;
+      contactLink.href = `https://qiita.com/${QIITA_USER_ID}`;
+
+      if (!QIITA_USER_ID || QIITA_USER_ID === 'your_qiita_id') {
+        list.innerHTML = `
+          <article class="article">
+            <div class="article__content">
+              <small>setup required</small>
+              <h4>QIITA_USER_ID を自分の Qiita ユーザーIDに置き換えてください。</h4>
+              <div class="article__meta">
+                <span>example: your_qiita_id → keishin-nishiura</span>
+              </div>
+            </div>
+            <div class="article__arrow">→</div>
+          </article>
+        `;
+        return;
+      }
+
+      try {
+        const endpoint = `https://qiita.com/api/v2/users/${encodeURIComponent(QIITA_USER_ID)}/items?page=1&per_page=${QIITA_POST_LIMIT}`;
+        const response = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Qiita API request failed: ${response.status}`);
+        }
+
+        const items = await response.json();
+
+        if (!Array.isArray(items) || items.length === 0) {
+          list.innerHTML = `
+            <article class="article">
+              <div class="article__content">
+                <small>no posts found</small>
+                <h4>記事が見つかりませんでした。</h4>
+                <div class="article__meta"><span>Qiita ID を確認してください</span></div>
+              </div>
+              <div class="article__arrow">→</div>
+            </article>
+          `;
+          return;
+        }
+
+        list.innerHTML = items.map((item) => {
+          const created = new Date(item.created_at);
+          const formattedDate = `${created.getFullYear()}.${String(created.getMonth() + 1).padStart(2, '0')}.${String(created.getDate()).padStart(2, '0')}`;
+          const tags = Array.isArray(item.tags) ? item.tags.slice(0, 3).map(tag => tag.name) : [];
+          const likes = typeof item.likes_count === 'number' ? item.likes_count : 0;
+
+          return `
+            <a class="article" href="${item.url}" target="_blank" rel="noopener noreferrer">
+              <div class="article__content">
+                <small>${formattedDate}</small>
+                <h4>${escapeHtml(item.title || 'Untitled')}</h4>
+                <div class="article__meta">
+                  <span>♥ ${likes}</span>
+                  ${tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('')}
+                </div>
+              </div>
+              <div class="article__arrow">↗</div>
+            </a>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error(error);
+        list.innerHTML = `
+          <article class="article">
+            <div class="article__content">
+              <small>fetch error</small>
+              <h4>Qiita記事の取得に失敗しました。</h4>
+              <div class="article__meta">
+                <span>ユーザーID</span>
+                <span>公開記事の有無</span>
+                <span>時間をおいて再試行</span>
+              </div>
+            </div>
+            <div class="article__arrow">!</div>
+          </article>
+        `;
+      }
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    loadQiitaArticles();
+
+    const canvas = document.getElementById('waterCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const ripples = [];
+    let animationId;
+
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function addRipple(x, y, power = 1) {
+      ripples.push({
+        x,
+        y,
+        radius: 10,
+        alpha: 0.22 * power,
+        speed: 1.6 + Math.random() * 0.8,
+        blur: 8 + Math.random() * 14,
+        hue: Math.random() > 0.5 ? 195 : 255
+      });
+
+      if (ripples.length > 24) ripples.shift();
+    }
+
+    function drawWater() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const ripple = ripples[i];
+        ripple.radius += ripple.speed;
+        ripple.alpha *= 0.985;
+
+        if (ripple.alpha < 0.01) {
+          ripples.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = ripple.alpha;
+        ctx.filter = `blur(${ripple.blur}px)`;
+        const gradient = ctx.createRadialGradient(ripple.x, ripple.y, ripple.radius * 0.15, ripple.x, ripple.y, ripple.radius);
+        gradient.addColorStop(0, ripple.hue === 195 ? 'rgba(134,216,255,0.55)' : 'rgba(143,124,255,0.45)');
+        gradient.addColorStop(0.5, ripple.hue === 195 ? 'rgba(134,216,255,0.18)' : 'rgba(143,124,255,0.14)');
+        gradient.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      animationId = requestAnimationFrame(drawWater);
+    }
+
+    let lastMove = 0;
+    window.addEventListener('pointermove', (event) => {
+      const now = performance.now();
+      if (now - lastMove > 42) {
+        addRipple(event.clientX, event.clientY, 0.9);
+        lastMove = now;
+      }
+    }, { passive: true });
+
+    window.addEventListener('click', (event) => {
+      addRipple(event.clientX, event.clientY, 1.35);
+      addRipple(event.clientX + 8, event.clientY - 4, 0.85);
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+
+    resizeCanvas();
+    drawWater();
+
+    window.addEventListener('beforeunload', () => {
+      cancelAnimationFrame(animationId);
+    });
+  </script>
 </body>
 </html>
