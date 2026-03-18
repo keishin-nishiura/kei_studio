@@ -15,6 +15,8 @@
     />
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#070b0f" />
+    <!-- OG image (header banner) -->
+    <meta property="og:image" content="assets/header-banner.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -186,11 +188,19 @@
         z-index: 50;
         backdrop-filter: blur(24px) saturate(160%);
         -webkit-backdrop-filter: blur(24px) saturate(160%);
-        background: linear-gradient(
+        /* background: linear-gradient(
           180deg,
           rgba(7, 11, 15, 0.78),
           rgba(7, 11, 15, 0.42)
-        );
+        ); */
+        /* グラデーションの上にヘッダーバナーを重ねる */
+        background-image:
+          linear-gradient(180deg, rgba(7, 11, 15, 0.78), rgba(7, 11, 15, 0.42)),
+          url("assets/header-banner.png");
+        background-size: cover;
+        /* 左下寄りに少しずらす */
+        background-position: 25% 47%;
+        background-repeat: no-repeat;
         border-bottom: 1px solid rgba(255, 255, 255, 0.055);
       }
       .bar__in {
@@ -207,40 +217,42 @@
       }
       .logo__mark {
         position: relative;
-        width: 38px;
-        height: 38px;
-        border-radius: 13px;
+        width: 44px; /* 少し大きめに */
+        height: 44px; /* 少し大きめに */
+        border-radius: 10px; /* 角をやや丸める */
         overflow: hidden;
         flex-shrink: 0;
-        background: linear-gradient(
-          135deg,
-          rgba(134, 216, 255, 0.2),
-          rgba(155, 139, 255, 0.18)
-        );
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        background: transparent; /* 背景のモヤを消す */
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: none;
       }
+      /* 疑似要素のモヤを無効化 */
       .logo__mark::before,
       .logo__mark::after {
-        content: "";
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(9px);
+        display: none;
       }
-      .logo__mark::before {
-        width: 28px;
-        height: 28px;
-        background: rgba(134, 216, 255, 0.7);
-        top: -5px;
-        left: -4px;
+      /* ロゴ画像を少し拡大して表示（中央クロップ） */
+      .logo__img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+        transform: scale(1.12); /* 少しズーム */
       }
-      .logo__mark::after {
-        width: 24px;
-        height: 24px;
-        background: rgba(155, 139, 255, 0.7);
-        right: -4px;
-        bottom: -4px;
+
+      /* ヘッダーバナー: 背景画像を薄く敷いて可読性を保つ */
+      .bar {
+        /* 既存のグラデーションの上に画像を置く（グラデーションを先に書くことで上にかかる） */
+        background-image:
+          linear-gradient(180deg, rgba(7, 11, 15, 0.78), rgba(7, 11, 15, 0.42)),
+          url("assets/header-banner.png");
+        background-size: cover;
+        /* 左下寄りに少しずらす */
+        background-position: 25% 47%;
+        background-repeat: no-repeat;
       }
+
       .logo__text strong {
         display: block;
         font-size: 0.925rem;
@@ -766,6 +778,9 @@
         );
         border: 1px solid rgba(255, 255, 255, 0.12);
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
+      .proj-card__name {
+        flex: 1;
       }
       .proj-card__name h3 {
         font-size: 1.7rem;
@@ -1402,6 +1417,10 @@
         .contact-band {
           padding: 28px;
         }
+        /* モバイルでは画像位置を中央上に戻して見切れを防ぐ */
+        .bar {
+          background-position: center top;
+        }
       }
       @media (max-width: 640px) {
         .wrap {
@@ -1467,7 +1486,14 @@
       <header class="bar">
         <div class="wrap bar__in">
           <a href="#top" class="logo" aria-label="keistudio top">
-            <div class="logo__mark" aria-hidden="true"></div>
+            <div class="logo__mark" aria-hidden="true">
+              <img
+                src="assets/keistudio-logo.png"
+                alt="keistudio logo"
+                class="logo__img"
+                loading="lazy"
+              />
+            </div>
             <div class="logo__text">
               <strong>keistudio</strong>
               <span>by keishinnishiura</span>
