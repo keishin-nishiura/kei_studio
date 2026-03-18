@@ -104,6 +104,12 @@ body {
   box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.15), 0 0 24px rgba(125, 211, 252, 0.12);
 }
 
+/* 小さめのサブテキスト */
+.sub {
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+
 @media (min-width: 768px) {
   .timeline {
     grid-template-columns: repeat(5, 1fr);

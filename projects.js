@@ -26,6 +26,7 @@ const PROJECTS = [
     id: "qreader",
     name: "QReader",
     tagline: "読むことに集中できる、静かなリーダー体験",
+    logo: "assets/qreader-logo.png",
     description:
       "Qiita API を用いた記事フィード、検索、ストック（お気に入り）管理、タグ設定、認証、記事表示（SafariView）など主要機能は実装済み。現在は UI の微調整、パフォーマンス最適化、アクセシビリティ、バグ修正を中心にリリース準備を進めています。具体的には記事カードのレイアウト調整、検索絞り込みの安定化、チュートリアルオーバーレイの改善、ネイティブ広告表示の確認、テストカバレッジの強化を行っています.",
     icon: "Q",
@@ -71,6 +72,62 @@ const PROJECTS = [
         label: "Release",
         description:
           "App Store 用の最終チェック、スクリーンショット／説明文作成、リリース手順確認。ローンチ直前の QA と軽微バグ修正を実施。",
+        state: "upcoming",
+      },
+    ],
+  },
+
+  {
+    id: "opensidecar",
+    name: "OpenSidecar",
+    tagline: "Apple ID の壁を越えた、自由なセカンドディスプレイ",
+    description:
+      "Apple 純正 Sidecar の「同一 Apple ID 制限」を撤廃し、異なる ID を持つ Mac と iPad 間でもセカンドディスプレイとして使えるシステム。ScreenCaptureKit・VideoToolbox・Network.framework を組み合わせた Mac/iPad クライアント・サーバー構成で、低遅延な画面共有とタッチ入力の双方向通信を実現する。現在は外部仕様書・詳細設計書・Backlog タスクリストが完成し、実装フェーズに向けて準備中。",
+    icon: "OS",
+    accentFrom: "rgba(159,243,210,0.18)",
+    accentTo: "rgba(134,216,255,0.10)",
+    glowColor: "rgba(159,243,210,0.28)",
+    percent: 10,
+    status: "planning",
+    stack: [
+      "Swift",
+      "SwiftUI",
+      "ScreenCaptureKit",
+      "VideoToolbox",
+      "Network.framework",
+      "AVSampleBufferDisplayLayer",
+      "CoreGraphics (CGEvent)",
+      "Bonjour (mDNS)",
+    ],
+    phases: [
+      {
+        label: "Concept",
+        description:
+          "「Apple ID に依存しない Sidecar」というコアアイデアを定義。外部仕様書・詳細設計書および Backlog インポート用タスクリスト（CSV）を作成済み。",
+        state: "done",
+      },
+      {
+        label: "Capture & Render",
+        description:
+          "Mac 側で ScreenCaptureKit による画面キャプチャ → VideoToolbox で H.264 エンコード → iPad 側で AVSampleBufferDisplayLayer に描画する疎通を確認するフェーズ。",
+        state: "current",
+      },
+      {
+        label: "Network & Pairing",
+        description:
+          "Bonjour でデバイスを自動検出し、Apple ID 不要でタップ一つで TCP/UDP 接続を確立。映像ストリームと制御信号のハイブリッド通信を実装する。",
+        state: "upcoming",
+      },
+      {
+        label: "Input & UX",
+        description:
+          "iPad のタッチ・Apple Pencil 入力を Mac へ送信し、CGEvent でカーソル移動・クリック・ドラッグを再現。ジェスチャによる右クリックやドラッグも対応する。",
+        state: "upcoming",
+      },
+      {
+        label: "Virtual Display",
+        description:
+          "仮想ディスプレイドライバ（AppleVirtualDisplay またはダミーアダプタ）を使い、Sidecar 同様に「画面を増やす」拡張ディスプレイモードを実現する。",
         state: "upcoming",
       },
     ],
