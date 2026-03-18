@@ -1,1824 +1,2122 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>keistudio by keishinnishiura</title>
-  <meta name="description" content="keistudio by keishinnishiura — 個人開発中のプロダクト進捗とQiita記事を掲載するデベロッパーサイト" />
-  <meta property="og:title" content="keistudio by keishinnishiura" />
-  <meta property="og:description" content="開発中のプロダクト進捗とQiita記事を掲載する、洗練されたデベロッパーサイト。" />
-  <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#0a0f14" />
-  <style>
-    :root {
-      --bg: #090d12;
-      --bg-soft: #0f141b;
-      --panel: rgba(255,255,255,0.04);
-      --panel-strong: rgba(255,255,255,0.06);
-      --line: rgba(255,255,255,0.1);
-      --line-strong: rgba(255,255,255,0.16);
-      --text: #f5f7fb;
-      --muted: #9aa8b8;
-      --muted-2: #7f8b99;
-      --accent: #86d8ff;
-      --accent-2: #8f7cff;
-      --accent-3: #9ff3d2;
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-      --radius-xl: 32px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
-      --radius-sm: 14px;
-      --max: 1240px;
-      --ease: cubic-bezier(.22, 1, .36, 1);
-    }
-
-    * { box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 15% 10%, rgba(134, 216, 255, 0.12), transparent 26%),
-        radial-gradient(circle at 82% 18%, rgba(143, 124, 255, 0.12), transparent 24%),
-        radial-gradient(circle at 60% 72%, rgba(159, 243, 210, 0.08), transparent 25%),
-        linear-gradient(180deg, #06090d 0%, #090d12 48%, #0a1016 100%);
-      min-height: 100vh;
-      letter-spacing: -0.02em;
-      overflow-x: hidden;
-    }
-
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
-
-    .noise,
-    .grid,
-    .water-canvas {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .water-canvas {
-      z-index: 0;
-      opacity: 0.7;
-      mix-blend-mode: screen;
-    }
-
-    .grid {
-      z-index: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 42px 42px;
-      mask-image: radial-gradient(circle at center, rgba(0,0,0,0.9), transparent 80%);
-      opacity: 0.18;
-    }
-
-    .noise {
-      z-index: 1;
-      opacity: 0.06;
-      background-image:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.7) 0.4px, transparent 0.6px),
-        radial-gradient(circle at 80% 40%, rgba(255,255,255,0.6) 0.4px, transparent 0.7px),
-        radial-gradient(circle at 40% 70%, rgba(255,255,255,0.4) 0.6px, transparent 0.9px);
-      background-size: 200px 200px, 260px 260px, 320px 320px;
-    }
-
-    .site {
-      position: relative;
-      z-index: 2;
-    }
-
-    .container {
-      width: min(var(--max), calc(100% - 32px));
-      margin: 0 auto;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      backdrop-filter: blur(18px);
-      background: linear-gradient(180deg, rgba(7,11,16,0.82), rgba(7,11,16,0.48));
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .topbar__inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      min-height: 76px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .brand__mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 16px;
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(134,216,255,0.25), rgba(143,124,255,0.2));
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 16px 40px rgba(0,0,0,0.2);
-    }
-
-    .brand__mark::before,
-    .brand__mark::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(10px);
-    }
-
-    .brand__mark::before {
-      width: 32px;
-      height: 32px;
-      background: rgba(134,216,255,0.7);
-      top: -4px;
-      left: -3px;
-    }
-
-    .brand__mark::after {
-      width: 26px;
-      height: 26px;
-      background: rgba(143,124,255,0.7);
-      right: -4px;
-      bottom: -3px;
-    }
-
-    .brand__text {
-      display: grid;
-      gap: 2px;
-    }
-
-    .brand__text strong {
-      font-size: 0.95rem;
-      font-weight: 700;
-    }
-
-    .brand__text span {
-      color: var(--muted);
-      font-size: 0.84rem;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .nav a {
-      padding: 10px 14px;
-      border-radius: 999px;
-      color: var(--muted);
-      transition: 0.35s var(--ease);
-    }
-
-    .nav a:hover {
-      color: var(--text);
-      background: rgba(255,255,255,0.05);
-    }
-
-    .nav .nav__cta {
-      color: #071018;
-      background: linear-gradient(135deg, var(--accent), #b7ecff);
-      font-weight: 700;
-      box-shadow: 0 14px 30px rgba(134,216,255,0.18);
-    }
-
-    .hero {
-      padding: 56px 0 28px;
-    }
-
-    .hero__shell {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
-      box-shadow: var(--shadow);
-      border-radius: 40px;
-      padding: 34px;
-    }
-
-    .hero__glow,
-    .hero__glow-2 {
-      position: absolute;
-      border-radius: 999px;
-      filter: blur(52px);
-      opacity: 0.25;
-      pointer-events: none;
-    }
-
-    .hero__glow {
-      width: 280px;
-      height: 280px;
-      background: rgba(134,216,255,0.34);
-      top: -80px;
-      right: 10%;
-    }
-
-    .hero__glow-2 {
-      width: 240px;
-      height: 240px;
-      background: rgba(143,124,255,0.26);
-      bottom: -100px;
-      left: 6%;
-    }
-
-    .hero__layout {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1.12fr 0.88fr;
-      gap: 26px;
-      align-items: stretch;
-    }
-
-    .hero__copy {
-      padding: 16px 6px 10px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: #dce9f6;
-      font-size: 0.88rem;
-      margin-bottom: 20px;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent-3));
-      box-shadow: 0 0 18px rgba(134,216,255,0.8);
-    }
-
-    .hero h1 {
-      font-size: clamp(3rem, 8vw, 6.2rem);
-      line-height: 0.95;
-      margin: 0;
-      font-weight: 750;
-      letter-spacing: -0.05em;
-    }
-
-    .hero h1 span {
-      display: block;
-      color: rgba(245,247,251,0.72);
-      font-weight: 500;
-    }
-
-    .hero__lead {
-      max-width: 660px;
-      font-size: clamp(1rem, 2vw, 1.22rem);
-      line-height: 1.85;
-      color: #c3ced9;
-      margin: 24px 0 0;
-    }
-
-    .hero__actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 28px;
-    }
-
-    .button {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 52px;
-      padding: 0 22px;
-      border-radius: 999px;
-      transition: transform 0.35s var(--ease), border-color 0.35s var(--ease), background 0.35s var(--ease), color 0.35s var(--ease);
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    .button::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.22), transparent 26%);
-      opacity: 0;
-      transition: opacity 0.35s var(--ease);
-      z-index: -1;
-    }
-
-    .button:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255,255,255,0.22);
-    }
-
-    .button:hover::after { opacity: 1; }
-
-    .button--primary {
-      color: #061018;
-      background: linear-gradient(135deg, #d8f5ff 0%, var(--accent) 55%, #8be1ff 100%);
-      border-color: transparent;
-      box-shadow: 0 18px 34px rgba(134,216,255,0.18);
-    }
-
-    .button--ghost {
-      background: rgba(255,255,255,0.035);
-      color: #eef4fb;
-    }
-
-    .hero__meta {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 34px;
-    }
-
-    .meta-card {
-      padding: 18px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-    }
-
-    .meta-card strong {
-      display: block;
-      font-size: 1.25rem;
-      margin-bottom: 4px;
-      font-weight: 700;
-    }
-
-    .meta-card span {
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .hero__visual {
-      position: relative;
-      min-height: 560px;
-      padding: 10px;
-    }
-
-    .floating-panel {
-      position: absolute;
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .device {
-      inset: 24px 42px 20px 12px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      transform: rotate(-6deg);
-    }
-
-    .device__top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
-
-    .device__camera {
-      width: 110px;
-      height: 18px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.55);
-      margin: 0 auto 6px;
-      border: 1px solid rgba(255,255,255,0.04);
-    }
-
-    .device__screen {
-      flex: 1;
-      border-radius: 24px;
-      padding: 18px;
-      background:
-        radial-gradient(circle at 24% 18%, rgba(134,216,255,0.15), transparent 28%),
-        radial-gradient(circle at 70% 12%, rgba(143,124,255,0.18), transparent 26%),
-        linear-gradient(180deg, rgba(10,14,18,0.98), rgba(14,19,26,0.98));
-      border: 1px solid rgba(255,255,255,0.08);
-      display: grid;
-      gap: 14px;
-    }
-
-    .mini-label {
-      font-size: 0.76rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted-2);
-    }
-
-    .product-card {
-      border-radius: 22px;
-      padding: 18px;
-      background: rgba(255,255,255,0.045);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .product-card h3 {
-      margin: 10px 0 8px;
-      font-size: 1.35rem;
-    }
-
-    .product-card p {
-      margin: 0;
-      color: #b8c4cf;
-      line-height: 1.7;
-      font-size: 0.95rem;
-    }
-
-    .product-chip-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    .chip {
-      border-radius: 999px;
-      padding: 8px 11px;
-      font-size: 0.76rem;
-      color: #eaf2fb;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .progress-card {
-      padding: 16px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .progress-card__head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .progress-bar {
-      position: relative;
-      height: 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      overflow: hidden;
-    }
-
-    .progress-bar span {
-      display: block;
-      width: 72%;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      box-shadow: 0 0 24px rgba(134,216,255,0.32);
-    }
-
-    .signal-card {
-      right: 0;
-      bottom: 14px;
-      width: 230px;
-      padding: 16px;
-      transform: rotate(5deg);
-    }
-
-    .signal-card__dots {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .signal-card__dots span {
-      display: block;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85), rgba(134,216,255,0.3));
-      opacity: calc(0.3 + var(--i) * 0.1);
-      filter: blur(calc(var(--i) * 0.1px));
-    }
-
-    .section {
-      padding: 28px 0;
-    }
-
-    .section__head {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 18px;
-      margin-bottom: 22px;
-    }
-
-    .section__label {
-      display: inline-block;
-      margin-bottom: 12px;
-      font-size: 0.82rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    .section__title {
-      margin: 0;
-      font-size: clamp(2rem, 4vw, 3.35rem);
-      letter-spacing: -0.05em;
-    }
-
-    .section__desc {
-      max-width: 560px;
-      color: var(--muted);
-      line-height: 1.8;
-      margin: 0;
-    }
-
-    .status-board {
-      position: relative;
-      padding: 28px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 34px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      overflow: hidden;
-    }
-
-    .status-board::before {
-      content: "";
-      position: absolute;
-      inset: auto 0 0 auto;
-      width: 280px;
-      height: 280px;
-      background: radial-gradient(circle, rgba(143,124,255,0.18), transparent 70%);
-      pointer-events: none;
-      filter: blur(10px);
-    }
-
-    .status-summary {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 20px;
-      align-items: center;
-      margin-bottom: 28px;
-    }
-
-    .status-summary h3 {
-      margin: 0;
-      font-size: clamp(1.4rem, 2vw, 2rem);
-    }
-
-    .status-summary p {
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.8;
-      max-width: 740px;
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      border-radius: 999px;
-      background: rgba(134,216,255,0.08);
-      color: #e8f8ff;
-      border: 1px solid rgba(134,216,255,0.18);
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .status-badge::before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 20px rgba(134,216,255,0.9);
-    }
-
-    .flow {
-      position: relative;
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 18px;
-      align-items: start;
-      overflow-x: auto;
-      padding-bottom: 10px;
-    }
-
-    .flow::before {
-      content: "";
-      position: absolute;
-      left: 6%;
-      right: 6%;
-      top: 34px;
-      height: 2px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.16), rgba(255,255,255,0.08));
-      z-index: 0;
-    }
-
-    .flow-step {
-      position: relative;
-      z-index: 1;
-      min-width: 200px;
-    }
-
-    .flow-step__dot {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      margin: 0 auto 18px;
-      display: grid;
-      place-items: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-      color: var(--muted);
-      backdrop-filter: blur(12px);
-      transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.45s var(--ease);
-    }
-
-    .flow-step__card {
-      border-radius: 24px;
-      padding: 18px;
-      min-height: 170px;
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: transform 0.45s var(--ease), border-color 0.45s var(--ease), background 0.45s var(--ease), box-shadow 0.45s var(--ease);
-    }
-
-    .flow-step__card small {
-      display: block;
-      color: var(--muted-2);
-      font-size: 0.77rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 8px;
-    }
-
-    .flow-step__card h4 {
-      margin: 0 0 10px;
-      font-size: 1.15rem;
-    }
-
-    .flow-step__card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.75;
-      font-size: 0.95rem;
-    }
-
-    .flow-step:hover .flow-step__dot,
-    .flow-step:hover .flow-step__card {
-      transform: translateY(-4px);
-      border-color: rgba(255,255,255,0.18);
-    }
-
-    .flow-step--done .flow-step__dot {
-      color: #eafbf6;
-      border-color: rgba(159,243,210,0.18);
-      background: linear-gradient(180deg, rgba(159,243,210,0.16), rgba(255,255,255,0.04));
-    }
-
-    .flow-step--done .flow-step__card {
-      border-color: rgba(159,243,210,0.12);
-    }
-
-    .flow-step--current .flow-step__dot {
-      color: #061018;
-      border-color: transparent;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 0 0 8px rgba(134,216,255,0.08), 0 0 36px rgba(134,216,255,0.25);
-    }
-
-    .flow-step--current .flow-step__card {
-      background: linear-gradient(180deg, rgba(134,216,255,0.08), rgba(255,255,255,0.03));
-      border-color: rgba(134,216,255,0.2);
-      box-shadow: 0 20px 50px rgba(7,18,28,0.35);
-    }
-
-    .overview-grid {
-      display: grid;
-      grid-template-columns: 1.18fr 0.82fr;
-      gap: 22px;
-      margin-top: 22px;
-    }
-
-    .card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 30px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.025));
-      padding: 24px;
-      box-shadow: var(--shadow);
-    }
-
-    .card--hover {
-      transition: transform 0.45s var(--ease), border-color 0.45s var(--ease), box-shadow 0.45s var(--ease);
-    }
-
-    .card--hover:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255,255,255,0.14);
-      box-shadow: 0 30px 90px rgba(0,0,0,0.32);
-    }
-
-    .qr-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .qr-mark {
-      width: 62px;
-      height: 62px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(134,216,255,0.18));
-      border: 1px solid rgba(255,255,255,0.12);
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      font-size: 1.25rem;
-      color: #ebf7ff;
-    }
-
-    .qr-title h3 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-
-    .qr-title p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      line-height: 1.8;
-      max-width: 600px;
-    }
-
-    .preview {
-      margin-top: 18px;
-      border-radius: 24px;
-      padding: 20px;
-      background:
-        radial-gradient(circle at 10% 14%, rgba(134,216,255,0.12), transparent 24%),
-        radial-gradient(circle at 84% 10%, rgba(143,124,255,0.12), transparent 18%),
-        linear-gradient(180deg, rgba(8,12,17,0.95), rgba(12,18,25,0.95));
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .preview__top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-      color: var(--muted);
-      font-size: 0.86rem;
-    }
-
-    .preview__dots {
-      display: flex;
-      gap: 8px;
-    }
-
-    .preview__dots span {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.18);
-    }
-
-    .preview__layout {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 16px;
-    }
-
-    .preview__sidebar,
-    .preview__content {
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      padding: 16px;
-    }
-
-    .preview__menu {
-      display: grid;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .preview__menu span,
-    .preview__row,
-    .preview__metric {
-      display: block;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .preview__menu span {
-      height: 42px;
-    }
-
-    .preview__content {
-      display: grid;
-      gap: 16px;
-    }
-
-    .preview__hero {
-      min-height: 138px;
-      border-radius: 18px;
-      padding: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(135deg, rgba(134,216,255,0.08), rgba(143,124,255,0.08));
-    }
-
-    .preview__hero strong {
-      display: block;
-      font-size: 1.18rem;
-      margin-bottom: 8px;
-    }
-
-    .preview__hero p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    .preview__metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .preview__metric {
-      height: 94px;
-      padding: 14px;
-    }
-
-    .preview__metric::before,
-    .preview__row::before {
-      content: "";
-      display: block;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.14);
-    }
-
-    .preview__metric::before {
-      width: 56%;
-      height: 12px;
-      margin-bottom: 10px;
-    }
-
-    .preview__row {
-      height: 56px;
-    }
-
-    .stack-card {
-      display: grid;
-      gap: 16px;
-      align-content: start;
-    }
-
-    .stack-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .stack-list span {
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.045);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: #eaf0f7;
-      font-size: 0.9rem;
-    }
-
-    .small-note {
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 0.95rem;
-    }
-
-    .qiita-grid {
-      display: grid;
-      grid-template-columns: 1.3fr 0.7fr;
-      gap: 22px;
-      margin-top: 20px;
-    }
-
-    .article-list {
-      display: grid;
-      gap: 14px;
-    }
-
-    .article {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 18px;
-      align-items: center;
-      padding: 18px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), background 0.4s var(--ease);
-    }
-
-    .article:hover {
-      transform: translateY(-3px);
-      border-color: rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.045);
-    }
-
-    .article__content {
-      min-width: 0;
-    }
-
-    .article__content small {
-      display: block;
-      color: var(--muted-2);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 0.74rem;
-      margin-bottom: 8px;
-    }
-
-    .article__content h4 {
-      margin: 0 0 10px;
-      font-size: 1.08rem;
-      line-height: 1.45;
-    }
-
-    .article__meta {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      color: var(--muted);
-      font-size: 0.84rem;
-    }
-
-    .article__meta span {
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-    }
-
-    .article__arrow {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--muted);
-      flex-shrink: 0;
-    }
-
-    .article-skeleton {
-      height: 106px;
-      border-radius: 22px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-      background-size: 200% 100%;
-      animation: shimmer 1.6s linear infinite;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    .aside-box {
-      display: grid;
-      gap: 16px;
-      align-content: start;
-    }
-
-    .stat-grid {
-      display: grid;
-      gap: 12px;
-    }
-
-    .stat-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 15px 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .stat-row span { color: var(--muted); }
-    .stat-row strong { font-size: 1.04rem; }
-
-    .contact-strip {
-      margin-top: 22px;
-      padding: 24px;
-      border-radius: 30px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .contact-strip h3 {
-      margin: 0 0 8px;
-      font-size: 1.5rem;
-    }
-
-    .contact-strip p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    .footer {
-      padding: 28px 0 60px;
-      color: var(--muted);
-    }
-
-    .footer__inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding-top: 22px;
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
-      will-change: opacity, transform;
-    }
-
-    .reveal.is-visible {
-      opacity: 1;
-      transform: none;
-    }
-
-    @media (max-width: 1100px) {
-      .hero__layout,
-      .overview-grid,
-      .qiita-grid {
-        grid-template-columns: 1fr;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>keistudio — keishinnishiura</title>
+    <meta
+      name="description"
+      content="keistudio by keishinnishiura — 個人開発中のプロダクト進捗とQiita記事を掲載するデベロッパーサイト"
+    />
+    <meta property="og:title" content="keistudio — keishinnishiura" />
+    <meta
+      property="og:description"
+      content="静かに、鋭く、長く使われるプロダクトをつくる個人開発スタジオ。"
+    />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#070b0f" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─── Design Tokens ─────────────────────────────── */
+      :root {
+        --bg: #070b0f;
+        --surface: rgba(255, 255, 255, 0.032);
+        --surface-hi: rgba(255, 255, 255, 0.058);
+        --border: rgba(255, 255, 255, 0.078);
+        --border-hi: rgba(255, 255, 255, 0.14);
+        --text: #eef2f7;
+        --text-2: #a8b6c6;
+        --text-3: #6e7e90;
+        --accent: #86d8ff;
+        --accent-2: #9b8bff;
+        --accent-3: #9ff3d2;
+        --max: 1200px;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
       }
 
-      .hero__visual {
-        min-height: 440px;
-      }
-
-      .device {
-        inset: 20px 54px 10px 20px;
-      }
-
-      .signal-card {
-        width: 220px;
-      }
-    }
-
-    @media (max-width: 860px) {
-      .topbar__inner {
-        min-height: 72px;
-      }
-
-      .nav {
-        display: none;
-      }
-
-      .hero__shell,
-      .status-board,
-      .card,
-      .contact-strip {
-        border-radius: 26px;
-      }
-
-      .hero__shell { padding: 22px; }
-      .status-board { padding: 20px; }
-      .card { padding: 20px; }
-
-      .hero__meta,
-      .preview__metrics {
-        grid-template-columns: 1fr;
-      }
-
-      .status-summary {
-        grid-template-columns: 1fr;
-      }
-
-      .preview__layout {
-        grid-template-columns: 1fr;
-      }
-
-      .flow {
-        gap: 14px;
-      }
-
-      .flow::before {
-        left: 40px;
-        right: 40px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .container {
-        width: min(var(--max), calc(100% - 20px));
-      }
-
-      .hero {
-        padding-top: 18px;
-      }
-
-      .hero__lead {
-        line-height: 1.75;
-      }
-
-      .hero__actions {
-        flex-direction: column;
-      }
-
-      .button {
-        width: 100%;
-      }
-
-      .device {
-        inset: 14px;
-        transform: none;
-      }
-
-      .signal-card {
-        position: relative;
-        inset: auto;
-        width: 100%;
-        margin-top: 12px;
-        transform: none;
-      }
-
-      .hero__visual {
-        min-height: auto;
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
         padding: 0;
       }
 
-      .flow {
+      html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body {
+        font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        letter-spacing: -0.022em;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      /* ─── Background layers ─────────────────────────── */
+      .bg-orbs {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .bg-orbs__orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0;
+        animation: orbFloat 20s ease-in-out infinite;
+      }
+      .bg-orbs__orb:nth-child(1) {
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(134, 216, 255, 0.09),
+          transparent 70%
+        );
+        top: -15%;
+        left: -8%;
+        animation-delay: 0s;
+        animation-duration: 22s;
+      }
+      .bg-orbs__orb:nth-child(2) {
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(155, 139, 255, 0.09),
+          transparent 70%
+        );
+        top: 5%;
+        right: -5%;
+        animation-delay: -8s;
+        animation-duration: 26s;
+      }
+      .bg-orbs__orb:nth-child(3) {
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(
+          circle,
+          rgba(159, 243, 210, 0.07),
+          transparent 70%
+        );
+        bottom: 10%;
+        left: 40%;
+        animation-delay: -14s;
+        animation-duration: 30s;
+      }
+      @keyframes orbFloat {
+        0% {
+          opacity: 1;
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(30px, -20px) scale(1.06);
+        }
+        66% {
+          transform: translate(-20px, 30px) scale(0.96);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(0, 0) scale(1);
+        }
+      }
+
+      .bg-grid {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+          );
+        background-size: 48px 48px;
+        mask-image: radial-gradient(
+          ellipse 80% 60% at 50% 0%,
+          black,
+          transparent
+        );
+        opacity: 0.7;
+      }
+
+      canvas#fx {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        opacity: 0.55;
+      }
+
+      /* ─── Layout ────────────────────────────────────── */
+      .site {
+        position: relative;
+        z-index: 2;
+      }
+
+      .wrap {
+        width: min(var(--max), calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      /* ─── Topbar ────────────────────────────────────── */
+      .bar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(24px) saturate(160%);
+        -webkit-backdrop-filter: blur(24px) saturate(160%);
+        background: linear-gradient(
+          180deg,
+          rgba(7, 11, 15, 0.78),
+          rgba(7, 11, 15, 0.42)
+        );
+        border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+      }
+      .bar__in {
         display: flex;
-        padding-bottom: 4px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        height: 72px;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+      }
+      .logo__mark {
+        position: relative;
+        width: 38px;
+        height: 38px;
+        border-radius: 13px;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(134, 216, 255, 0.2),
+          rgba(155, 139, 255, 0.18)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+      .logo__mark::before,
+      .logo__mark::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(9px);
+      }
+      .logo__mark::before {
+        width: 28px;
+        height: 28px;
+        background: rgba(134, 216, 255, 0.7);
+        top: -5px;
+        left: -4px;
+      }
+      .logo__mark::after {
+        width: 24px;
+        height: 24px;
+        background: rgba(155, 139, 255, 0.7);
+        right: -4px;
+        bottom: -4px;
+      }
+      .logo__text strong {
+        display: block;
+        font-size: 0.925rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+      .logo__text span {
+        display: block;
+        font-size: 0.65rem;
+        color: var(--text-2);
+        margin-top: 2px;
+        letter-spacing: 0;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .nav a {
+        padding: 9px 14px;
+        border-radius: 999px;
+        font-size: 0.875rem;
+        color: var(--text-2);
+        transition:
+          color 0.3s var(--ease),
+          background 0.3s var(--ease);
+      }
+      .nav a:hover {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .nav .cta {
+        color: #050e17;
+        background: linear-gradient(135deg, #c6eeff, var(--accent));
+        font-weight: 700;
+        box-shadow: 0 8px 24px rgba(134, 216, 255, 0.18);
+        transition:
+          transform 0.3s var(--ease-spring),
+          box-shadow 0.3s var(--ease);
+      }
+      .nav .cta:hover {
+        color: #050e17;
+        background: linear-gradient(135deg, #d8f5ff, #a0e5ff);
+        transform: translateY(-1px);
+        box-shadow: 0 12px 32px rgba(134, 216, 255, 0.28);
       }
 
-      .flow::before {
-        left: 40px;
-        right: 40px;
-        top: 34px;
+      /* ─── Section base ──────────────────────────────── */
+      .sec {
+        padding: 72px 0;
+      }
+      .sec--sm {
+        padding: 48px 0;
       }
 
-      .flow-step {
-        min-width: 260px;
+      .sec-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .sec-eyebrow::before {
+        content: "";
+        width: 18px;
+        height: 1px;
+        background: var(--accent);
+        opacity: 0.7;
+      }
+      .sec-title {
+        font-size: clamp(2.1rem, 4.5vw, 3.6rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        line-height: 1;
+      }
+      .sec-desc {
+        color: var(--text-2);
+        line-height: 1.8;
+        font-size: 1.02rem;
+        max-width: 520px;
+        margin-top: 14px;
+      }
+      .sec-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 36px;
       }
 
-      .article {
-        grid-template-columns: 1fr;
-        align-items: start;
+      /* ─── Buttons ───────────────────────────────────── */
+      .btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 22px;
+        min-height: 50px;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        cursor: pointer;
+        overflow: hidden;
+        isolation: isolate;
+        transition:
+          transform 0.35s var(--ease),
+          border-color 0.35s var(--ease),
+          box-shadow 0.35s var(--ease);
+      }
+      .btn::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at var(--bx, 50%) var(--by, 50%),
+          rgba(255, 255, 255, 0.18),
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.35s;
+        z-index: -1;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        border-color: var(--border-hi);
+      }
+      .btn:hover::after {
+        opacity: 1;
+      }
+      .btn--pri {
+        background: linear-gradient(
+          135deg,
+          #cceeff,
+          var(--accent) 60%,
+          #a8e6ff
+        );
+        border-color: transparent;
+        color: #040e18;
+        box-shadow: 0 12px 32px rgba(134, 216, 255, 0.2);
+      }
+      .btn--pri:hover {
+        box-shadow: 0 18px 40px rgba(134, 216, 255, 0.3);
+      }
+      .btn--ghost {
+        background: rgba(255, 255, 255, 0.04);
       }
 
-      .contact-strip {
-        align-items: start;
+      /* ─── Hero ──────────────────────────────────────── */
+      .hero {
+        padding: 52px 0 40px;
       }
-    }
-  </style>
-</head>
-<body>
-  <canvas class="water-canvas" id="waterCanvas"></canvas>
-  <div class="grid"></div>
-  <div class="noise"></div>
+      .hero__shell {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 36px;
+        background: linear-gradient(
+          160deg,
+          rgba(255, 255, 255, 0.048),
+          rgba(255, 255, 255, 0.018)
+        );
+        padding: 48px;
+        box-shadow:
+          0 40px 100px rgba(0, 0, 0, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+      .hero__fg {
+        position: absolute;
+        pointer-events: none;
+        border-radius: 50%;
+        filter: blur(64px);
+      }
+      .hero__fg--a {
+        width: 360px;
+        height: 360px;
+        background: rgba(134, 216, 255, 0.2);
+        top: -120px;
+        right: 5%;
+      }
+      .hero__fg--b {
+        width: 280px;
+        height: 280px;
+        background: rgba(155, 139, 255, 0.16);
+        bottom: -80px;
+        left: 4%;
+      }
+      .hero__body {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 40px;
+        align-items: center;
+      }
+      .hero__copy {
+        padding: 8px 0;
+      }
 
-  <div class="site">
-    <header class="topbar">
-      <div class="container topbar__inner">
-        <a href="#top" class="brand" aria-label="keistudio top">
-          <div class="brand__mark" aria-hidden="true"></div>
-          <div class="brand__text">
-            <strong>keistudio</strong>
-            <span>by keishinnishiura</span>
-          </div>
-        </a>
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 15px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        font-size: 0.82rem;
+        color: #d8ecf8;
+        margin-bottom: 24px;
+      }
+      .badge__dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-3));
+        box-shadow: 0 0 12px rgba(134, 216, 255, 0.9);
+        flex-shrink: 0;
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 10px rgba(134, 216, 255, 0.8);
+        }
+        50% {
+          box-shadow:
+            0 0 20px rgba(134, 216, 255, 1),
+            0 0 40px rgba(134, 216, 255, 0.4);
+        }
+      }
 
-        <nav class="nav">
-          <a href="#product">Product</a>
-          <a href="#status">Progress</a>
-          <a href="#qiita">Qiita</a>
-          <a href="#contact" class="nav__cta">Connect</a>
-        </nav>
-      </div>
-    </header>
+      .hero__h1 {
+        font-size: clamp(3.2rem, 8vw, 6.4rem);
+        font-weight: 800;
+        letter-spacing: -0.055em;
+        line-height: 0.94;
+      }
+      .hero__h1 .sub {
+        display: block;
+        color: rgba(238, 242, 247, 0.52);
+        font-weight: 500;
+      }
+      .hero__lead {
+        font-size: clamp(0.98rem, 1.8vw, 1.15rem);
+        color: var(--text-2);
+        line-height: 1.9;
+        max-width: 580px;
+        margin-top: 22px;
+      }
+      .hero__actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 30px;
+      }
+      .hero__stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 36px;
+      }
+      .hero__stat {
+        padding: 18px 16px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.025);
+      }
+      .hero__stat strong {
+        display: block;
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+      .hero__stat span {
+        font-size: 0.82rem;
+        color: var(--text-2);
+        margin-top: 4px;
+        display: block;
+      }
 
-    <main id="top">
-      <section class="hero">
-        <div class="container">
-          <div class="hero__shell reveal">
-            <div class="hero__glow"></div>
-            <div class="hero__glow-2"></div>
+      /* Right visual */
+      .hero__vis {
+        position: relative;
+        min-height: 520px;
+      }
+      .fp {
+        position: absolute;
+        border-radius: 28px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.055),
+          rgba(255, 255, 255, 0.025)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+      .fp--main {
+        inset: 20px 44px 18px 8px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        transform: perspective(900px) rotateY(-6deg) rotateX(2deg);
+        transition: transform 0.6s var(--ease);
+      }
+      .fp--main:hover {
+        transform: perspective(900px) rotateY(-2deg) rotateX(1deg);
+      }
+      .fp__notch {
+        width: 100px;
+        height: 16px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.5);
+        margin: 0 auto 8px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .fp__row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: var(--text-2);
+      }
+      .fp__screen {
+        flex: 1;
+        border-radius: 22px;
+        padding: 18px;
+        background:
+          radial-gradient(
+            circle at 22% 15%,
+            rgba(134, 216, 255, 0.13),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 75% 10%,
+            rgba(155, 139, 255, 0.16),
+            transparent 28%
+          ),
+          linear-gradient(180deg, rgba(8, 13, 18, 0.98), rgba(12, 18, 26, 0.98));
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: grid;
+        gap: 13px;
+      }
+      .fp__card {
+        padding: 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .fp__card h3 {
+        font-size: 1.2rem;
+        margin: 8px 0 6px;
+      }
+      .fp__card p {
+        font-size: 0.88rem;
+        color: var(--text-2);
+        line-height: 1.65;
+      }
+      .fp__chips {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+      .chip {
+        padding: 6px 11px;
+        border-radius: 999px;
+        font-size: 0.73rem;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        color: #ddeeff;
+      }
+      .fp__prog {
+        padding: 14px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .fp__prog-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 0.76rem;
+        color: var(--text-2);
+      }
+      .fp__prog-head strong {
+        color: var(--text);
+        font-size: 0.88rem;
+      }
+      .fp__bar {
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+      .fp__bar span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        box-shadow: 0 0 16px rgba(134, 216, 255, 0.4);
+      }
+      .fp--float {
+        right: 0;
+        bottom: 16px;
+        width: 220px;
+        padding: 16px;
+        transform: perspective(700px) rotateY(6deg) rotateX(-2deg) rotate(3deg);
+        transition: transform 0.6s var(--ease);
+      }
+      .fp--float:hover {
+        transform: perspective(700px) rotateY(2deg) rotateX(-1deg) rotate(1deg);
+      }
+      .fp__grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 9px;
+        margin-top: 12px;
+      }
+      .fp__grid span {
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgba(255, 255, 255, 0.8),
+          rgba(134, 216, 255, 0.25)
+        );
+        opacity: calc(0.28 + var(--i) * 0.09);
+      }
 
-            <div class="hero__layout">
-              <div class="hero__copy">
-                <div class="eyebrow">Independent app design & development</div>
-                <h1>keistudio <span>by keishinnishiura</span></h1>
-                <p class="hero__lead">
-                  静かに、鋭く、長く使われるプロダクトをつくるための個人開発スタジオ。
-                  現在は <strong>QReader</strong> を中心に、設計・実装・改善の流れを公開しながら開発しています。
-                </p>
+      /* lbl */
+      .lbl {
+        font-size: 0.71rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-3);
+        font-weight: 500;
+      }
 
-                <div class="hero__actions">
-                  <a class="button button--primary" href="#status">QReader の進捗を見る</a>
-                  <a class="button button--ghost" href="#qiita">Qiita の記事を見る</a>
-                </div>
+      /* ─── Progress section ──────────────────────────── */
+      #progress {
+        padding: 64px 0;
+      }
+      .progress-grid {
+        display: grid;
+        gap: 24px;
+      }
 
-                <div class="hero__meta">
-                  <div class="meta-card">
-                    <strong>01</strong>
-                    <span>Focused product lineup</span>
+      .proj-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 32px;
+        background: linear-gradient(
+          160deg,
+          rgba(255, 255, 255, 0.042),
+          rgba(255, 255, 255, 0.016)
+        );
+        padding: 32px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+        transition:
+          border-color 0.4s var(--ease),
+          box-shadow 0.4s var(--ease),
+          transform 0.4s var(--ease);
+      }
+      .proj-card:hover {
+        border-color: var(--border-hi);
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.35);
+        transform: translateY(-3px);
+      }
+      .proj-card__glow {
+        position: absolute;
+        pointer-events: none;
+        border-radius: 50%;
+        filter: blur(80px);
+        top: -60px;
+        right: -40px;
+        width: 320px;
+        height: 320px;
+        opacity: 0.55;
+        transition: opacity 0.4s;
+      }
+      .proj-card:hover .proj-card__glow {
+        opacity: 0.8;
+      }
+
+      .proj-card__top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      .proj-card__id {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .proj-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 1.35rem;
+        color: #e8f6ff;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.12),
+          rgba(134, 216, 255, 0.14)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
+      .proj-card__name h3 {
+        font-size: 1.7rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+      .proj-card__name p {
+        color: var(--text-2);
+        font-size: 0.9rem;
+        margin-top: 5px;
+        line-height: 1.6;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 15px;
+        border-radius: 999px;
+        white-space: nowrap;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .status-pill__dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+
+      /* Overall progress bar */
+      .proj-overall {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      .proj-overall__bar {
+        flex: 1;
+        height: 6px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.07);
+        overflow: hidden;
+      }
+      .proj-overall__fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        box-shadow: 0 0 14px rgba(134, 216, 255, 0.45);
+        transition: width 1.2s var(--ease);
+        width: 0%; /* animated via JS */
+      }
+      .proj-overall__pct {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--accent);
+        white-space: nowrap;
+        min-width: 40px;
+        text-align: right;
+      }
+
+      /* Phases flow */
+      .proj-phases {
+        position: relative;
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+      .proj-phases::before {
+        content: "";
+        position: absolute;
+        left: calc(10% + 4px);
+        right: calc(10% + 4px);
+        top: 32px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1) 20%,
+          rgba(255, 255, 255, 0.1) 80%,
+          transparent
+        );
+        z-index: 0;
+      }
+      .phase {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        text-align: center;
+      }
+      .phase__num {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 0.78rem;
+        font-weight: 700;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.055),
+          rgba(255, 255, 255, 0.02)
+        );
+        color: var(--text-3);
+        transition:
+          transform 0.45s var(--ease-spring),
+          box-shadow 0.45s var(--ease),
+          border-color 0.45s var(--ease),
+          background 0.45s var(--ease),
+          color 0.45s var(--ease);
+      }
+      .phase__body {
+        border-radius: 22px;
+        padding: 16px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.028);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        transition:
+          border-color 0.4s var(--ease),
+          background 0.4s var(--ease),
+          transform 0.4s var(--ease-spring),
+          box-shadow 0.4s var(--ease);
+      }
+      .phase__body small {
+        display: block;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-3);
+        margin-bottom: 6px;
+      }
+      .phase__body h4 {
+        font-size: 0.97rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .phase__body p {
+        font-size: 0.84rem;
+        color: var(--text-2);
+        line-height: 1.7;
+      }
+      .phase:hover .phase__num {
+        transform: translateY(-3px);
+      }
+      .phase:hover .phase__body {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
+      }
+
+      /* done */
+      .phase--done .phase__num {
+        color: #b8f7e4;
+        border-color: rgba(159, 243, 210, 0.22);
+        background: linear-gradient(
+          180deg,
+          rgba(159, 243, 210, 0.14),
+          rgba(255, 255, 255, 0.03)
+        );
+      }
+      .phase--done .phase__body {
+        border-color: rgba(159, 243, 210, 0.12);
+      }
+
+      /* current */
+      .phase--current .phase__num {
+        color: #040e18;
+        border-color: transparent;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow:
+          0 0 0 6px rgba(134, 216, 255, 0.1),
+          0 0 28px rgba(134, 216, 255, 0.3);
+      }
+      .phase--current .phase__body {
+        background: linear-gradient(
+          160deg,
+          rgba(134, 216, 255, 0.07),
+          rgba(255, 255, 255, 0.025)
+        );
+        border-color: rgba(134, 216, 255, 0.22);
+        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
+      }
+
+      /* stack chips */
+      .proj-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 24px;
+      }
+
+      /* ─── Product section ───────────────────────────── */
+      .product-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 20px;
+      }
+      .card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 30px;
+        border: 1px solid var(--border);
+        background: linear-gradient(
+          160deg,
+          rgba(255, 255, 255, 0.042),
+          rgba(255, 255, 255, 0.016)
+        );
+        padding: 28px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+        transition:
+          transform 0.4s var(--ease),
+          border-color 0.4s var(--ease),
+          box-shadow 0.4s var(--ease);
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: var(--border-hi);
+        box-shadow: 0 36px 90px rgba(0, 0, 0, 0.32);
+      }
+
+      .prod-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      .prod-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 20px;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        font-size: 1.3rem;
+        color: #e8f6ff;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.12),
+          rgba(134, 216, 255, 0.15)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.13);
+      }
+      .prod-head h3 {
+        font-size: 1.9rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+      .prod-head p {
+        color: var(--text-2);
+        line-height: 1.7;
+        margin-top: 8px;
+        font-size: 0.92rem;
+      }
+
+      /* Mini browser preview */
+      .mini-browser {
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(
+          180deg,
+          rgba(8, 13, 18, 0.95),
+          rgba(12, 18, 26, 0.95)
+        );
+        margin-top: 20px;
+      }
+      .mini-browser__bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .mini-browser__dots {
+        display: flex;
+        gap: 7px;
+      }
+      .mini-browser__dots span {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.18);
+      }
+      .mini-browser__url {
+        font-size: 0.74rem;
+        color: var(--text-3);
+      }
+      .mini-browser__body {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 14px;
+        padding: 16px;
+      }
+      .mini-browser__side,
+      .mini-browser__main {
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        background: rgba(255, 255, 255, 0.035);
+        padding: 14px;
+      }
+      .mini-browser__menu {
+        display: grid;
+        gap: 9px;
+        margin-top: 12px;
+      }
+      .mini-browser__menu span {
+        display: block;
+        height: 38px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .mini-browser__main {
+        display: grid;
+        gap: 13px;
+      }
+      .mini-browser__hero {
+        border-radius: 14px;
+        padding: 16px;
+        min-height: 130px;
+        background: linear-gradient(
+          135deg,
+          rgba(134, 216, 255, 0.07),
+          rgba(155, 139, 255, 0.07)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .mini-browser__hero strong {
+        display: block;
+        font-size: 1.05rem;
+        margin-bottom: 7px;
+      }
+      .mini-browser__hero p {
+        font-size: 0.83rem;
+        color: var(--text-2);
+        line-height: 1.7;
+      }
+      .mini-browser__metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .mini-browser__metric {
+        height: 84px;
+        border-radius: 13px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .mini-browser__metric::before {
+        content: "";
+        display: block;
+        width: 55%;
+        height: 10px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.14);
+        margin-bottom: 8px;
+      }
+      .mini-browser__row {
+        height: 50px;
+        border-radius: 13px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      /* Side card */
+      .side-card {
+        display: grid;
+        gap: 20px;
+        align-content: start;
+      }
+      .tag-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
+      .tag-cloud span {
+        padding: 9px 14px;
+        border-radius: 999px;
+        font-size: 0.86rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text);
+      }
+      .note {
+        color: var(--text-2);
+        font-size: 0.92rem;
+        line-height: 1.8;
+      }
+
+      /* ─── Qiita ─────────────────────────────────────── */
+      .qiita-grid {
+        display: grid;
+        grid-template-columns: 1.25fr 0.75fr;
+        gap: 20px;
+      }
+      .article-feed {
+        display: grid;
+        gap: 12px;
+      }
+      .art {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 16px;
+        align-items: center;
+        padding: 18px 20px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        transition:
+          transform 0.4s var(--ease),
+          border-color 0.4s var(--ease),
+          background 0.4s var(--ease);
+        text-decoration: none;
+      }
+      .art:hover {
+        transform: translateY(-2px);
+        border-color: var(--border-hi);
+        background: var(--surface-hi);
+      }
+      .art__date {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-3);
+        margin-bottom: 7px;
+      }
+      .art__title {
+        font-size: 1.02rem;
+        font-weight: 600;
+        line-height: 1.45;
+        margin-bottom: 10px;
+      }
+      .art__meta {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+      }
+      .art__tag {
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        color: var(--text-2);
+      }
+      .art__arrow {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text-2);
+        font-size: 1rem;
+        transition:
+          background 0.3s,
+          border-color 0.3s,
+          color 0.3s;
+      }
+      .art:hover .art__arrow {
+        background: rgba(134, 216, 255, 0.1);
+        border-color: rgba(134, 216, 255, 0.3);
+        color: var(--accent);
+      }
+
+      .skel {
+        height: 100px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.025) 0%,
+          rgba(255, 255, 255, 0.055) 50%,
+          rgba(255, 255, 255, 0.025) 100%
+        );
+        background-size: 200% 100%;
+        animation: skel 1.8s linear infinite;
+      }
+      @keyframes skel {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      .qiita-aside {
+        display: grid;
+        gap: 14px;
+        align-content: start;
+      }
+      .stat-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        font-size: 0.9rem;
+      }
+      .stat-row span {
+        color: var(--text-2);
+      }
+      .stat-row strong {
+        font-weight: 700;
+      }
+
+      /* ─── Contact ───────────────────────────────────── */
+      .contact-band {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.048),
+          rgba(255, 255, 255, 0.018)
+        );
+        padding: 40px 44px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .contact-band::before {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+        border-radius: 50%;
+        filter: blur(90px);
+        opacity: 0.15;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, var(--accent-2), transparent 70%);
+        right: -80px;
+        top: -120px;
+      }
+      .contact-band h3 {
+        font-size: 1.85rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+      .contact-band p {
+        color: var(--text-2);
+        line-height: 1.8;
+        margin-top: 10px;
+        max-width: 560px;
+      }
+      .contact-btns {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* ─── Footer ────────────────────────────────────── */
+      .foot {
+        padding: 24px 0 48px;
+        color: var(--text-2);
+      }
+      .foot__in {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        padding-top: 24px;
+        font-size: 0.86rem;
+      }
+
+      /* ─── Scroll reveal ─────────────────────────────── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.8s var(--ease),
+          transform 0.8s var(--ease);
+        will-change: opacity, transform;
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* ─── Responsive ────────────────────────────────── */
+      @media (max-width: 1060px) {
+        .hero__body,
+        .product-grid,
+        .qiita-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero__vis {
+          min-height: 420px;
+        }
+        .fp--main {
+          inset: 18px 56px 14px 16px;
+        }
+      }
+      @media (max-width: 860px) {
+        .bar__in {
+          height: 64px;
+        }
+        .nav {
+          display: none;
+        }
+        .hero__shell {
+          padding: 28px;
+        }
+        .hero__stats {
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 10px;
+        }
+        .proj-phases {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          overflow-x: auto;
+        }
+        .proj-phases::before {
+          display: none;
+        }
+        .contact-band {
+          padding: 28px;
+        }
+      }
+      @media (max-width: 640px) {
+        .wrap {
+          width: calc(100% - 28px);
+        }
+        .hero {
+          padding: 24px 0 20px;
+        }
+        .hero__shell {
+          padding: 22px;
+          border-radius: 26px;
+        }
+        .hero__actions {
+          flex-direction: column;
+        }
+        .btn {
+          width: 100%;
+        }
+        .hero__stats {
+          grid-template-columns: 1fr;
+        }
+        .proj-phases {
+          grid-template-columns: repeat(2, minmax(220px, 1fr));
+        }
+        .proj-card {
+          padding: 22px;
+          border-radius: 24px;
+        }
+        .card {
+          padding: 20px;
+          border-radius: 24px;
+        }
+        .contact-band {
+          border-radius: 24px;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .fp--float {
+          position: relative;
+          inset: auto;
+          width: 100%;
+          transform: none;
+          margin-top: 14px;
+        }
+        .hero__vis {
+          min-height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background -->
+    <div class="bg-orbs" aria-hidden="true">
+      <div class="bg-orbs__orb"></div>
+      <div class="bg-orbs__orb"></div>
+      <div class="bg-orbs__orb"></div>
+    </div>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <canvas id="fx" aria-hidden="true"></canvas>
+
+    <div class="site">
+      <!-- ── Topbar ── -->
+      <header class="bar">
+        <div class="wrap bar__in">
+          <a href="#top" class="logo" aria-label="keistudio top">
+            <div class="logo__mark" aria-hidden="true"></div>
+            <div class="logo__text">
+              <strong>keistudio</strong>
+              <span>by keishinnishiura</span>
+            </div>
+          </a>
+          <nav class="nav">
+            <a href="#progress">Progress</a>
+            <a href="#product">Product</a>
+            <a href="#qiita">Qiita</a>
+            <a href="#contact" class="cta">Connect</a>
+          </nav>
+        </div>
+      </header>
+
+      <main id="top">
+        <!-- ── Hero ── -->
+        <section class="hero sec--sm">
+          <div class="wrap">
+            <div class="hero__shell reveal">
+              <div class="hero__fg hero__fg--a" aria-hidden="true"></div>
+              <div class="hero__fg hero__fg--b" aria-hidden="true"></div>
+              <div class="hero__body">
+                <div class="hero__copy">
+                  <div class="badge">
+                    <span class="badge__dot"></span>
+                    Independent design &amp; development
                   </div>
-                  <div class="meta-card">
-                    <strong>72%</strong>
-                    <span>Current development completion</span>
-                  </div>
-                  <div class="meta-card">
-                    <strong>Qiita</strong>
-                    <span>Latest notes & technical writing</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="hero__visual">
-                <div class="floating-panel device card--hover">
-                  <div class="device__camera"></div>
-                  <div class="device__top">
-                    <span>QReader</span>
-                    <span>Preview Build</span>
-                  </div>
-                  <div class="device__screen">
-                    <div class="mini-label">currently building</div>
-                    <div class="product-card">
-                      <div class="mini-label">reading experience</div>
-                      <h3>QReader</h3>
-                      <p>
-                        読むことに集中できる、軽くて静かなリーダー体験。
-                        情報取得のノイズを減らし、継続して使いたくなる設計を目指しています。
-                      </p>
-                      <div class="product-chip-row">
-                        <span class="chip">Minimal UI</span>
-                        <span class="chip">Reading Flow</span>
-                        <span class="chip">Save & Resume</span>
-                      </div>
-                    </div>
-
-                    <div class="progress-card">
-                      <div class="progress-card__head">
-                        <span class="mini-label">current phase</span>
-                        <strong>Development</strong>
-                      </div>
-                      <div class="progress-bar"><span></span></div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="floating-panel signal-card card--hover">
-                  <div class="mini-label">hover reaction</div>
-                  <h3 style="margin:10px 0 4px; font-size:1.1rem;">liquid signal</h3>
-                  <p style="margin:0; color:var(--muted); line-height:1.7; font-size:0.92rem;">
-                    ポインタの動きに反応して、水面みたいな光がゆっくり流れる演出。
+                  <h1 class="hero__h1">
+                    keistudio
+                    <span class="sub">by keishinnishiura</span>
+                  </h1>
+                  <p class="hero__lead">
+                    静かに、鋭く、長く使われるプロダクトをつくるための個人開発スタジオ。
+                    現在は
+                    <strong>QReader</strong>
+                    を中心に、設計・実装・改善の流れを公開しながら開発しています。
                   </p>
-                  <div class="signal-card__dots">
-                    <span style="--i:1"></span>
-                    <span style="--i:2"></span>
-                    <span style="--i:3"></span>
-                    <span style="--i:4"></span>
-                    <span style="--i:2"></span>
-                    <span style="--i:3"></span>
-                    <span style="--i:4"></span>
-                    <span style="--i:5"></span>
+                  <div class="hero__actions">
+                    <a class="btn btn--pri" href="#progress"
+                      >プロジェクト進捗を見る</a
+                    >
+                    <a class="btn btn--ghost" href="#qiita">Qiita 記事を見る</a>
+                  </div>
+                  <div class="hero__stats">
+                    <div class="hero__stat">
+                      <strong>01</strong><span>Focused products</span>
+                    </div>
+                    <div class="hero__stat">
+                      <strong>72%</strong><span>Development progress</span>
+                    </div>
+                    <div class="hero__stat">
+                      <strong>Open</strong><span>Build log on Qiita</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hero__vis" aria-hidden="true">
+                  <div class="fp fp--main">
+                    <div class="fp__notch"></div>
+                    <div class="fp__row">
+                      <span>QReader</span><span>Preview Build</span>
+                    </div>
+                    <div class="fp__screen">
+                      <div class="lbl">currently building</div>
+                      <div class="fp__card">
+                        <div class="lbl">reading experience</div>
+                        <h3>QReader</h3>
+                        <p>
+                          読むことに集中できる、軽くて静かなリーダー体験。ノイズを削ぎ落とした設計。
+                        </p>
+                        <div class="fp__chips">
+                          <span class="chip">Minimal UI</span>
+                          <span class="chip">Reading Flow</span>
+                          <span class="chip">Save &amp; Resume</span>
+                        </div>
+                      </div>
+                      <div class="fp__prog">
+                        <div class="fp__prog-head">
+                          <span>current phase</span><strong>Development</strong>
+                        </div>
+                        <div class="fp__bar">
+                          <span style="width: 72%"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="fp fp--float">
+                    <div class="lbl">liquid signal</div>
+                    <h3 style="font-size: 1.05rem; margin: 9px 0 5px">
+                      pointer reaction
+                    </h3>
+                    <p
+                      style="
+                        font-size: 0.84rem;
+                        color: var(--text-2);
+                        line-height: 1.65;
+                      "
+                    >
+                      水面みたいな光がポインタの動きに反応します。
+                    </p>
+                    <div class="fp__grid">
+                      <span style="--i: 1"></span><span style="--i: 2"></span>
+                      <span style="--i: 3"></span><span style="--i: 4"></span>
+                      <span style="--i: 2"></span><span style="--i: 3"></span>
+                      <span style="--i: 4"></span><span style="--i: 5"></span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="section" id="status">
-        <div class="container">
-          <div class="section__head reveal">
-            <div>
-              <span class="section__label">Progress Flow</span>
-              <h2 class="section__title">開発中のプロダクト進捗</h2>
-            </div>
-            <p class="section__desc">
-              横向きフローで現在地が一目でわかるように設計。
-              完了した工程、進行中の工程、次に進む工程を滑らかにつなげて見せます。
-            </p>
-          </div>
-
-          <div class="status-board reveal">
-            <div class="status-summary">
+        <!-- ── Progress (generated from projects.js) ── -->
+        <section class="sec" id="progress">
+          <div class="wrap">
+            <div class="sec-head reveal">
               <div>
-                <h3>QReader is now in active development.</h3>
-                <p>
-                  情報の読みやすさ、保存しやすさ、あとから戻りやすい体験を整理中。
-                  現在はUIの微調整と主要フローの実装を進めつつ、リリース前の品質を高めています。
+                <span class="sec-eyebrow">Progress Flow</span>
+                <h2 class="sec-title">開発中のプロジェクト</h2>
+                <p class="sec-desc">
+                  現在地・完了フェーズ・次のステップを一枚のカードで把握できます。
                 </p>
               </div>
-              <div class="status-badge">Current / Development</div>
             </div>
-
-            <div class="flow" aria-label="QReader development flow">
-              <article class="flow-step flow-step--done">
-                <div class="flow-step__dot">01</div>
-                <div class="flow-step__card">
-                  <small>Phase</small>
-                  <h4>Concept</h4>
-                  <p>QReader の方向性、価値、世界観を定義。読む行為を邪魔しない思想を設計。</p>
-                </div>
-              </article>
-
-              <article class="flow-step flow-step--done">
-                <div class="flow-step__dot">02</div>
-                <div class="flow-step__card">
-                  <small>Phase</small>
-                  <h4>Structure</h4>
-                  <p>情報設計、主要画面、遷移、必要な機能群を整理。体験の骨格を決める工程。</p>
-                </div>
-              </article>
-
-              <article class="flow-step flow-step--current">
-                <div class="flow-step__dot">03</div>
-                <div class="flow-step__card">
-                  <small>Phase</small>
-                  <h4>Development</h4>
-                  <p>現在地。主要機能の実装とUXの細部を調整しながら、完成度を引き上げている段階。</p>
-                </div>
-              </article>
-
-              <article class="flow-step">
-                <div class="flow-step__dot">04</div>
-                <div class="flow-step__card">
-                  <small>Phase</small>
-                  <h4>Refinement</h4>
-                  <p>操作感の磨き込み、表示速度、細かなUIの一貫性、文章表現の最終調整を行う工程。</p>
-                </div>
-              </article>
-
-              <article class="flow-step">
-                <div class="flow-step__dot">05</div>
-                <div class="flow-step__card">
-                  <small>Phase</small>
-                  <h4>Release</h4>
-                  <p>公開準備、ストア用素材、最終チェック。静かに強い第一印象をつくるローンチへ。</p>
-                </div>
-              </article>
+            <div class="progress-grid reveal" id="projectsContainer">
+              <!-- JS から生成されます -->
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="section" id="product">
-        <div class="container">
-          <div class="section__head reveal">
-            <div>
-              <span class="section__label">Featured Product</span>
-              <h2 class="section__title">QReader</h2>
+        <!-- ── Product ── -->
+        <section class="sec" id="product">
+          <div class="wrap">
+            <div class="sec-head reveal">
+              <div>
+                <span class="sec-eyebrow">Featured Product</span>
+                <h2 class="sec-title">QReader</h2>
+              </div>
+              <p class="sec-desc">
+                見せたいのは派手さではなく、静かな完成度。UIと導線と情報密度を丁寧に整えたリーダー。
+              </p>
             </div>
-            <p class="section__desc">
-              見せたいのは派手さではなく、静かな完成度。
-              UI・導線・情報密度を丁寧に整えることで、長く使いたくなる読書体験をつくるプロダクトです。
-            </p>
-          </div>
-
-          <div class="overview-grid">
-            <article class="card card--hover reveal">
-              <div class="qr-head">
-                <div style="display:flex; gap:16px; align-items:flex-start;">
-                  <div class="qr-mark">Q</div>
-                  <div class="qr-title">
+            <div class="product-grid">
+              <article class="card reveal">
+                <div class="prod-head">
+                  <div class="prod-icon">Q</div>
+                  <div>
                     <h3>QReader</h3>
                     <p>
-                      記事を読む、あとで読む、もう一度読む。
-                      その流れを無理なく続けられるように、ノイズを削ぎ落としたリーダー体験を設計しています。
+                      記事を読む、あとで読む、もう一度読む。その流れを無理なく続けられるように、ノイズを削ぎ落としたリーダー体験を設計しています。
                     </p>
                   </div>
                 </div>
-              </div>
-
-              <div class="preview">
-                <div class="preview__top">
-                  <div class="preview__dots"><span></span><span></span><span></span></div>
-                  <span>interface preview</span>
-                </div>
-
-                <div class="preview__layout">
-                  <div class="preview__sidebar">
-                    <div class="mini-label">Workspace</div>
-                    <div class="preview__menu">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                      <span></span>
+                <div class="mini-browser">
+                  <div class="mini-browser__bar">
+                    <div class="mini-browser__dots">
+                      <span></span><span></span><span></span>
+                    </div>
+                    <span class="mini-browser__url">interface preview</span>
+                  </div>
+                  <div class="mini-browser__body">
+                    <div class="mini-browser__side">
+                      <div class="lbl">Workspace</div>
+                      <div class="mini-browser__menu">
+                        <span></span><span></span><span></span><span></span>
+                      </div>
+                    </div>
+                    <div class="mini-browser__main">
+                      <div class="mini-browser__hero">
+                        <strong>Quiet reading, better recall.</strong>
+                        <p>
+                          余白と視線移動を設計し直すことで、読む体験に集中できるようにする。
+                        </p>
+                      </div>
+                      <div class="mini-browser__metrics">
+                        <div class="mini-browser__metric"></div>
+                        <div class="mini-browser__metric"></div>
+                        <div class="mini-browser__metric"></div>
+                      </div>
+                      <div class="mini-browser__row"></div>
+                      <div class="mini-browser__row"></div>
                     </div>
                   </div>
-
-                  <div class="preview__content">
-                    <div class="preview__hero">
-                      <strong>Quiet reading, better recall.</strong>
-                      <p>
-                        余白と視線移動を設計し直すことで、読む体験に集中できるようにする。
-                      </p>
-                    </div>
-
-                    <div class="preview__metrics">
-                      <div class="preview__metric"></div>
-                      <div class="preview__metric"></div>
-                      <div class="preview__metric"></div>
-                    </div>
-
-                    <div class="preview__row"></div>
-                    <div class="preview__row"></div>
-                  </div>
                 </div>
-              </div>
-            </article>
-
-            <aside class="card stack-card card--hover reveal">
-              <div>
-                <span class="section__label" style="margin-bottom:10px;">Design Notes</span>
-                <h3 style="margin:0 0 10px; font-size:1.65rem;">Built for focus</h3>
-                <p class="small-note">
-                  見せ方は静かに、挙動は気持ちよく。スクロール、視線、保存、再訪を中心に体験を磨いています。
-                </p>
-              </div>
-
-              <div>
-                <div class="mini-label" style="margin-bottom:10px;">Highlights</div>
-                <div class="stack-list">
-                  <span>Minimal interface</span>
-                  <span>Readable layout</span>
-                  <span>Low-friction save flow</span>
-                  <span>Progressive refinement</span>
-                </div>
-              </div>
-
-              <div>
-                <div class="mini-label" style="margin-bottom:10px;">Stack</div>
-                <div class="stack-list">
-                  <span>HTML</span>
-                  <span>CSS</span>
-                  <span>JavaScript</span>
-                  <span>Qiita API</span>
-                  <span>GitHub Pages</span>
-                </div>
-              </div>
-
-              <div>
-                <div class="mini-label" style="margin-bottom:10px;">Tone</div>
-                <p class="small-note">
-                  Sidecar のように、静かで上品で、情報の置き方に芯があるデザインを意識しています。
-                </p>
-              </div>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="qiita">
-        <div class="container">
-          <div class="section__head reveal">
-            <div>
-              <span class="section__label">Qiita Feed</span>
-              <h2 class="section__title">Qiita Articles</h2>
-            </div>
-            <p class="section__desc">
-              Qiita API から最新記事を取得して表示。
-              リリース後もコードを書き換えず、記事更新に合わせて自然に情報が育つ構成です。
-            </p>
-          </div>
-
-          <div class="qiita-grid">
-            <section class="card reveal">
-              <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px; flex-wrap:wrap;">
+              </article>
+              <aside class="card side-card reveal">
                 <div>
-                  <div class="mini-label">Latest posts</div>
-                  <h3 style="margin:8px 0 0; font-size:1.6rem;">From Qiita</h3>
+                  <span class="sec-eyebrow" style="margin-bottom: 8px"
+                    >Design Notes</span
+                  >
+                  <h3
+                    style="
+                      font-size: 1.6rem;
+                      font-weight: 800;
+                      letter-spacing: -0.04em;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    Built for focus
+                  </h3>
+                  <p class="note">
+                    見せ方は静かに、挙動は気持ちよく。スクロール・視線・保存・再訪を中心に体験を磨いています。
+                  </p>
                 </div>
-                <a class="button button--ghost" id="qiitaProfileLink" href="https://qiita.com/your_qiita_id" target="_blank" rel="noopener noreferrer">Qiita Profile</a>
-              </div>
+                <div>
+                  <div class="lbl" style="margin-bottom: 10px">Highlights</div>
+                  <div class="tag-cloud">
+                    <span>Minimal interface</span>
+                    <span>Readable layout</span>
+                    <span>Low-friction save</span>
+                    <span>Progressive refinement</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="lbl" style="margin-bottom: 10px">Stack</div>
+                  <div class="tag-cloud">
+                    <span>HTML</span><span>CSS</span><span>JavaScript</span>
+                    <span>Qiita API</span><span>GitHub Pages</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="lbl" style="margin-bottom: 10px">Tone</div>
+                  <p class="note">
+                    Sidecar
+                    のように、静かで上品で、情報の置き方に芯があるデザインを意識しています。
+                  </p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </section>
 
-              <div class="article-list" id="qiitaArticles">
-                <div class="article-skeleton"></div>
-                <div class="article-skeleton"></div>
-                <div class="article-skeleton"></div>
-              </div>
-            </section>
-
-            <aside class="card aside-box reveal">
+        <!-- ── Qiita ── -->
+        <section class="sec" id="qiita">
+          <div class="wrap">
+            <div class="sec-head reveal">
               <div>
-                <div class="mini-label">API Setup</div>
-                <h3 style="margin:8px 0 10px; font-size:1.5rem;">One edit before publish</h3>
-                <p class="small-note">
-                  このテンプレは公開ユーザー記事を取得する前提。<br />
-                  <code style="color:#eaf6ff;">QIITA_USER_ID</code> を自分の Qiita ユーザーIDに置き換えるだけで動きます。
+                <span class="sec-eyebrow">Qiita Feed</span>
+                <h2 class="sec-title">Qiita Articles</h2>
+              </div>
+              <p class="sec-desc">
+                Qiita API
+                から最新記事を取得。コードを変えずとも記事更新に合わせて自然に育つ構成。
+              </p>
+            </div>
+            <div class="qiita-grid">
+              <section class="card reveal">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 14px;
+                    margin-bottom: 20px;
+                    flex-wrap: wrap;
+                  "
+                >
+                  <div>
+                    <div class="lbl">Latest posts</div>
+                    <h3
+                      style="
+                        font-size: 1.5rem;
+                        font-weight: 800;
+                        letter-spacing: -0.04em;
+                        margin-top: 7px;
+                      "
+                    >
+                      From Qiita
+                    </h3>
+                  </div>
+                  <a
+                    class="btn btn--ghost"
+                    id="qiitaProfileLink"
+                    href="https://qiita.com/your_qiita_id"
+                    target="_blank"
+                    rel="noopener"
+                    >Qiita Profile →</a
+                  >
+                </div>
+                <div class="article-feed" id="qiitaArticles">
+                  <div class="skel"></div>
+                  <div class="skel"></div>
+                  <div class="skel"></div>
+                </div>
+              </section>
+              <aside class="card qiita-aside reveal">
+                <div>
+                  <div class="lbl">API Setup</div>
+                  <h3
+                    style="
+                      font-size: 1.4rem;
+                      font-weight: 800;
+                      letter-spacing: -0.04em;
+                      margin: 8px 0 10px;
+                    "
+                  >
+                    One edit to activate
+                  </h3>
+                  <p class="note">
+                    <code style="color: #c6eeff; font-size: 0.9em"
+                      >QIITA_USER_ID</code
+                    >
+                    を自分のIDに書き換えるだけで動きます。
+                  </p>
+                </div>
+                <div class="stat-row">
+                  <span>source</span><strong>/api/v2/users/:id/items</strong>
+                </div>
+                <div class="stat-row">
+                  <span>display</span><strong>latest 6 posts</strong>
+                </div>
+                <div class="stat-row">
+                  <span>auth</span><strong>public read</strong>
+                </div>
+                <p class="note">
+                  非認証の GET で公開データを取得できるため、GitHub Pages
+                  のような静的サイトに最適。
+                </p>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Contact ── -->
+        <section class="sec" id="contact">
+          <div class="wrap">
+            <div class="contact-band reveal">
+              <div>
+                <h3>keistudio by keishinnishiura</h3>
+                <p>
+                  個人開発・設計・UI・文章・進捗の見せ方まで、一つの体験として整える。ここからさらに磨き込んで公開できます。
                 </p>
               </div>
-
-              <div class="stat-grid">
-                <div class="stat-row"><span>fetch source</span><strong>/api/v2/users/:user_id/items</strong></div>
-                <div class="stat-row"><span>display count</span><strong>latest 6 posts</strong></div>
-                <div class="stat-row"><span>mode</span><strong>public read</strong></div>
-              </div>
-
-              <p class="small-note">
-                非認証でも GET で公開データの取得ができるので、GitHub Pages のような静的サイトでも組み込みやすい設計です。
-              </p>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="contact">
-        <div class="container">
-          <div class="contact-strip reveal">
-            <div>
-              <h3>keistudio by keishinnishiura</h3>
-              <p>
-                個人開発、設計、UI、文章、進捗の見せ方まで一つの体験として整える。
-                ここからさらに磨き込んで公開できます。
-              </p>
-            </div>
-            <div style="display:flex; gap:12px; flex-wrap:wrap;">
-              <a class="button button--primary" href="https://github.com/keishin-nishiura" target="_blank" rel="noopener noreferrer">GitHub</a>
-              <a class="button button--ghost" href="https://qiita.com/your_qiita_id" id="qiitaContactLink" target="_blank" rel="noopener noreferrer">Qiita</a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <div class="container footer__inner">
-        <div>© <span id="year"></span> keistudio by keishinnishiura</div>
-        <div>Quiet products. Thoughtful details.</div>
-      </div>
-    </footer>
-  </div>
-
-  <script>
-    const QIITA_USER_ID = 'your_qiita_id';
-    const QIITA_POST_LIMIT = 6;
-
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    document.querySelectorAll('.button').forEach((button) => {
-      button.addEventListener('pointermove', (event) => {
-        const rect = button.getBoundingClientRect();
-        const x = ((event.clientX - rect.left) / rect.width) * 100;
-        const y = ((event.clientY - rect.top) / rect.height) * 100;
-        button.style.setProperty('--mx', x + '%');
-        button.style.setProperty('--my', y + '%');
-      });
-    });
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll('.reveal').forEach((element) => observer.observe(element));
-
-    async function loadQiitaArticles() {
-      const list = document.getElementById('qiitaArticles');
-      const profileLink = document.getElementById('qiitaProfileLink');
-      const contactLink = document.getElementById('qiitaContactLink');
-
-      profileLink.href = `https://qiita.com/${QIITA_USER_ID}`;
-      contactLink.href = `https://qiita.com/${QIITA_USER_ID}`;
-
-      if (!QIITA_USER_ID || QIITA_USER_ID === 'your_qiita_id') {
-        list.innerHTML = `
-          <article class="article">
-            <div class="article__content">
-              <small>setup required</small>
-              <h4>QIITA_USER_ID を自分の Qiita ユーザーIDに置き換えてください。</h4>
-              <div class="article__meta">
-                <span>example: your_qiita_id → keishin-nishiura</span>
+              <div class="contact-btns">
+                <a
+                  class="btn btn--pri"
+                  href="https://github.com/keishin-nishiura"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub</a
+                >
+                <a
+                  class="btn btn--ghost"
+                  href="https://qiita.com/your_qiita_id"
+                  id="qiitaContactLink"
+                  target="_blank"
+                  rel="noopener"
+                  >Qiita</a
+                >
               </div>
             </div>
-            <div class="article__arrow">→</div>
-          </article>
-        `;
-        return;
-      }
+          </div>
+        </section>
+      </main>
 
-      try {
-        const endpoint = `https://qiita.com/api/v2/users/${encodeURIComponent(QIITA_USER_ID)}/items?page=1&per_page=${QIITA_POST_LIMIT}`;
-        const response = await fetch(endpoint, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json'
-          }
+      <footer class="foot">
+        <div class="wrap foot__in">
+          <div>© <span id="yr"></span> keistudio by keishinnishiura</div>
+          <div>Quiet products. Thoughtful details.</div>
+        </div>
+      </footer>
+    </div>
+    <!-- /site -->
+
+    <!-- Data -->
+    <script src="projects.js"></script>
+
+    <!-- App -->
+    <script>
+      (() => {
+        "use strict";
+
+        /* ── Utils ── */
+        const $ = (s, r = document) => r.querySelector(s);
+        const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+        const esc = (t) =>
+          String(t)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+        /* ── Year ── */
+        $("#yr").textContent = new Date().getFullYear();
+
+        /* ── Qiita config ── */
+        const QIITA_USER_ID = "your_qiita_id";
+        const QIITA_LIMIT = 6;
+
+        /* ── Button shimmer ── */
+        $$(".btn").forEach((b) => {
+          b.addEventListener("pointermove", (e) => {
+            const r = b.getBoundingClientRect();
+            b.style.setProperty(
+              "--bx",
+              ((e.clientX - r.left) / r.width) * 100 + "%",
+            );
+            b.style.setProperty(
+              "--by",
+              ((e.clientY - r.top) / r.height) * 100 + "%",
+            );
+          });
         });
 
-        if (!response.ok) {
-          throw new Error(`Qiita API request failed: ${response.status}`);
-        }
+        /* ── Scroll reveal ── */
+        const ro = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add("in");
+                ro.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
+        $$(".reveal").forEach((el) => ro.observe(el));
 
-        const items = await response.json();
+        /* ── Progress bar animation (triggered on reveal) ── */
+        const barObs = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                $$(".proj-overall__fill", e.target).forEach((fill) => {
+                  fill.style.width = fill.dataset.pct + "%";
+                });
+                barObs.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.2 },
+        );
 
-        if (!Array.isArray(items) || items.length === 0) {
-          list.innerHTML = `
-            <article class="article">
-              <div class="article__content">
-                <small>no posts found</small>
-                <h4>記事が見つかりませんでした。</h4>
-                <div class="article__meta"><span>Qiita ID を確認してください</span></div>
-              </div>
-              <div class="article__arrow">→</div>
-            </article>
-          `;
-          return;
-        }
+        /* ── Render projects ── */
+        function renderProjects() {
+          const container = $("#projectsContainer");
+          if (!container || typeof PROJECTS === "undefined") return;
 
-        list.innerHTML = items.map((item) => {
-          const created = new Date(item.created_at);
-          const formattedDate = `${created.getFullYear()}.${String(created.getMonth() + 1).padStart(2, '0')}.${String(created.getDate()).padStart(2, '0')}`;
-          const tags = Array.isArray(item.tags) ? item.tags.slice(0, 3).map(tag => tag.name) : [];
-          const likes = typeof item.likes_count === 'number' ? item.likes_count : 0;
+          container.innerHTML = PROJECTS.map((p) => {
+            const sc = (typeof STATUS_CONFIG !== "undefined" &&
+              STATUS_CONFIG[p.status]) || { label: p.status, dot: "#86d8ff" };
 
-          return `
-            <a class="article" href="${item.url}" target="_blank" rel="noopener noreferrer">
-              <div class="article__content">
-                <small>${formattedDate}</small>
-                <h4>${escapeHtml(item.title || 'Untitled')}</h4>
-                <div class="article__meta">
-                  <span>♥ ${likes}</span>
-                  ${tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('')}
+            const phasesHtml = p.phases
+              .map(
+                (ph, i) => `
+          <div class="phase phase--${ph.state}">
+            <div class="phase__num">${String(i + 1).padStart(2, "0")}</div>
+            <div class="phase__body">
+              <small>Phase</small>
+              <h4>${esc(ph.label)}</h4>
+              <p>${esc(ph.description)}</p>
+            </div>
+          </div>
+        `,
+              )
+              .join("");
+
+            const stackHtml = (p.stack || [])
+              .map((s) => `<span class="chip">${esc(s)}</span>`)
+              .join("");
+
+            return `
+          <div class="proj-card" id="proj-${esc(p.id)}">
+            <div class="proj-card__glow" style="background:radial-gradient(circle, ${esc(p.glowColor || "rgba(134,216,255,0.25)")}, transparent 70%);"></div>
+            <div class="proj-card__top">
+              <div class="proj-card__id">
+                <div class="proj-icon">${esc(p.icon)}</div>
+                <div class="proj-card__name">
+                  <h3>${esc(p.name)}</h3>
+                  <p>${esc(p.tagline)}</p>
                 </div>
               </div>
-              <div class="article__arrow">↗</div>
-            </a>
-          `;
-        }).join('');
-      } catch (error) {
-        console.error(error);
-        list.innerHTML = `
-          <article class="article">
-            <div class="article__content">
-              <small>fetch error</small>
-              <h4>Qiita記事の取得に失敗しました。</h4>
-              <div class="article__meta">
-                <span>ユーザーID</span>
-                <span>公開記事の有無</span>
-                <span>時間をおいて再試行</span>
+              <div class="status-pill">
+                <span class="status-pill__dot" style="background:${esc(sc.dot)};box-shadow:0 0 10px ${esc(sc.dot)};"></span>
+                ${esc(sc.label)}
               </div>
             </div>
-            <div class="article__arrow">!</div>
-          </article>
+            <div class="proj-overall">
+              <div class="proj-overall__bar">
+                <div class="proj-overall__fill" data-pct="${p.percent}" style="width:0%"></div>
+              </div>
+              <div class="proj-overall__pct">${p.percent}%</div>
+            </div>
+            <p style="color:var(--text-2);font-size:0.92rem;line-height:1.75;margin-bottom:24px;">${esc(p.description)}</p>
+            <div class="proj-phases">${phasesHtml}</div>
+            ${stackHtml ? `<div class="proj-stack">${stackHtml}</div>` : ""}
+          </div>
         `;
-      }
-    }
+          }).join("");
 
-    function escapeHtml(text) {
-      return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
+          $$(".proj-card").forEach((card) => barObs.observe(card));
+        }
+        renderProjects();
 
-    loadQiitaArticles();
+        /* ── Qiita ── */
+        async function loadQiita() {
+          const list = $("#qiitaArticles");
+          const profLink = $("#qiitaProfileLink");
+          const ctcLink = $("#qiitaContactLink");
 
-    const canvas = document.getElementById('waterCanvas');
-    const ctx = canvas.getContext('2d');
-    let width = 0;
-    let height = 0;
-    let dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const ripples = [];
-    let animationId;
+          if (profLink) profLink.href = `https://qiita.com/${QIITA_USER_ID}`;
+          if (ctcLink) ctcLink.href = `https://qiita.com/${QIITA_USER_ID}`;
 
-    function resizeCanvas() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      canvas.style.width = width + 'px';
-      canvas.style.height = height + 'px';
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
+          if (!QIITA_USER_ID || QIITA_USER_ID === "your_qiita_id") {
+            list.innerHTML = `
+          <a class="art">
+            <div>
+              <div class="art__date">setup required</div>
+              <div class="art__title">QIITA_USER_ID を自分のQiitaユーザーIDに書き換えてください。</div>
+              <div class="art__meta"><span class="art__tag">例: your_qiita_id → keishin-nishiura</span></div>
+            </div>
+            <div class="art__arrow">!</div>
+          </a>`;
+            return;
+          }
+          try {
+            const res = await fetch(
+              `https://qiita.com/api/v2/users/${encodeURIComponent(QIITA_USER_ID)}/items?page=1&per_page=${QIITA_LIMIT}`,
+              { headers: { Accept: "application/json" } },
+            );
+            if (!res.ok) throw new Error(res.status);
+            const items = await res.json();
+            if (!items.length) throw new Error("empty");
 
-    function addRipple(x, y, power = 1) {
-      ripples.push({
-        x,
-        y,
-        radius: 10,
-        alpha: 0.22 * power,
-        speed: 1.6 + Math.random() * 0.8,
-        blur: 8 + Math.random() * 14,
-        hue: Math.random() > 0.5 ? 195 : 255
-      });
+            list.innerHTML = items
+              .map((item) => {
+                const d = new Date(item.created_at);
+                const date = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
+                const tags = (item.tags || [])
+                  .slice(0, 3)
+                  .map((t) => `<span class="art__tag">${esc(t.name)}</span>`)
+                  .join("");
+                return `
+            <a class="art" href="${esc(item.url)}" target="_blank" rel="noopener">
+              <div>
+                <div class="art__date">${date}</div>
+                <div class="art__title">${esc(item.title)}</div>
+                <div class="art__meta"><span class="art__tag">♥ ${item.likes_count}</span>${tags}</div>
+              </div>
+              <div class="art__arrow">↗</div>
+            </a>`;
+              })
+              .join("");
+          } catch {
+            list.innerHTML = `
+          <a class="art">
+            <div>
+              <div class="art__date">fetch error</div>
+              <div class="art__title">Qiita記事の取得に失敗しました。</div>
+              <div class="art__meta"><span class="art__tag">ユーザーIDと公開記事を確認してください</span></div>
+            </div>
+            <div class="art__arrow">!</div>
+          </a>`;
+          }
+        }
+        loadQiita();
 
-      if (ripples.length > 24) ripples.shift();
-    }
+        /* ── Canvas FX (pointer ripple) ── */
+        const canvas = $("#fx");
+        const ctx = canvas.getContext("2d");
+        const ripples = [];
+        let W, H, DPR, raf;
 
-    function drawWater() {
-      ctx.clearRect(0, 0, width, height);
-
-      for (let i = ripples.length - 1; i >= 0; i--) {
-        const ripple = ripples[i];
-        ripple.radius += ripple.speed;
-        ripple.alpha *= 0.985;
-
-        if (ripple.alpha < 0.01) {
-          ripples.splice(i, 1);
-          continue;
+        function resize() {
+          W = window.innerWidth;
+          H = window.innerHeight;
+          DPR = Math.min(devicePixelRatio || 1, 2);
+          canvas.width = Math.floor(W * DPR);
+          canvas.height = Math.floor(H * DPR);
+          canvas.style.width = W + "px";
+          canvas.style.height = H + "px";
+          ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
         }
 
-        ctx.save();
-        ctx.globalAlpha = ripple.alpha;
-        ctx.filter = `blur(${ripple.blur}px)`;
-        const gradient = ctx.createRadialGradient(ripple.x, ripple.y, ripple.radius * 0.15, ripple.x, ripple.y, ripple.radius);
-        gradient.addColorStop(0, ripple.hue === 195 ? 'rgba(134,216,255,0.55)' : 'rgba(143,124,255,0.45)');
-        gradient.addColorStop(0.5, ripple.hue === 195 ? 'rgba(134,216,255,0.18)' : 'rgba(143,124,255,0.14)');
-        gradient.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
+        function spawnRipple(x, y, power = 1) {
+          if (ripples.length > 22) ripples.shift();
+          ripples.push({
+            x,
+            y,
+            r: 8,
+            alpha: 0.2 * power,
+            speed: 1.4 + Math.random() * 1,
+            blur: 6 + Math.random() * 12,
+            hue: Math.random() > 0.5 ? 195 : 265,
+          });
+        }
 
-      animationId = requestAnimationFrame(drawWater);
-    }
+        function draw() {
+          ctx.clearRect(0, 0, W, H);
+          for (let i = ripples.length - 1; i >= 0; i--) {
+            const rp = ripples[i];
+            rp.r += rp.speed;
+            rp.alpha *= 0.984;
+            if (rp.alpha < 0.008) {
+              ripples.splice(i, 1);
+              continue;
+            }
+            ctx.save();
+            ctx.globalAlpha = rp.alpha;
+            ctx.filter = `blur(${rp.blur}px)`;
+            const g = ctx.createRadialGradient(
+              rp.x,
+              rp.y,
+              rp.r * 0.1,
+              rp.x,
+              rp.y,
+              rp.r,
+            );
+            const c =
+              rp.hue === 195
+                ? ["rgba(134,216,255,.55)", "rgba(134,216,255,.14)"]
+                : ["rgba(155,139,255,.5)", "rgba(155,139,255,.12)"];
+            g.addColorStop(0, c[0]);
+            g.addColorStop(0.6, c[1]);
+            g.addColorStop(1, "rgba(0,0,0,0)");
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+          raf = requestAnimationFrame(draw);
+        }
 
-    let lastMove = 0;
-    window.addEventListener('pointermove', (event) => {
-      const now = performance.now();
-      if (now - lastMove > 42) {
-        addRipple(event.clientX, event.clientY, 0.9);
-        lastMove = now;
-      }
-    }, { passive: true });
+        let lastT = 0;
+        window.addEventListener(
+          "pointermove",
+          (e) => {
+            const now = performance.now();
+            if (now - lastT > 40) {
+              spawnRipple(e.clientX, e.clientY, 0.8);
+              lastT = now;
+            }
+          },
+          { passive: true },
+        );
+        window.addEventListener("click", (e) => {
+          spawnRipple(e.clientX, e.clientY, 1.3);
+        });
+        window.addEventListener("resize", resize);
+        window.addEventListener("beforeunload", () =>
+          cancelAnimationFrame(raf),
+        );
 
-    window.addEventListener('click', (event) => {
-      addRipple(event.clientX, event.clientY, 1.35);
-      addRipple(event.clientX + 8, event.clientY - 4, 0.85);
-    });
-
-    window.addEventListener('resize', resizeCanvas);
-
-    resizeCanvas();
-    drawWater();
-
-    window.addEventListener('beforeunload', () => {
-      cancelAnimationFrame(animationId);
-    });
-  </script>
-</body>
+        resize();
+        draw();
+      })();
+    </script>
+  </body>
 </html>
