@@ -6,12 +6,12 @@
     <title>keistudio — keishinnishiura</title>
     <meta
       name="description"
-      content="keistudio by keishinnishiura — 個人開発中のプロダクト進捗とQiita記事を掲載するデベロッパーサイト"
+      content="keistudio — 個人開発の進捗やツールを公開するサイト。"
     />
     <meta property="og:title" content="keistudio — keishinnishiura" />
     <meta
       property="og:description"
-      content="静かに、鋭く、長く使われるプロダクトをつくる個人開発スタジオ。"
+      content="使いやすさを重視した個人開発スタジオ。開発の進捗や設計を素直に公開します。"
     />
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#070b0f" />
@@ -21,6 +21,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- 日本語フォントを追加（訪問者が日本語のため） -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -37,7 +42,7 @@
         --accent: #86d8ff;
         --accent-2: #9b8bff;
         --accent-3: #9ff3d2;
-        --max: 1200px;
+        --max: 1000px; /* 日本語は行幅をやや狭めにすると読みやすい */
         --ease: cubic-bezier(0.22, 1, 0.36, 1);
         --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
       }
@@ -56,12 +61,20 @@
       }
 
       body {
-        font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+        /* 日本語優先のフォントスタック（Noto Sans JP を優先） */
+        font-family:
+          "Noto Sans JP", "Inter", ui-sans-serif, system-ui, sans-serif;
         background: var(--bg);
         color: var(--text);
-        letter-spacing: -0.022em;
+        letter-spacing: 0; /* 日本語は文字間を詰めない */
+        line-height: 1.9; /* 読みやすさ重視 */
         overflow-x: hidden;
         min-height: 100vh;
+        /* 日本語の改行と行末処理をより自然にする */
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        line-break: strict;
+        word-break: normal;
       }
 
       a {
@@ -300,7 +313,7 @@
         box-shadow: 0 12px 32px rgba(134, 216, 255, 0.28);
       }
 
-      /* ─── Section base ──────────────────────────────── */
+      /* ─── Section base ─────────────────────────────── */
       .sec {
         padding: 72px 0;
       }
@@ -1500,10 +1513,10 @@
             </div>
           </a>
           <nav class="nav">
-            <a href="#progress">Progress</a>
-            <a href="#product">Product</a>
+            <a href="#progress">進捗</a>
+            <a href="#product">プロダクト</a>
             <a href="#qiita">Qiita</a>
-            <a href="#contact" class="cta">Connect</a>
+            <a href="#contact" class="cta">お問い合わせ</a>
           </nav>
         </div>
       </header>
@@ -1517,19 +1530,14 @@
               <div class="hero__fg hero__fg--b" aria-hidden="true"></div>
               <div class="hero__body">
                 <div class="hero__copy">
-                  <div class="badge">
-                    <span class="badge__dot"></span>
-                    Independent design &amp; development
-                  </div>
+
                   <h1 class="hero__h1">
                     keistudio
                     <span class="sub">by keishinnishiura</span>
                   </h1>
                   <p class="hero__lead">
-                    静かに、鋭く、長く使われるプロダクトをつくるための個人開発スタジオ。
-                    現在は
-                    <strong>QReader</strong>
-                    を中心に、設計・実装・改善の流れを公開しながら開発しています。
+                    使いやすさを重視したリーダー「<strong>QReader</strong>」を中心に、
+                    開発の進捗や設計の考え方を分かりやすく公開しています。
                   </p>
                   <div class="hero__actions">
                     <a class="btn btn--pri" href="#progress"
@@ -1539,15 +1547,15 @@
                   </div>
                   <div class="hero__stats">
                     <div class="hero__stat">
-                      <strong>01</strong><span>Focused products</span>
+                      <strong>01</strong><span>プロダクト数</span>
                     </div>
                     <div class="hero__stat">
-                      <strong>72%</strong><span>Development progress</span>
+                      <strong>72%</strong><span>開発進捗</span>
                     </div>
                     <div class="hero__stat">
-                      <strong>Open</strong><span>Build log on Qiita</span>
+                      <strong>公開中</strong><span>Qiita に記録</span>
                     </div>
-                  </div>
+                   </div>
                 </div>
 
                 <div class="hero__vis" aria-hidden="true">
@@ -1634,7 +1642,7 @@
                 <h2 class="sec-title">QReader</h2>
               </div>
               <p class="sec-desc">
-                見せたいのは派手さではなく、静かな完成度。UIと導線と情報密度を丁寧に整えたリーダー。
+                派手さよりも使いやすさを重視したリーダーです。UI と導線を丁寧に整えています。
               </p>
             </div>
             <div class="product-grid">
@@ -1664,9 +1672,9 @@
                     </div>
                     <div class="mini-browser__main">
                       <div class="mini-browser__hero">
-                        <strong>Quiet reading, better recall.</strong>
+                        <strong>静かに読む、記憶に残す。</strong>
                         <p>
-                          余白と視線移動を設計し直すことで、読む体験に集中できるようにする。
+                          余白と視線の流れを整え、読むことに集中できる設計です。
                         </p>
                       </div>
                       <div class="mini-browser__metrics">
@@ -1825,7 +1833,7 @@
               <div>
                 <h3>keistudio by keishinnishiura</h3>
                 <p>
-                  個人開発・設計・UI・文章・進捗の見せ方まで、一つの体験として整える。ここからさらに磨き込んで公開できます。
+                  個人開発の内容や進捗を分かりやすくまとめています。ご相談はお気軽にどうぞ。
                 </p>
               </div>
               <div class="contact-btns">
@@ -1853,7 +1861,7 @@
       <footer class="foot">
         <div class="wrap foot__in">
           <div>© <span id="yr"></span> keistudio by keishinnishiura</div>
-          <div>Quiet products. Thoughtful details.</div>
+          <div>静かなプロダクト。丁寧な細部。</div>
         </div>
       </footer>
     </div>
