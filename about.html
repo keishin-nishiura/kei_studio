@@ -22,7 +22,7 @@
         --accent: #86d8ff;
         --accent-2: #9b8bff;
         --accent-3: #9ff3d2;
-        --max: 1000px;
+        --max: 1200px;
         --ease: cubic-bezier(0.22, 1, 0.36, 1);
         --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
       }
@@ -178,15 +178,33 @@
 
       /* Responsive */
       @media (max-width: 860px) {
-        .nav { display: none; }
-        .bar__in { height: 64px; }
         .profile-hero__inner { grid-template-columns: 1fr; }
         .avatar { display: none; }
         .about-grid, .about-grid--wide { grid-template-columns: 1fr; }
+        .profile-hero { padding: 60px 0 48px; }
       }
       @media (max-width: 640px) {
-        .profile-hero { padding: 48px 0 40px; }
-        .profile-hero__name { font-size: 2.4rem; }
+        .wrap { width: calc(100% - 24px); }
+        .profile-hero { padding: 44px 0 36px; }
+        .profile-hero__name { font-size: clamp(2rem, 10vw, 2.8rem); letter-spacing: -0.03em; }
+        .profile-hero__bio { font-size: 0.92rem; line-height: 1.75; margin-bottom: 20px; }
+        .profile-hero__links { flex-direction: column; gap: 8px; }
+        .profile-hero__links a { text-align: center; min-height: 46px; width: 100%; justify-content: center; }
+        .about-grid, .about-grid--wide { grid-template-columns: 1fr; gap: 14px; }
+        .card { padding: 18px 16px; border-radius: 22px; }
+        .skill-group { margin-bottom: 14px; }
+        .tag { padding: 6px 11px; font-size: 0.78rem; }
+        .tl-item { grid-template-columns: 52px 1fr; gap: 10px; padding: 14px 0; }
+        .tl-year { font-size: 0.72rem; }
+        .tl-body h4 { font-size: 0.9rem; }
+        .tl-body p { font-size: 0.8rem; }
+        .value-item { gap: 12px; padding: 14px; border-radius: 14px; }
+        .value-item__icon { width: 36px; height: 36px; border-radius: 10px; font-size: 1.1rem; }
+        .value-item__body h4 { font-size: 0.88rem; }
+        .value-item__body p { font-size: 0.8rem; }
+        .foot__in { flex-direction: column; gap: 6px; text-align: center; font-size: 0.8rem; }
+        .btn { min-height: 46px; font-size: 0.88rem; }
+        .sec-gap { margin-bottom: 14px; }
       }
     </style>
   </head>

@@ -42,7 +42,7 @@
         --accent: #86d8ff;
         --accent-2: #9b8bff;
         --accent-3: #9ff3d2;
-        --max: 1000px; /* 日本語は行幅をやや狭めにすると読みやすい */
+        --max: 1200px;
         --ease: cubic-bezier(0.22, 1, 0.36, 1);
         --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
       }
@@ -1321,7 +1321,7 @@
           padding: 28px;
         }
         .hero__stats {
-          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-columns: 1fr 1fr;
           gap: 10px;
         }
         .proj-phases {
@@ -1334,56 +1334,194 @@
         .contact-band {
           padding: 28px;
         }
-        /* モバイルでは画像位置を中央上に戻して見切れを防ぐ */
         .bar {
           background-position: center top;
+        }
+        /* タブレットでヒーローを1カラムに */
+        .hero__body {
+          grid-template-columns: 1fr;
+        }
+        .hero__vis {
+          display: none;
         }
       }
       @media (max-width: 640px) {
         .wrap {
-          width: calc(100% - 28px);
+          width: calc(100% - 24px);
         }
         .hero {
-          padding: 24px 0 20px;
+          padding: 20px 0 16px;
         }
         .hero__shell {
-          padding: 22px;
-          border-radius: 26px;
+          padding: 20px 18px;
+          border-radius: 22px;
+        }
+        .hero__h1 {
+          font-size: clamp(2.4rem, 11vw, 3.8rem);
+          letter-spacing: -0.04em;
+        }
+        .hero__lead {
+          font-size: 0.95rem;
+          margin-top: 14px;
         }
         .hero__actions {
           flex-direction: column;
+          margin-top: 20px;
+          gap: 10px;
         }
         .btn {
           width: 100%;
+          justify-content: center;
+          min-height: 46px;
+          font-size: 0.9rem;
         }
         .hero__stats {
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          margin-top: 20px;
+        }
+        .hero__stat {
+          padding: 14px 12px;
+          border-radius: 16px;
+        }
+        .hero__stat strong {
+          font-size: 1.2rem;
+        }
+        .hero__stat span {
+          font-size: 0.75rem;
+        }
+        /* プロジェクトカード */
+        .proj-card {
+          padding: 18px 16px;
+          border-radius: 22px;
+        }
+        .proj-card__top {
+          flex-direction: column;
+          gap: 12px;
+          margin-bottom: 18px;
+        }
+        .proj-card__id {
+          gap: 12px;
+        }
+        .proj-icon {
+          width: 46px;
+          height: 46px;
+          border-radius: 14px;
+          font-size: 1.1rem;
+        }
+        .proj-card__name h3 {
+          font-size: 1.4rem;
+        }
+        .status-pill {
+          align-self: flex-start;
+          font-size: 0.75rem;
+          padding: 7px 12px;
+        }
+        /* フェーズ：2列グリッドで縦に積む */
+        .proj-phases {
+          grid-template-columns: repeat(2, 1fr);
+          overflow-x: visible;
+          padding-bottom: 0;
+          gap: 10px;
+        }
+        .proj-phases::before { display: none; }
+        /* フェーズ各アイテムを横並び（番号＋テキスト）に */
+        .phase {
+          flex-direction: row;
+          align-items: flex-start;
+          gap: 10px;
+          text-align: left;
+        }
+        .phase__num {
+          width: 36px;
+          height: 36px;
+          min-width: 36px;
+          font-size: 0.7rem;
+        }
+        .phase__body {
+          padding: 10px 12px;
+          border-radius: 14px;
+        }
+        .phase__body small {
+          font-size: 0.62rem;
+          margin-bottom: 3px;
+        }
+        .phase__body h4 {
+          font-size: 0.85rem;
+        }
+        .phase__body p {
+          font-size: 0.78rem;
+        }
+        .phase:hover .phase__num { transform: none; }
+        .phase:hover .phase__body { transform: none; box-shadow: none; }
+        .proj-stack {
+          margin-top: 16px;
+        }
+        /* カード共通 */
+        .card {
+          padding: 18px 16px;
+          border-radius: 22px;
+        }
+        /* Qiita */
+        .article-feed {
           grid-template-columns: 1fr;
         }
-        .proj-phases {
-          grid-template-columns: repeat(2, minmax(220px, 1fr));
+        .qiita-grid {
+          grid-template-columns: 1fr;
         }
-        .proj-card {
-          padding: 22px;
-          border-radius: 24px;
+        .art {
+          padding: 14px 16px;
+          border-radius: 16px;
         }
-        .card {
-          padding: 20px;
-          border-radius: 24px;
+        .art__title {
+          font-size: 0.93rem;
         }
+        /* コンタクト */
         .contact-band {
-          border-radius: 24px;
+          padding: 22px 18px;
+          border-radius: 22px;
           flex-direction: column;
           align-items: flex-start;
+          gap: 18px;
+        }
+        .contact-band h3 {
+          font-size: 1.4rem;
+        }
+        .contact-band p {
+          font-size: 0.9rem;
+        }
+        .contact-btns {
+          flex-direction: column;
+          width: 100%;
+        }
+        /* セクション */
+        .sec {
+          padding: 48px 0;
+        }
+        .sec-head {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+          margin-bottom: 24px;
+        }
+        .sec-title {
+          font-size: clamp(1.8rem, 7vw, 2.8rem);
+        }
+        .sec-desc {
+          font-size: 0.92rem;
+        }
+        /* フッター */
+        .foot__in {
+          flex-direction: column;
+          gap: 6px;
+          text-align: center;
+          font-size: 0.8rem;
         }
         .fp--float {
-          position: relative;
-          inset: auto;
-          width: 100%;
-          transform: none;
-          margin-top: 14px;
+          display: none;
         }
         .hero__vis {
-          min-height: auto;
+          display: none;
         }
       }
     </style>
