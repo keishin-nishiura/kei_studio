@@ -20,7 +20,7 @@ body {
 
 .header {
   padding: 20px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(11, 15, 20, 0.8);
   backdrop-filter: blur(10px);
   position: sticky;
@@ -89,7 +89,7 @@ body {
   padding: 18px 20px;
   border-radius: 16px;
   background: #131a22;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: #8fa1b3;
 }
 
@@ -101,7 +101,9 @@ body {
 .step.current {
   color: #ffffff;
   border-color: rgba(125, 211, 252, 0.6);
-  box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.15), 0 0 24px rgba(125, 211, 252, 0.12);
+  box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.15),
+    0 0 24px rgba(125, 211, 252, 0.12);
 }
 
 /* 小さめのサブテキスト */

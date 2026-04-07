@@ -240,8 +240,8 @@
   }
   // ハンバーガーメニュー制御
   (() => {
-    const burger  = document.getElementById("nav-burger");
-    const drawer  = document.getElementById("nav-drawer");
+    const burger = document.getElementById("nav-burger");
+    const drawer = document.getElementById("nav-drawer");
     const overlay = document.getElementById("nav-overlay");
     if (!burger || !drawer || !overlay) return;
 
@@ -266,6 +266,8 @@
       burger.classList.contains("open") ? closeMenu() : openMenu();
     });
     overlay.addEventListener("click", closeMenu);
-    drawer.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+    drawer
+      .querySelectorAll("a")
+      .forEach((a) => a.addEventListener("click", closeMenu));
   })();
 })();

@@ -302,6 +302,234 @@
         background: rgba(255, 255, 255, 0.04);
       }
 
+      /* ─── ⑦ Opening Screen ─────────────────────────── */
+      #page-curtain {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        pointer-events: none;
+        background: #070b0f;
+        overflow: hidden;
+      }
+
+      /* 極薄グリッド（ロゴ背景の奥行き） */
+      #page-curtain::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(134, 216, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(134, 216, 255, 0.03) 1px, transparent 1px);
+        background-size: 48px 48px;
+        opacity: 0;
+        will-change: opacity;
+        animation: gridFadeIn 0.6s ease-out 0.3s forwards;
+      }
+      @keyframes gridFadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* 走査線：画面を横断する細い光の線 */
+      #c-line {
+        position: absolute;
+        top: 50%;
+        left: -100%;
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(134, 216, 255, 0.9) 50%,
+          transparent 100%
+        );
+        transform: translateY(-50%);
+        will-change: left, opacity;
+        box-shadow: 0 0 12px 2px rgba(134, 216, 255, 0.45);
+      }
+
+      /* 中央に残る垂直の光柱 */
+      #c-vline {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 1px;
+        transform: translateX(-50%) scaleY(0);
+        transform-origin: center center;
+        background: linear-gradient(
+          180deg,
+          transparent 0%,
+          rgba(134, 216, 255, 0.5) 30%,
+          rgba(155, 139, 255, 0.5) 70%,
+          transparent 100%
+        );
+        will-change: transform, opacity;
+        opacity: 0;
+      }
+
+      /* ロゴラッパー：clipで横に切り開く */
+      #c-logo-wrap {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        clip-path: inset(0 100% 0 0);
+        will-change: clip-path;
+      }
+
+      /* ロゴテキスト */
+      #c-logo {
+        font-family: "Inter", ui-sans-serif, sans-serif;
+        font-size: clamp(3rem, 8vw, 7.5rem);
+        font-weight: 900;
+        letter-spacing: -0.045em;
+        line-height: 1;
+        white-space: nowrap;
+        background: linear-gradient(
+          105deg,
+          #ffffff 0%,
+          #86d8ff 45%,
+          #9b8bff 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* byライン */
+      #c-by {
+        font-family: "Inter", ui-sans-serif, sans-serif;
+        font-size: clamp(0.6rem, 1.2vw, 0.75rem);
+        font-weight: 400;
+        letter-spacing: 0.38em;
+        text-transform: uppercase;
+        color: rgba(134, 216, 255, 0.55);
+        white-space: nowrap;
+        opacity: 0;
+        will-change: opacity;
+      }
+
+      /* カウンター */
+      #c-counter {
+        position: absolute;
+        bottom: clamp(24px, 4vw, 48px);
+        right: clamp(24px, 4vw, 48px);
+        font-family: "Inter", ui-sans-serif, sans-serif;
+        font-size: clamp(0.65rem, 1.2vw, 0.78rem);
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        color: rgba(134, 216, 255, 0.35);
+        font-variant-numeric: tabular-nums;
+        opacity: 0;
+        will-change: opacity;
+      }
+
+      /* 退場用ワイプ：左から右へ黒で塗る */
+      #c-wipe {
+        position: absolute;
+        inset: 0;
+        background: #070b0f;
+        transform: scaleX(0);
+        transform-origin: left center;
+        will-change: transform;
+        z-index: 5;
+      }
+
+      /* ─── ⑥ Scroll progress bar ────────────────────── */
+      #scroll-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        width: 0%;
+        z-index: 101;
+        background: linear-gradient(
+          90deg,
+          var(--accent),
+          var(--accent-2),
+          var(--accent-3)
+        );
+        box-shadow: 0 0 10px rgba(134, 216, 255, 0.7);
+        transition: width 0.1s linear;
+        pointer-events: none;
+      }
+
+      /* ─── ④ h1 Shimmer ─────────────────────────────── */
+      @keyframes shimmer-sweep {
+        0% {
+          background-position: -200% center;
+        }
+        100% {
+          background-position: 200% center;
+        }
+      }
+      .hero__h1 {
+        background: linear-gradient(
+          105deg,
+          var(--text) 30%,
+          rgba(255, 255, 255, 0.95) 45%,
+          var(--accent) 50%,
+          rgba(255, 255, 255, 0.95) 55%,
+          var(--text) 70%
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer-sweep 4s linear infinite;
+      }
+      /* sub は別色で上書き */
+      .hero__h1 .sub {
+        background: linear-gradient(
+          105deg,
+          rgba(238, 242, 247, 0.45) 30%,
+          rgba(255, 255, 255, 0.7) 50%,
+          rgba(238, 242, 247, 0.45) 70%
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer-sweep 4s linear infinite;
+        display: block;
+        font-weight: 500;
+      }
+
+      /* ─── ⑤ Spotlight card ──────────────────────────── */
+      .spotlight-card {
+        position: relative;
+        isolation: isolate;
+      }
+      .spotlight-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(
+          400px circle at var(--mx, 50%) var(--my, 50%),
+          rgba(134, 216, 255, 0.1),
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.4s;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .spotlight-card:hover::before {
+        opacity: 1;
+      }
+
+      /* ─── ③ Count-up 数字 ───────────────────────────── */
+      .hero__stat strong {
+        font-variant-numeric: tabular-nums;
+      }
+
       /* ─── Hero ──────────────────────────────────────── */
       .hero {
         padding: 52px 0 40px;
@@ -1424,7 +1652,9 @@
           padding-bottom: 0;
           gap: 10px;
         }
-        .proj-phases::before { display: none; }
+        .proj-phases::before {
+          display: none;
+        }
         /* フェーズ各アイテムを横並び（番号＋テキスト）に */
         .phase {
           flex-direction: row;
@@ -1452,8 +1682,13 @@
         .phase__body p {
           font-size: 0.78rem;
         }
-        .phase:hover .phase__num { transform: none; }
-        .phase:hover .phase__body { transform: none; box-shadow: none; }
+        .phase:hover .phase__num {
+          transform: none;
+        }
+        .phase:hover .phase__body {
+          transform: none;
+          box-shadow: none;
+        }
         .proj-stack {
           margin-top: 16px;
         }
@@ -1527,6 +1762,20 @@
     </style>
   </head>
   <body>
+    <!-- ⑦ Opening screen -->
+    <div id="page-curtain" aria-hidden="true">
+      <div id="c-line"></div>
+      <div id="c-vline"></div>
+      <div id="c-logo-wrap">
+        <div id="c-logo">keistudio</div>
+        <div id="c-by">by keishinnishiura</div>
+      </div>
+      <div id="c-counter">000</div>
+      <div id="c-wipe"></div>
+    </div>
+    <!-- ⑥ Scroll progress bar -->
+    <div id="scroll-bar" aria-hidden="true"></div>
+
     <!-- Background -->
     <div class="bg-orbs" aria-hidden="true">
       <div class="bg-orbs__orb"></div>
@@ -1550,8 +1799,8 @@
               <div class="hero__fg hero__fg--b" aria-hidden="true"></div>
               <div class="hero__body">
                 <div class="hero__copy">
-                  <h1 class="hero__h1">
-                    keistudio
+                  <h1 class="hero__h1" id="hero-h1">
+                    <span data-scramble="keistudio">keistudio</span>
                     <span class="sub">by keishinnishiura</span>
                   </h1>
                   <p class="hero__lead">
@@ -1566,10 +1815,12 @@
                   </div>
                   <div class="hero__stats">
                     <div class="hero__stat">
-                      <strong id="statProductCount">01</strong><span>プロダクト数</span>
+                      <strong id="statProductCount">01</strong
+                      ><span>プロダクト数</span>
                     </div>
                     <div class="hero__stat">
-                      <strong id="statAvgProgress">72%</strong><span>開発進捗</span>
+                      <strong id="statAvgProgress">72%</strong
+                      ><span>開発進捗</span>
                     </div>
                   </div>
                 </div>
@@ -1662,7 +1913,7 @@
                 で発信しています。
               </p>
             </div>
-            <div class="card reveal" style="padding: 32px">
+            <div class="card spotlight-card reveal" style="padding: 32px">
               <div
                 style="
                   display: flex;
@@ -1819,7 +2070,7 @@
               .join("");
 
             return `
-          <div class="proj-card" id="proj-${esc(p.id)}">
+          <div class="proj-card spotlight-card" id="proj-${esc(p.id)}">
             <div class="proj-card__glow" style="background:radial-gradient(circle, ${esc(p.glowColor || "rgba(134,216,255,0.25)")}, transparent 70%);"></div>
             <div class="proj-card__top">
               <div class="proj-card__id">
@@ -1861,7 +2112,7 @@
         if (typeof PROJECTS !== "undefined" && PROJECTS.length) {
           const count = PROJECTS.length;
           const avg = Math.round(
-            PROJECTS.reduce((s, p) => s + (p.percent || 0), 0) / count
+            PROJECTS.reduce((s, p) => s + (p.percent || 0), 0) / count,
           );
           const el = $("#statProductCount");
           const el2 = $("#statAvgProgress");
@@ -2021,6 +2272,338 @@
 
         resize();
         draw();
+
+        /* ══════════════════════════════════════════════════
+           ⑦ Opening Screen — ライン走査 → 縦光柱 → ワイプイン → カウンター → 逆走ワイプアウト
+        ══════════════════════════════════════════════════ */
+        (() => {
+          const curtain = $("#page-curtain");
+          if (!curtain) return;
+
+          const line = $("#c-line");
+          const vline = $("#c-vline");
+          const logoWrap = $("#c-logo-wrap");
+          const by = $("#c-by");
+          const counter = $("#c-counter");
+          const wipe = $("#c-wipe");
+          const easeOut = "cubic-bezier(0.16, 1, 0.3, 1)";
+          const easeIn = "cubic-bezier(0.7, 0, 1, 1)";
+
+          // ── Step 1 (80ms): 水平走査線が左→右へ横断 ──
+          line.animate(
+            [
+              { left: "-100%", opacity: 1 },
+              { left: "100%", opacity: 1 },
+            ],
+            {
+              duration: 650,
+              easing: "cubic-bezier(0.4,0,0.2,1)",
+              delay: 80,
+              fill: "forwards",
+            },
+          );
+
+          // ── Step 2 (430ms): 走査線が中央を通過 → 垂直光柱がスケールイン ──
+          setTimeout(() => {
+            if (!vline) return;
+            vline.animate(
+              [
+                { opacity: 0, transform: "translateX(-50%) scaleY(0)" },
+                { opacity: 1, transform: "translateX(-50%) scaleY(1)" },
+                { opacity: 0, transform: "translateX(-50%) scaleY(1)" },
+              ],
+              { duration: 500, easing: easeOut, fill: "forwards" },
+            );
+          }, 430);
+
+          // ── Step 3 (500ms): ロゴをクリップワイプで切り開く ──
+          setTimeout(() => {
+            if (!logoWrap) return;
+            logoWrap.animate(
+              [
+                { clipPath: "inset(0 100% 0 0)" },
+                { clipPath: "inset(0 0% 0 0)" },
+              ],
+              { duration: 650, easing: easeOut, fill: "forwards" },
+            );
+          }, 500);
+
+          // ── Step 4 (900ms): by テキストフェードイン ──
+          setTimeout(() => {
+            if (!by) return;
+            by.animate([{ opacity: 0 }, { opacity: 1 }], {
+              duration: 450,
+              easing: easeOut,
+              fill: "forwards",
+            });
+          }, 900);
+
+          // ── Step 5 (600ms〜): カウンター 000 → 100 ──
+          if (counter) {
+            counter.animate([{ opacity: 0 }, { opacity: 1 }], {
+              duration: 200,
+              easing: "ease-out",
+              delay: 600,
+              fill: "forwards",
+            });
+
+            const countDuration = 1500; // 600ms〜2100msの間
+            const countStart = performance.now();
+            function tick() {
+              const elapsed = performance.now() - countStart - 600;
+              if (elapsed < 0) {
+                requestAnimationFrame(tick);
+                return;
+              }
+              const progress = Math.min(elapsed / countDuration, 1);
+              // ease-out cubic
+              const eased = 1 - Math.pow(1 - progress, 3);
+              const val = Math.floor(eased * 100);
+              counter.textContent = String(val).padStart(3, "0");
+              if (progress < 1) requestAnimationFrame(tick);
+              else counter.textContent = "100";
+            }
+            requestAnimationFrame(tick);
+          }
+
+          // ── Step 6 (2300ms): 退場 ──
+          const EXIT = 2300;
+          setTimeout(() => {
+            // カウンターをフェード
+            if (counter) {
+              counter.animate([{ opacity: 1 }, { opacity: 0 }], {
+                duration: 250,
+                easing: "ease-in",
+                fill: "forwards",
+              });
+            }
+            // byをフェード
+            if (by) {
+              by.animate([{ opacity: 1 }, { opacity: 0 }], {
+                duration: 250,
+                easing: "ease-in",
+                fill: "forwards",
+              });
+            }
+            // ロゴをわずかに上へ
+            if (logoWrap) {
+              logoWrap.animate(
+                [
+                  { opacity: 1, transform: "translate(-50%, -50%)" },
+                  { opacity: 0, transform: "translate(-50%, -57%)" },
+                ],
+                { duration: 450, easing: easeIn, fill: "forwards" },
+              );
+            }
+            // 走査線が右→左へ逆走して掃き出す
+            setTimeout(() => {
+              if (line) {
+                line.animate(
+                  [
+                    { left: "100%", opacity: 0.7 },
+                    { left: "-100%", opacity: 0.7 },
+                  ],
+                  {
+                    duration: 500,
+                    easing: "cubic-bezier(0.4,0,0.8,0)",
+                    fill: "forwards",
+                  },
+                );
+              }
+              // 黒ワイプが逆走線の直後に左→右へ一閃
+              setTimeout(() => {
+                if (!wipe) return;
+                wipe.animate(
+                  [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }],
+                  { duration: 380, easing: easeIn, fill: "forwards" },
+                ).onfinish = () => curtain.remove();
+              }, 200);
+            }, 200);
+          }, EXIT);
+        })();
+
+        /* ══════════════════════════════════════════════════
+           ⑥ Scroll Progress Bar
+        ══════════════════════════════════════════════════ */
+        (() => {
+          const bar = $("#scroll-bar");
+          if (!bar) return;
+          window.addEventListener(
+            "scroll",
+            () => {
+              const total =
+                document.documentElement.scrollHeight - window.innerHeight;
+              bar.style.width =
+                (total > 0 ? (window.scrollY / total) * 100 : 0) + "%";
+            },
+            { passive: true },
+          );
+        })();
+
+        /* ══════════════════════════════════════════════════
+           ① Text Scramble — 洗練版：文字ごとにフェードイン＋確定時グラデーション光
+        ══════════════════════════════════════════════════ */
+        (() => {
+          const CHARS =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          const rand = () => CHARS[Math.floor(Math.random() * CHARS.length)];
+
+          function scramble(el) {
+            const target = el.dataset.scramble || el.textContent.trim();
+            const n = target.length;
+            // 各文字を<span>に分解してインラインに配置
+            el.innerHTML = target
+              .split("")
+              .map(
+                (ch, i) =>
+                  `<span class="sc-ch" data-i="${i}" style="opacity:0;transition:opacity 0.18s,color 0.35s,text-shadow 0.35s;">${ch === " " ? "&nbsp;" : rand()}</span>`,
+              )
+              .join("");
+            const spans = [...el.querySelectorAll(".sc-ch")];
+
+            // 各文字: delay後にランダム文字を数回表示→確定→グロー
+            spans.forEach((sp, i) => {
+              const ch = target[i];
+              if (ch === " ") {
+                sp.style.opacity = "1";
+                return;
+              }
+              const startDelay = 180 + i * 55; // 左から順に時差
+              const scrambleDur = 320;
+              const fps = 40;
+              const interval = 1000 / fps;
+              const totalTicks = Math.round(scrambleDur / interval);
+
+              // まずフェードイン（ランダム文字で）
+              setTimeout(() => {
+                sp.style.opacity = "1";
+                let tick = 0;
+                const t = setInterval(() => {
+                  if (tick++ < totalTicks) {
+                    sp.textContent = rand();
+                  } else {
+                    clearInterval(t);
+                    // 文字確定：グラデーションカラーで一瞬光る
+                    sp.textContent = ch;
+                    sp.style.color = "var(--accent)";
+                    sp.style.textShadow =
+                      "0 0 14px rgba(134,216,255,0.9), 0 0 28px rgba(134,216,255,0.5)";
+                    // その後すっとフェードアウトしてデフォルト色へ
+                    setTimeout(() => {
+                      sp.style.color = "";
+                      sp.style.textShadow = "";
+                    }, 320);
+                  }
+                }, interval);
+              }, startDelay);
+            });
+          }
+
+          // オープニング完全終了後（1800+700ms）に発火
+          setTimeout(() => {
+            document
+              .querySelectorAll("[data-scramble]")
+              .forEach((el) => scramble(el));
+          }, 2500);
+        })();
+
+        /* ══════════════════════════════════════════════════
+           ③ Count-up — stats の数字が 0 からカウントアップ
+        ══════════════════════════════════════════════════ */
+        (() => {
+          function countUp(el, targetStr, duration = 1200) {
+            const isPercent = targetStr.endsWith("%");
+            const isPadded = /^\d{2}$/.test(targetStr);
+            const target = parseInt(targetStr, 10);
+            if (isNaN(target)) return;
+            const start = performance.now();
+            function tick(now) {
+              const p = Math.min((now - start) / duration, 1);
+              const ease = 1 - Math.pow(1 - p, 3); // easeOutCubic
+              const val = Math.round(ease * target);
+              el.textContent = isPercent
+                ? val + "%"
+                : isPadded
+                  ? String(val).padStart(2, "0")
+                  : String(val);
+              if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+          }
+          // Intersection で初めて見えたときだけ発火
+          const statObs = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((e) => {
+                if (!e.isIntersecting) return;
+                const strong = e.target.querySelector("strong");
+                if (strong) countUp(strong, strong.textContent);
+                statObs.unobserve(e.target);
+              });
+            },
+            { threshold: 0.5 },
+          );
+          $$(".hero__stat").forEach((el) => statObs.observe(el));
+        })();
+
+        /* ══════════════════════════════════════════════════
+           ⑤ Spotlight Card — カード内でマウスを追う光
+        ══════════════════════════════════════════════════ */
+        (() => {
+          $$(".spotlight-card").forEach((card) => {
+            card.addEventListener("pointermove", (e) => {
+              const r = card.getBoundingClientRect();
+              card.style.setProperty("--mx", e.clientX - r.left + "px");
+              card.style.setProperty("--my", e.clientY - r.top + "px");
+            });
+          });
+        })();
+
+        /* ══════════════════════════════════════════════════
+           ② Mouse Spotlight — カーソル追従スポットライト
+        ══════════════════════════════════════════════════ */
+        (() => {
+          const spot = document.createElement("div");
+          spot.style.cssText = `
+            position:fixed; pointer-events:none; z-index:1;
+            width:600px; height:600px; border-radius:50%;
+            transform:translate(-50%,-50%);
+            background:radial-gradient(circle, rgba(134,216,255,0.055) 0%, transparent 65%);
+            transition: opacity 0.6s;
+            opacity:0;
+          `;
+          document.body.appendChild(spot);
+          window.addEventListener(
+            "pointermove",
+            (e) => {
+              spot.style.left = e.clientX + "px";
+              spot.style.top = e.clientY + "px";
+              spot.style.opacity = "1";
+            },
+            { passive: true },
+          );
+          window.addEventListener("pointerleave", () => {
+            spot.style.opacity = "0";
+          });
+        })();
+
+        /* ══════════════════════════════════════════════════
+           ⑧ ローカルストレージで進捗バーを少しずつ増やす演出
+        ══════════════════════════════════════════════════ */
+        (() => {
+          const KEY = "ks_visit_count";
+          const count = Math.min(
+            parseInt(localStorage.getItem(KEY) || "0", 10) + 1,
+            20,
+          );
+          localStorage.setItem(KEY, String(count));
+          // 訪問回数に応じて +0〜8% のオフセットをかける（見た目だけ）
+          const offset = count * 0.4;
+          $$(".proj-overall__fill").forEach((fill) => {
+            const base = parseFloat(fill.dataset.pct) || 0;
+            const display = Math.min(base + offset, 99).toFixed(1);
+            fill.dataset.pct = display;
+          });
+        })();
       })();
     </script>
   </body>
