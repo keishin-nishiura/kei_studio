@@ -4,11 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QReader — keistudio</title>
-    <meta name="description" content="使いやすさを重視したリーダーアプリ QReader の紹介ページ。" />
+    <meta
+      name="description"
+      content="使いやすさを重視したリーダーアプリ QReader の紹介ページ。"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
     <style>
       /* ─── Design Tokens ─────────────────────────────── */
       :root {
@@ -23,169 +32,558 @@
         --accent: #86d8ff;
         --accent-2: #9b8bff;
         --accent-3: #9ff3d2;
-        --max: 1000px;
+        --max: 1200px;
         --ease: cubic-bezier(0.22, 1, 0.36, 1);
         --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
       }
 
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+      }
       body {
-        font-family: "Noto Sans JP", "Inter", ui-sans-serif, system-ui, sans-serif;
+        font-family:
+          "Noto Sans JP", "Inter", ui-sans-serif, system-ui, sans-serif;
         background: var(--bg);
         color: var(--text);
         line-height: 1.9;
         overflow-x: hidden;
         min-height: 100vh;
       }
-      a { color: inherit; text-decoration: none; }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
 
       /* ─── Orbs ── */
-      .bg-orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-      .bg-orbs__orb {
-        position: absolute; border-radius: 50%; filter: blur(100px);
-        opacity: 0; animation: orbFloat 20s ease-in-out infinite;
+      .bg-orbs {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
       }
-      .bg-orbs__orb:nth-child(1) { width: 600px; height: 600px; background: rgba(134,216,255,0.12); top: -200px; left: -150px; animation-delay: 0s; }
-      .bg-orbs__orb:nth-child(2) { width: 500px; height: 500px; background: rgba(155,139,255,0.10); top: 30%; right: -180px; animation-delay: -7s; }
-      .bg-orbs__orb:nth-child(3) { width: 400px; height: 400px; background: rgba(159,243,210,0.08); bottom: -100px; left: 30%; animation-delay: -13s; }
+      .bg-orbs__orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0;
+        animation: orbFloat 20s ease-in-out infinite;
+      }
+      .bg-orbs__orb:nth-child(1) {
+        width: 600px;
+        height: 600px;
+        background: rgba(134, 216, 255, 0.12);
+        top: -200px;
+        left: -150px;
+        animation-delay: 0s;
+      }
+      .bg-orbs__orb:nth-child(2) {
+        width: 500px;
+        height: 500px;
+        background: rgba(155, 139, 255, 0.1);
+        top: 30%;
+        right: -180px;
+        animation-delay: -7s;
+      }
+      .bg-orbs__orb:nth-child(3) {
+        width: 400px;
+        height: 400px;
+        background: rgba(159, 243, 210, 0.08);
+        bottom: -100px;
+        left: 30%;
+        animation-delay: -13s;
+      }
       @keyframes orbFloat {
-        0%   { opacity: 0; transform: translateY(0) scale(1); }
-        15%  { opacity: 1; }
-        50%  { transform: translateY(-40px) scale(1.06); }
-        85%  { opacity: 1; }
-        100% { opacity: 0; transform: translateY(0) scale(1); }
+        0% {
+          opacity: 0;
+          transform: translateY(0) scale(1);
+        }
+        15% {
+          opacity: 1;
+        }
+        50% {
+          transform: translateY(-40px) scale(1.06);
+        }
+        85% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(0) scale(1);
+        }
       }
 
       /* ─── Layout ── */
-      .wrap { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
-      .site { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; }
+      .wrap {
+        width: min(var(--max), calc(100% - 40px));
+        margin: 0 auto;
+      }
+      .site {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
 
       /* ─── Topbar → header.js が注入 ── */
 
       /* ─── Page hero ── */
       .page-hero {
         padding: 80px 0 60px;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         margin-bottom: 60px;
       }
       .page-hero__eyebrow {
-        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em;
-        color: var(--accent); margin-bottom: 14px;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--accent);
+        margin-bottom: 14px;
       }
       .page-hero__title {
         font-size: clamp(2.4rem, 6vw, 4rem);
-        font-weight: 900; letter-spacing: -0.04em; line-height: 1.05;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        line-height: 1.05;
         margin-bottom: 18px;
       }
       .page-hero__desc {
-        max-width: 560px; color: var(--text-2); font-size: 1rem; line-height: 1.8;
+        max-width: 560px;
+        color: var(--text-2);
+        font-size: 1rem;
+        line-height: 1.8;
       }
 
       /* ─── Section label ── */
       .lbl {
-        font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em;
-        color: var(--text-3); font-weight: 600;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-3);
+        font-weight: 600;
       }
-      .note { color: var(--text-2); font-size: 0.92rem; line-height: 1.8; }
+      .note {
+        color: var(--text-2);
+        font-size: 0.92rem;
+        line-height: 1.8;
+      }
 
       /* ─── Card ── */
       .card {
-        position: relative; overflow: hidden; border-radius: 30px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 30px;
         border: 1px solid var(--border);
-        background: linear-gradient(160deg, rgba(255,255,255,0.042), rgba(255,255,255,0.016));
+        background: linear-gradient(
+          160deg,
+          rgba(255, 255, 255, 0.042),
+          rgba(255, 255, 255, 0.016)
+        );
         padding: 28px;
-        box-shadow: 0 24px 60px rgba(0,0,0,0.25);
-        transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+        transition:
+          transform 0.4s var(--ease),
+          border-color 0.4s var(--ease),
+          box-shadow 0.4s var(--ease);
       }
-      .card:hover { transform: translateY(-4px); border-color: var(--border-hi); box-shadow: 0 36px 90px rgba(0,0,0,0.32); }
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: var(--border-hi);
+        box-shadow: 0 36px 90px rgba(0, 0, 0, 0.32);
+      }
 
       /* ─── Product grid ── */
-      .product-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; margin-bottom: 60px; }
-      .prod-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+      .product-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 20px;
+        margin-bottom: 60px;
+      }
+      .prod-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
       .prod-icon {
-        width: 58px; height: 58px; border-radius: 20px; flex-shrink: 0;
-        display: grid; place-items: center; font-weight: 900; font-size: 1.3rem;
+        width: 58px;
+        height: 58px;
+        border-radius: 20px;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        font-size: 1.3rem;
         color: #e8f6ff;
-        background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(134,216,255,0.15));
-        border: 1px solid rgba(255,255,255,0.13);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.12),
+          rgba(134, 216, 255, 0.15)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.13);
         overflow: hidden;
       }
-      .prod-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; }
-      .prod-head h3 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.04em; }
-      .prod-head p { color: var(--text-2); line-height: 1.7; margin-top: 8px; font-size: 0.92rem; }
+      .prod-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 16px;
+      }
+      .prod-head h3 {
+        font-size: 1.9rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+      .prod-head p {
+        color: var(--text-2);
+        line-height: 1.7;
+        margin-top: 8px;
+        font-size: 0.92rem;
+      }
 
       /* Mini browser */
       .mini-browser {
-        border-radius: 20px; overflow: hidden;
-        border: 1px solid rgba(255,255,255,0.08);
-        background: linear-gradient(180deg, rgba(8,13,18,0.95), rgba(12,18,26,0.95));
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(
+          180deg,
+          rgba(8, 13, 18, 0.95),
+          rgba(12, 18, 26, 0.95)
+        );
         margin-top: 20px;
       }
       .mini-browser__bar {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.07);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
       }
-      .mini-browser__dots { display: flex; gap: 7px; }
-      .mini-browser__dots span { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.18); }
-      .mini-browser__url { font-size: 0.74rem; color: var(--text-3); }
-      .mini-browser__body { display: grid; grid-template-columns: 220px 1fr; gap: 14px; padding: 16px; }
+      .mini-browser__dots {
+        display: flex;
+        gap: 7px;
+      }
+      .mini-browser__dots span {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.18);
+      }
+      .mini-browser__url {
+        font-size: 0.74rem;
+        color: var(--text-3);
+      }
+      .mini-browser__body {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 14px;
+        padding: 16px;
+      }
       .mini-browser__side,
       .mini-browser__main {
-        border-radius: 16px; border: 1px solid rgba(255,255,255,0.07);
-        background: rgba(255,255,255,0.035); padding: 14px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        background: rgba(255, 255, 255, 0.035);
+        padding: 14px;
       }
-      .mini-browser__menu { display: grid; gap: 9px; margin-top: 12px; }
-      .mini-browser__menu span { display: block; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); }
-      .mini-browser__main { display: grid; gap: 13px; }
+      .mini-browser__menu {
+        display: grid;
+        gap: 9px;
+        margin-top: 12px;
+      }
+      .mini-browser__menu span {
+        display: block;
+        height: 38px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .mini-browser__main {
+        display: grid;
+        gap: 13px;
+      }
       .mini-browser__hero {
-        border-radius: 14px; padding: 16px; min-height: 130px;
-        background: linear-gradient(135deg, rgba(134,216,255,0.07), rgba(155,139,255,0.07));
-        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 14px;
+        padding: 16px;
+        min-height: 130px;
+        background: linear-gradient(
+          135deg,
+          rgba(134, 216, 255, 0.07),
+          rgba(155, 139, 255, 0.07)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.08);
       }
-      .mini-browser__hero strong { display: block; font-size: 1.05rem; margin-bottom: 7px; }
-      .mini-browser__hero p { font-size: 0.83rem; color: var(--text-2); line-height: 1.7; }
-      .mini-browser__metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .mini-browser__hero strong {
+        display: block;
+        font-size: 1.05rem;
+        margin-bottom: 7px;
+      }
+      .mini-browser__hero p {
+        font-size: 0.83rem;
+        color: var(--text-2);
+        line-height: 1.7;
+      }
+      .mini-browser__metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
       .mini-browser__metric {
-        height: 84px; border-radius: 13px; padding: 12px;
-        background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+        height: 84px;
+        border-radius: 13px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
       }
       .mini-browser__metric::before {
-        content: ""; display: block; width: 55%; height: 10px;
-        border-radius: 6px; background: rgba(255,255,255,0.14); margin-bottom: 8px;
+        content: "";
+        display: block;
+        width: 55%;
+        height: 10px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.14);
+        margin-bottom: 8px;
       }
-      .mini-browser__row { height: 50px; border-radius: 13px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); }
+      .mini-browser__row {
+        height: 50px;
+        border-radius: 13px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
 
       /* Side card */
-      .side-card { display: grid; gap: 20px; align-content: start; }
-      .tag-cloud { display: flex; flex-wrap: wrap; gap: 9px; }
+      .side-card {
+        display: grid;
+        gap: 20px;
+        align-content: start;
+      }
+      .tag-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
       .tag-cloud span {
-        padding: 9px 14px; border-radius: 999px; font-size: 0.86rem;
-        background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--text);
+        padding: 9px 14px;
+        border-radius: 999px;
+        font-size: 0.86rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text);
       }
 
       /* ─── Scroll reveal ── */
-      .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
-      .reveal.in { opacity: 1; transform: none; }
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.8s var(--ease),
+          transform 0.8s var(--ease);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
 
       /* ─── Footer ── */
-      .foot { border-top: 1px solid rgba(255,255,255,0.07); margin-top: auto; }
-      .foot__in { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 0; font-size: 0.82rem; color: var(--text-3); flex-wrap: wrap; }
+      .foot {
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        margin-top: auto;
+      }
+      .foot__in {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 24px 0;
+        font-size: 0.82rem;
+        color: var(--text-3);
+        flex-wrap: wrap;
+      }
 
       /* ─── Responsive ── */
       @media (max-width: 860px) {
-        .nav { display: none; }
-        .bar__in { height: 64px; }
+        .product-grid {
+          grid-template-columns: 1fr;
+        }
+        .page-hero {
+          padding: 60px 0 44px;
+        }
+        .page-hero__title {
+          font-size: clamp(2rem, 8vw, 3rem);
+        }
       }
       @media (max-width: 640px) {
-        .product-grid { grid-template-columns: 1fr; }
-        .mini-browser__body { grid-template-columns: 1fr; }
-        .mini-browser__side { display: none; }
-        .page-hero { padding: 48px 0 40px; }
+        .wrap {
+          width: calc(100% - 24px);
+        }
+        .page-hero {
+          padding: 44px 0 32px;
+        }
+        .page-hero__title {
+          font-size: 2rem;
+          letter-spacing: -0.03em;
+        }
+        .page-hero__desc {
+          font-size: 0.92rem;
+        }
+        .product-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
+          margin-bottom: 40px;
+        }
+        .card {
+          padding: 18px 16px;
+          border-radius: 22px;
+        }
+        .prod-head {
+          flex-direction: column;
+          gap: 12px;
+        }
+        .prod-icon {
+          width: 50px;
+          height: 50px;
+          border-radius: 16px;
+          font-size: 1.1rem;
+        }
+        .prod-head h3 {
+          font-size: 1.6rem;
+        }
+        .mini-browser__body {
+          grid-template-columns: 1fr;
+        }
+        .mini-browser__side {
+          display: none;
+        }
+        .mini-browser__metrics {
+          grid-template-columns: 1fr 1fr;
+        }
+        .mini-browser__hero strong {
+          font-size: 0.95rem;
+        }
+        .tag-cloud span {
+          padding: 7px 11px;
+          font-size: 0.8rem;
+        }
+        .foot__in {
+          flex-direction: column;
+          gap: 6px;
+          text-align: center;
+          font-size: 0.8rem;
+        }
+      }
+      /* Spotlight card */
+      .spotlight-card {
+        position: relative;
+        isolation: isolate;
+      }
+      .spotlight-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(
+          400px circle at var(--mx, 50%) var(--my, 50%),
+          rgba(134, 216, 255, 0.09),
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.4s;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .spotlight-card:hover::before {
+        opacity: 1;
+      }
+      /* Page curtain — シネマティックオープニング */
+      #page-curtain {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        background: #070b0f;
+      }
+      #curtain-logo {
+        font-family: "Inter", ui-sans-serif, sans-serif;
+        font-size: clamp(3rem, 10vw, 7rem);
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        line-height: 1;
+        background: linear-gradient(
+          135deg,
+          #eef2f7 0%,
+          #86d8ff 50%,
+          #9b8bff 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        opacity: 0;
+        transform: scale(0.88) translateY(12px);
+        will-change: transform, opacity;
+      }
+      #curtain-sub {
+        margin-top: 18px;
+        font-family: "Inter", ui-sans-serif, sans-serif;
+        font-size: clamp(0.72rem, 1.8vw, 0.95rem);
+        font-weight: 500;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: rgba(168, 182, 198, 0);
+        will-change: opacity;
+      }
+      #curtain-line {
+        width: 0;
+        height: 1px;
+        margin-top: 28px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(134, 216, 255, 0.6),
+          transparent
+        );
+        will-change: width, opacity;
+      }
+      /* Scroll bar */
+      #scroll-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        width: 0%;
+        z-index: 101;
+        background: linear-gradient(
+          90deg,
+          var(--accent),
+          var(--accent-2),
+          #9ff3d2
+        );
+        box-shadow: 0 0 10px rgba(134, 216, 255, 0.7);
+        pointer-events: none;
       }
     </style>
   </head>
   <body>
+    <div id="page-curtain" aria-hidden="true">
+      <div id="curtain-logo">keistudio</div>
+      <div id="curtain-sub">by keishinnishiura</div>
+      <div id="curtain-line"></div>
+    </div>
+    <div id="scroll-bar" aria-hidden="true"></div>
     <div class="bg-orbs" aria-hidden="true">
       <div class="bg-orbs__orb"></div>
       <div class="bg-orbs__orb"></div>
@@ -204,7 +602,8 @@
             <p class="page-hero__eyebrow">Featured Product</p>
             <h1 class="page-hero__title">QReader</h1>
             <p class="page-hero__desc">
-              派手さよりも使いやすさを重視したリーダーです。UI と導線を丁寧に整えています。
+              派手さよりも使いやすさを重視したリーダーです。UI
+              と導線を丁寧に整えています。
             </p>
           </div>
         </section>
@@ -212,30 +611,42 @@
         <!-- Product detail -->
         <div class="wrap">
           <div class="product-grid">
-            <article class="card reveal">
+            <article class="card spotlight-card reveal">
               <div class="prod-head">
                 <div class="prod-icon">
-                  <img src="assets/qreader-logo.png" alt="QReader logo" onerror="this.parentElement.textContent='Q'">
+                  <img
+                    src="assets/qreader-logo.png"
+                    alt="QReader logo"
+                    onerror="this.parentElement.textContent = 'Q'"
+                  />
                 </div>
                 <div>
                   <h3>QReader</h3>
-                  <p>記事を読む、あとで読む、もう一度読む。その流れを無理なく続けられるように、ノイズを削ぎ落としたリーダー体験を設計しています。</p>
+                  <p>
+                    記事を読む、あとで読む、もう一度読む。その流れを無理なく続けられるように、ノイズを削ぎ落としたリーダー体験を設計しています。
+                  </p>
                 </div>
               </div>
               <div class="mini-browser">
                 <div class="mini-browser__bar">
-                  <div class="mini-browser__dots"><span></span><span></span><span></span></div>
+                  <div class="mini-browser__dots">
+                    <span></span><span></span><span></span>
+                  </div>
                   <span class="mini-browser__url">interface preview</span>
                 </div>
                 <div class="mini-browser__body">
                   <div class="mini-browser__side">
                     <div class="lbl">Workspace</div>
-                    <div class="mini-browser__menu"><span></span><span></span><span></span><span></span></div>
+                    <div class="mini-browser__menu">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
                   </div>
                   <div class="mini-browser__main">
                     <div class="mini-browser__hero">
                       <strong>静かに読む、記憶に残す。</strong>
-                      <p>余白と視線の流れを整え、読むことに集中できる設計です。</p>
+                      <p>
+                        余白と視線の流れを整え、読むことに集中できる設計です。
+                      </p>
                     </div>
                     <div class="mini-browser__metrics">
                       <div class="mini-browser__metric"></div>
@@ -249,14 +660,27 @@
               </div>
             </article>
 
-            <aside class="card side-card reveal">
+            <aside class="card spotlight-card side-card reveal">
               <div>
-                <span class="lbl" style="margin-bottom: 8px; display:block;">Design Notes</span>
-                <h3 style="font-size:1.6rem;font-weight:800;letter-spacing:-0.04em;margin-bottom:10px;">Built for focus</h3>
-                <p class="note">見せ方は静かに、挙動は気持ちよく。スクロール・視線・保存・再訪を中心に体験を磨いています。</p>
+                <span class="lbl" style="margin-bottom: 8px; display: block"
+                  >Design Notes</span
+                >
+                <h3
+                  style="
+                    font-size: 1.6rem;
+                    font-weight: 800;
+                    letter-spacing: -0.04em;
+                    margin-bottom: 10px;
+                  "
+                >
+                  Built for focus
+                </h3>
+                <p class="note">
+                  見せ方は静かに、挙動は気持ちよく。スクロール・視線・保存・再訪を中心に体験を磨いています。
+                </p>
               </div>
               <div>
-                <div class="lbl" style="margin-bottom:10px;">Highlights</div>
+                <div class="lbl" style="margin-bottom: 10px">Highlights</div>
                 <div class="tag-cloud">
                   <span>Minimal interface</span>
                   <span>Readable layout</span>
@@ -265,15 +689,18 @@
                 </div>
               </div>
               <div>
-                <div class="lbl" style="margin-bottom:10px;">Stack</div>
+                <div class="lbl" style="margin-bottom: 10px">Stack</div>
                 <div class="tag-cloud">
                   <span>Swift</span><span>SwiftUI</span><span>Combine</span>
                   <span>Qiita API</span><span>URLSession</span>
                 </div>
               </div>
               <div>
-                <div class="lbl" style="margin-bottom:10px;">Tone</div>
-                <p class="note">Sidecar のように、静かで上品で、情報の置き方に芯があるデザインを意識しています。</p>
+                <div class="lbl" style="margin-bottom: 10px">Tone</div>
+                <p class="note">
+                  Sidecar
+                  のように、静かで上品で、情報の置き方に芯があるデザインを意識しています。
+                </p>
               </div>
             </aside>
           </div>
@@ -290,10 +717,97 @@
 
     <script>
       document.getElementById("yr").textContent = new Date().getFullYear();
-      const ro = new IntersectionObserver((entries) => {
-        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); ro.unobserve(e.target); } });
-      }, { threshold: 0.1 });
+      // Scroll reveal
+      const ro = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("in");
+              ro.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
       document.querySelectorAll(".reveal").forEach((el) => ro.observe(el));
+
+      // ⑦ Opening Screen — ロゴ表示 → フェードアウト
+      (() => {
+        const curtain = document.getElementById("page-curtain");
+        const logo = document.getElementById("curtain-logo");
+        const sub = document.getElementById("curtain-sub");
+        const line = document.getElementById("curtain-line");
+        if (!curtain || !logo) return;
+        const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
+        logo.animate(
+          [
+            { opacity: 0, transform: "scale(0.88) translateY(14px)" },
+            { opacity: 1, transform: "scale(1) translateY(0)" },
+          ],
+          { duration: 900, easing: ease, delay: 80, fill: "forwards" },
+        );
+        sub.animate(
+          [
+            { color: "rgba(168,182,198,0)" },
+            { color: "rgba(168,182,198,0.75)" },
+          ],
+          { duration: 700, easing: ease, delay: 500, fill: "forwards" },
+        );
+        line.animate(
+          [
+            { width: "0px", opacity: 0 },
+            { width: "180px", opacity: 1 },
+          ],
+          { duration: 600, easing: ease, delay: 600, fill: "forwards" },
+        );
+        setTimeout(() => {
+          curtain.animate([{ opacity: 1 }, { opacity: 0 }], {
+            duration: 700,
+            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+            fill: "forwards",
+          }).onfinish = () => curtain.remove();
+        }, 1800);
+      })();
+
+      // ⑥ Scroll bar
+      const bar = document.getElementById("scroll-bar");
+      if (bar)
+        window.addEventListener(
+          "scroll",
+          () => {
+            const t =
+              document.documentElement.scrollHeight - window.innerHeight;
+            bar.style.width = (t > 0 ? (window.scrollY / t) * 100 : 0) + "%";
+          },
+          { passive: true },
+        );
+
+      // ⑤ Spotlight card
+      document.querySelectorAll(".spotlight-card").forEach((card) => {
+        card.addEventListener("pointermove", (e) => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty("--mx", e.clientX - r.left + "px");
+          card.style.setProperty("--my", e.clientY - r.top + "px");
+        });
+      });
+
+      // ② Mouse spotlight
+      const spot = document.createElement("div");
+      spot.style.cssText =
+        "position:fixed;pointer-events:none;z-index:1;width:500px;height:500px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(134,216,255,0.055) 0%,transparent 65%);transition:opacity 0.6s;opacity:0;";
+      document.body.appendChild(spot);
+      window.addEventListener(
+        "pointermove",
+        (e) => {
+          spot.style.left = e.clientX + "px";
+          spot.style.top = e.clientY + "px";
+          spot.style.opacity = "1";
+        },
+        { passive: true },
+      );
+      window.addEventListener("pointerleave", () => {
+        spot.style.opacity = "0";
+      });
     </script>
   </body>
 </html>

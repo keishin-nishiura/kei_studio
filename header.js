@@ -16,14 +16,24 @@
         <span>by keishinnishiura</span>
       </div>
     </a>
-    <nav class="nav">
+    <nav class="nav" id="site-nav">
       <a href="index.html">Top</a>
       <a href="product.html">Products</a>
       <a href="about.html">About</a>
       <a href="#contact" class="cta">お問い合わせ</a>
     </nav>
+    <button class="nav-burger" id="nav-burger" aria-label="メニューを開く" aria-expanded="false" aria-controls="site-nav">
+      <span></span><span></span><span></span>
+    </button>
   </div>
-</header>`;
+</header>
+<div class="nav-drawer" id="nav-drawer" aria-hidden="true">
+  <a href="index.html">Top</a>
+  <a href="product.html">Products</a>
+  <a href="about.html">About</a>
+  <a href="#contact" class="cta">お問い合わせ</a>
+</div>
+<div class="nav-overlay" id="nav-overlay"></div>`;
 
   const CSS = `
     .bar {
@@ -114,10 +124,106 @@
       transform: translateY(-1px);
       box-shadow: 0 12px 32px rgba(134, 216, 255, 0.28);
     }
-    @media (max-width: 860px) {
-      .nav { display: none; }
-      .bar__in { height: 64px; }
+    /* ── ナビ / ハンバーガー 切り替え ── */
+    /* デフォルト：ナビ表示・ハンバーガー非表示 */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: rgba(255,255,255,0.06);
+      border-radius: 10px;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
     }
+    /* 860px以下でナビ非表示→ハンバーガー表示に切り替え */
+    @media (max-width: 860px) {
+      .nav          { display: none !important; }
+      .nav-burger   { display: flex; }
+      .bar__in      { height: 64px; }
+    }
+    .nav-burger span {
+      display: block;
+      width: 18px;
+      height: 1.5px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 2px;
+      transition: transform 0.28s cubic-bezier(0.22,1,0.36,1), opacity 0.2s;
+      transform-origin: center;
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ── ドロワー ── */
+    .nav-drawer {
+      position: fixed;
+      top: 72px; /* PCヘッダー高さ */
+      right: 0;
+      bottom: 0;
+      width: min(280px, 82vw);
+      z-index: 99;
+      background: rgba(7,11,15,0.97);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-left: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      flex-direction: column;
+      padding: 20px 16px;
+      gap: 4px;
+      transform: translateX(110%);
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1),
+                  visibility 0s linear 0.35s;
+      visibility: hidden;
+    }
+    @media (max-width: 860px) {
+      .nav-drawer { top: 64px; } /* スマホヘッダー高さ */
+    }
+    .nav-drawer.open {
+      transform: translateX(0);
+      visibility: visible;
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1),
+                  visibility 0s linear 0s;
+    }
+    .nav-drawer a {
+      padding: 15px 18px;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      transition: color 0.2s, background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-drawer a:hover,
+    .nav-drawer a:active { color: #fff; background: rgba(255,255,255,0.07); }
+    .nav-drawer .cta {
+      margin-top: 10px;
+      color: #050e17;
+      background: linear-gradient(135deg, #c6eeff, #86d8ff);
+      font-weight: 700;
+      text-align: center;
+      border-radius: 14px;
+    }
+    .nav-drawer .cta:hover,
+    .nav-drawer .cta:active { background: linear-gradient(135deg, #d8f5ff, #a0e5ff); color: #050e17; }
+
+    /* ── オーバーレイ ── */
+    .nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 98;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(2px);
+    }
+    .nav-overlay.open { display: block; }
   `;
 
   // スタイルを挿入
@@ -132,4 +238,36 @@
   } else {
     document.body.insertAdjacentHTML("afterbegin", HTML);
   }
+  // ハンバーガーメニュー制御
+  (() => {
+    const burger = document.getElementById("nav-burger");
+    const drawer = document.getElementById("nav-drawer");
+    const overlay = document.getElementById("nav-overlay");
+    if (!burger || !drawer || !overlay) return;
+
+    function openMenu() {
+      burger.classList.add("open");
+      drawer.classList.add("open");
+      overlay.classList.add("open");
+      burger.setAttribute("aria-expanded", "true");
+      drawer.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    function closeMenu() {
+      burger.classList.remove("open");
+      drawer.classList.remove("open");
+      overlay.classList.remove("open");
+      burger.setAttribute("aria-expanded", "false");
+      drawer.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    burger.addEventListener("click", () => {
+      burger.classList.contains("open") ? closeMenu() : openMenu();
+    });
+    overlay.addEventListener("click", closeMenu);
+    drawer
+      .querySelectorAll("a")
+      .forEach((a) => a.addEventListener("click", closeMenu));
+  })();
 })();
