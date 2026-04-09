@@ -19,6 +19,7 @@
     <nav class="nav" id="site-nav">
       <a href="index.html">Top</a>
       <a href="product.html">Products</a>
+      <a href="mocks.html">Mocks</a>
       <a href="about.html">About</a>
       <a href="#contact" class="cta">お問い合わせ</a>
     </nav>
@@ -30,6 +31,7 @@
 <div class="nav-drawer" id="nav-drawer" aria-hidden="true">
   <a href="index.html">Top</a>
   <a href="product.html">Products</a>
+  <a href="mocks.html">Mocks</a>
   <a href="about.html">About</a>
   <a href="#contact" class="cta">お問い合わせ</a>
 </div>

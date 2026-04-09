@@ -1,0 +1,1823 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ご予約フォーム | MIDORI PLACE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ── Reset & Tokens ── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --green: #3d6b4f;
+        --green-2: #5a8a68;
+        --green-lt: #e8f0ea;
+        --cream: #faf7f2;
+        --beige: #f0e9dc;
+        --brown: #7a5c3e;
+        --text: #2c2c2c;
+        --text-2: #6b6560;
+        --text-3: #a09890;
+        --border: rgba(61, 107, 79, 0.18);
+        --white: #ffffff;
+        --red: #e05252;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: "Noto Sans JP", "Helvetica Neue", sans-serif;
+        background: var(--cream);
+        color: var(--text);
+        line-height: 1.8;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      /* ── Page Header ── */
+      .page-header {
+        background: var(--green);
+        padding: 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 16px rgba(61, 107, 79, 0.18);
+      }
+      .page-header__inner {
+        width: min(1160px, calc(100% - 48px));
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        gap: 20px;
+      }
+      .page-header__logo {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        flex-shrink: 0;
+      }
+      .page-header__logo strong {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        letter-spacing: 0.1em;
+        line-height: 1;
+      }
+      .page-header__logo span {
+        font-size: 0.6rem;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 0.14em;
+      }
+      .page-header__back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.8);
+        letter-spacing: 0.06em;
+        transition: color 0.2s;
+        flex-shrink: 0;
+      }
+      .page-header__back:hover {
+        color: #fff;
+      }
+      .page-header__back svg {
+        flex-shrink: 0;
+      }
+      .page-header__title {
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.55);
+        font-weight: 500;
+      }
+
+      /* ── Hero Strip ── */
+      .reserve-hero {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+      }
+      .reserve-hero__bg {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(
+            to bottom,
+            rgba(30, 58, 40, 0.5) 0%,
+            rgba(30, 58, 40, 0.8) 100%
+          ),
+          url("https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1600&q=80")
+            center/cover no-repeat;
+      }
+      .reserve-hero__content {
+        position: relative;
+        z-index: 1;
+        width: min(1160px, calc(100% - 48px));
+        margin: 0 auto;
+        padding-bottom: 36px;
+      }
+      .reserve-hero__eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.65);
+        margin-bottom: 8px;
+        display: block;
+      }
+      .reserve-hero__title {
+        font-family: "Cormorant Garamond", "Noto Serif JP", serif;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: 400;
+        color: #fff;
+        line-height: 1.2;
+        letter-spacing: 0.02em;
+      }
+      .reserve-hero__title em {
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      /* ── Layout ── */
+      .reserve-body {
+        width: min(1160px, calc(100% - 48px));
+        margin: 0 auto;
+        padding: 64px 0 100px;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 56px;
+        align-items: start;
+      }
+
+      /* ── Sidebar ── */
+      .sidebar {
+        position: sticky;
+        top: 88px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .sidebar-card {
+        background: var(--white);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(61, 107, 79, 0.05);
+      }
+      .sidebar-card__label {
+        font-size: 0.62rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        margin-bottom: 14px;
+        display: block;
+        font-weight: 600;
+      }
+      .sidebar-tel {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .sidebar-tel__icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--green-lt);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .sidebar-tel__num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: var(--text);
+        line-height: 1;
+      }
+      .sidebar-tel__sub {
+        font-size: 0.68rem;
+        color: var(--text-3);
+        margin-top: 3px;
+      }
+      .sidebar-hours {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 0.8rem;
+      }
+      .sidebar-hours__row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .sidebar-hours__row:last-child {
+        border-bottom: none;
+      }
+      .sidebar-hours__dt {
+        color: var(--text-3);
+        font-size: 0.75rem;
+      }
+      .sidebar-hours__dd {
+        color: var(--text);
+        font-weight: 500;
+        font-size: 0.8rem;
+      }
+      .sidebar-note {
+        font-size: 0.72rem;
+        color: var(--text-3);
+        line-height: 1.8;
+      }
+      .sidebar-note strong {
+        color: var(--green);
+      }
+
+      /* ── Form Card ── */
+      .form-card {
+        background: var(--white);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 48px 52px;
+        box-shadow: 0 20px 60px rgba(61, 107, 79, 0.08);
+      }
+
+      /* ── Steps indicator ── */
+      .form-steps {
+        display: flex;
+        align-items: center;
+        margin-bottom: 40px;
+      }
+      .form-step {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-3);
+        letter-spacing: 0.06em;
+        flex: 1;
+        transition: color 0.3s;
+      }
+      .form-step__num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1.5px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+        transition: all 0.3s var(--ease);
+        background: var(--cream);
+      }
+      .form-step.active .form-step__num {
+        background: var(--green);
+        border-color: var(--green);
+        color: var(--white);
+        box-shadow: 0 0 0 4px rgba(61, 107, 79, 0.12);
+      }
+      .form-step.active {
+        color: var(--green);
+      }
+      .form-step.done .form-step__num {
+        background: var(--green-lt);
+        border-color: var(--green);
+        color: var(--green);
+        content: "✓";
+      }
+      .form-step.done {
+        color: var(--green-2);
+      }
+      .form-step__line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+        margin: 0 8px;
+        transition: background 0.3s;
+      }
+      .form-step__line.done {
+        background: var(--green-lt);
+      }
+
+      /* ── Section heading inside form ── */
+      .form-section-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        letter-spacing: 0.04em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .form-section-title .step-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--green);
+        color: #fff;
+        font-size: 0.65rem;
+        flex-shrink: 0;
+      }
+
+      /* ── Fields ── */
+      .field-group {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .field--row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .field > label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-2);
+        letter-spacing: 0.06em;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .req {
+        color: var(--green);
+        font-size: 0.75rem;
+      }
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        padding: 13px 16px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border);
+        background: var(--cream);
+        color: var(--text);
+        font-family: "Noto Sans JP", sans-serif;
+        font-size: 0.9rem;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          background 0.2s;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      .field input::placeholder,
+      .field textarea::placeholder {
+        color: var(--text-3);
+      }
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        border-color: var(--green);
+        background: var(--white);
+        box-shadow: 0 0 0 4px rgba(61, 107, 79, 0.09);
+      }
+      .field input.error,
+      .field select.error,
+      .field textarea.error {
+        border-color: var(--red);
+        box-shadow: 0 0 0 3px rgba(224, 82, 82, 0.1);
+      }
+      .field textarea {
+        resize: vertical;
+        min-height: 96px;
+        line-height: 1.7;
+      }
+      .select-wrap {
+        position: relative;
+      }
+      .select-wrap select {
+        padding-right: 40px;
+        cursor: pointer;
+      }
+      .select-wrap::after {
+        content: "";
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid var(--text-3);
+        pointer-events: none;
+      }
+      .err-hint {
+        font-size: 0.72rem;
+        color: var(--red);
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* ── Facility Selector ── */
+      .facility-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .facility-opt {
+        position: relative;
+      }
+      .facility-opt input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .facility-opt label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        border-radius: 10px;
+        border: 1.5px solid var(--border);
+        background: var(--cream);
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 400;
+        color: var(--text-2);
+        letter-spacing: 0;
+      }
+      .facility-opt__icon {
+        font-size: 1.3rem;
+        flex-shrink: 0;
+        width: 28px;
+        text-align: center;
+      }
+      .facility-opt__body {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .facility-opt label .fac-name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.2;
+      }
+      .facility-opt label .fac-sub {
+        font-size: 0.68rem;
+        color: var(--text-3);
+      }
+      .facility-opt input:checked + label {
+        border-color: var(--green);
+        background: var(--green-lt);
+        box-shadow: 0 0 0 1px var(--green);
+      }
+      .facility-opt input:checked + label .fac-name {
+        color: var(--green);
+      }
+      .facility-opt input:checked + label .fac-sub {
+        color: var(--green-2);
+      }
+
+      /* ── Date + Time ── */
+      .date-time-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        align-items: start;
+      }
+      .time-slots {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .time-slot {
+        position: relative;
+      }
+      .time-slot input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .time-slot label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 11px 4px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border);
+        background: var(--cream);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-2);
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+        letter-spacing: 0;
+      }
+      .time-slot input:checked + label {
+        border-color: var(--green);
+        background: var(--green-lt);
+        color: var(--green);
+        box-shadow: 0 0 0 1px var(--green);
+      }
+      .time-slot label:hover {
+        border-color: var(--green-2);
+      }
+
+      /* ── Guest Counter ── */
+      .guest-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+      .guest-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .guest-item__label {
+        font-size: 0.7rem;
+        color: var(--text-3);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .guest-counter {
+        display: flex;
+        align-items: center;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--cream);
+      }
+      .guest-counter__btn {
+        width: 48px;
+        height: 48px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        color: var(--text-2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.2s,
+          color 0.2s;
+        flex-shrink: 0;
+      }
+      .guest-counter__btn:hover {
+        background: var(--beige);
+        color: var(--green);
+      }
+      .guest-counter__btn:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+      .guest-counter__val {
+        flex: 1;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text);
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+        height: 48px;
+        line-height: 48px;
+        min-width: 44px;
+      }
+
+      /* ── Divider ── */
+      .form-divider {
+        width: 100%;
+        height: 1px;
+        background: var(--border);
+        margin: 4px 0;
+      }
+
+      /* ── Privacy ── */
+      .privacy-check {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 0.8rem;
+        color: var(--text-2);
+        line-height: 1.7;
+        cursor: pointer;
+      }
+      .privacy-check input[type="checkbox"] {
+        width: 17px;
+        height: 17px;
+        margin-top: 3px;
+        accent-color: var(--green);
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+      .privacy-check a {
+        color: var(--green);
+        text-decoration: underline;
+      }
+
+      /* ── Buttons ── */
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 18px 24px;
+        border-radius: 8px;
+        border: none;
+        background: var(--green);
+        color: var(--white);
+        font-family: "Noto Sans JP", sans-serif;
+        font-size: 0.92rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.3s var(--ease),
+          box-shadow 0.3s;
+        box-shadow: 0 8px 24px rgba(61, 107, 79, 0.22);
+      }
+      .btn-primary:hover {
+        background: var(--green-2);
+        transform: translateY(-2px);
+        box-shadow: 0 14px 32px rgba(61, 107, 79, 0.3);
+      }
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 17px 24px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border);
+        background: var(--cream);
+        color: var(--text-2);
+        font-family: "Noto Sans JP", sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .btn-secondary:hover {
+        background: var(--beige);
+        border-color: var(--brown);
+      }
+
+      /* ── Confirmation Preview ── */
+      .confirm-block {
+        background: var(--cream);
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .confirm-block__title {
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+      .confirm-row {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        font-size: 0.85rem;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .confirm-row:last-child {
+        border-bottom: none;
+      }
+      .confirm-row__label {
+        font-size: 0.72rem;
+        color: var(--text-3);
+        font-weight: 600;
+        min-width: 80px;
+        flex-shrink: 0;
+      }
+      .confirm-row__value {
+        color: var(--text);
+        font-weight: 500;
+        flex: 1;
+      }
+
+      /* ── Success ── */
+      .form-success {
+        display: none;
+        text-align: center;
+        padding: 60px 20px;
+        animation: fadeUp 0.6s var(--ease) both;
+      }
+      .form-success__icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--green-lt);
+        border: 2px solid var(--green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 28px;
+        font-size: 2rem;
+        color: var(--green);
+        animation: scaleIn 0.5s var(--ease) 0.2s both;
+      }
+      .form-success__title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.8rem;
+        color: var(--green);
+        margin-bottom: 14px;
+      }
+      .form-success__sub {
+        font-size: 0.88rem;
+        color: var(--text-2);
+        line-height: 2;
+        max-width: 420px;
+        margin: 0 auto 36px;
+      }
+      .form-success__ref {
+        display: inline-block;
+        padding: 12px 28px;
+        border-radius: 100px;
+        background: var(--green-lt);
+        color: var(--green);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        margin-bottom: 32px;
+      }
+      .btn-back-to-top {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        border-radius: 8px;
+        background: var(--green);
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        transition:
+          background 0.2s,
+          transform 0.3s;
+      }
+      .btn-back-to-top:hover {
+        background: var(--green-2);
+        transform: translateY(-2px);
+      }
+
+      /* ── Animations ── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.6);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* ── Footer ── */
+      .page-footer {
+        background: #1a2e23;
+        padding: 32px 0;
+        margin-top: 0;
+      }
+      .page-footer__inner {
+        width: min(1160px, calc(100% - 48px));
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .page-footer__logo strong {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        letter-spacing: 0.1em;
+      }
+      .page-footer__copy {
+        font-size: 0.68rem;
+        color: rgba(255, 255, 255, 0.3);
+        letter-spacing: 0.08em;
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 900px) {
+        .reserve-body {
+          grid-template-columns: 1fr;
+          gap: 36px;
+        }
+        .sidebar {
+          position: static;
+        }
+        .form-card {
+          padding: 32px 24px;
+        }
+        .date-time-grid {
+          grid-template-columns: 1fr;
+        }
+        .time-slots {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      @media (max-width: 540px) {
+        .facility-selector {
+          grid-template-columns: 1fr;
+        }
+        .field--row {
+          grid-template-columns: 1fr;
+        }
+        .time-slots {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .guest-row {
+          flex-direction: column;
+        }
+        .form-card {
+          padding: 24px 16px;
+        }
+        .page-footer__inner {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── Header ── -->
+    <header class="page-header">
+      <div class="page-header__inner">
+        <a href="midori-place.html" class="page-header__logo">
+          <strong>MIDORI PLACE</strong>
+          <span>○○ Village, ○○ Prefecture</span>
+        </a>
+        <span class="page-header__title">Reservation</span>
+        <a href="midori-place.html" class="page-header__back">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M10 3L5 8l5 5"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          トップに戻る
+        </a>
+      </div>
+    </header>
+
+    <!-- ── Hero Strip ── -->
+    <div class="reserve-hero">
+      <div class="reserve-hero__bg"></div>
+      <div class="reserve-hero__content">
+        <span class="reserve-hero__eyebrow">Reservation</span>
+        <h1 class="reserve-hero__title">ご予約・<em>お問い合わせ</em></h1>
+      </div>
+    </div>
+
+    <!-- ── Body ── -->
+    <div class="reserve-body">
+      <!-- ── Sidebar ── -->
+      <aside class="sidebar">
+        <div class="sidebar-card">
+          <span class="sidebar-card__label">Contact</span>
+          <div class="sidebar-tel">
+            <div class="sidebar-tel__icon">
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                <path
+                  d="M16.5 12.9v2.1a1.4 1.4 0 0 1-1.53 1.4A13.86 13.86 0 0 1 9 14.53a13.66 13.66 0 0 1-4.2-4.2 13.86 13.86 0 0 1-1.87-5.96A1.4 1.4 0 0 1 4.32 3H6.4a1.4 1.4 0 0 1 1.4 1.2 9 9 0 0 0 .49 1.97 1.4 1.4 0 0 1-.32 1.48L6.8 8.82a11.2 11.2 0 0 0 4.2 4.2l1.17-1.17a1.4 1.4 0 0 1 1.48-.32 9 9 0 0 0 1.97.49A1.4 1.4 0 0 1 16.5 12.9Z"
+                  stroke="var(--green)"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="sidebar-tel__num">0X0-XXXX-XXXX</p>
+              <p class="sidebar-tel__sub">受付時間：10:00 〜 20:00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <span class="sidebar-card__label">Hours</span>
+          <div class="sidebar-hours">
+            <div class="sidebar-hours__row">
+              <span class="sidebar-hours__dt">平日</span>
+              <span class="sidebar-hours__dd">11:00 〜 20:00</span>
+            </div>
+            <div class="sidebar-hours__row">
+              <span class="sidebar-hours__dt">土日祝</span>
+              <span class="sidebar-hours__dd">8:00 〜 20:00</span>
+            </div>
+            <div class="sidebar-hours__row">
+              <span class="sidebar-hours__dt">L.O.</span>
+              <span class="sidebar-hours__dd">19:00</span>
+            </div>
+            <div class="sidebar-hours__row">
+              <span class="sidebar-hours__dt">定休日</span>
+              <span class="sidebar-hours__dd">毎週○曜日</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <span class="sidebar-card__label">Note</span>
+          <p class="sidebar-note">
+            確認後、<strong>2営業日以内</strong>に折り返しご連絡いたします。<br /><br />
+            アレルギーや食事制限のある方は備考欄へご記入ください。<br /><br />
+            キャンセルは前日20:00までにお電話にてご連絡ください。
+          </p>
+        </div>
+      </aside>
+
+      <!-- ── Form ── -->
+      <div class="form-card">
+        <!-- Steps -->
+        <div class="form-steps" id="steps-bar">
+          <div class="form-step active" id="step1-ind">
+            <div class="form-step__num">1</div>
+            <span>施設・日時</span>
+          </div>
+          <div class="form-step__line" id="line1"></div>
+          <div class="form-step" id="step2-ind">
+            <div class="form-step__num">2</div>
+            <span>お客様情報</span>
+          </div>
+          <div class="form-step__line" id="line2"></div>
+          <div class="form-step" id="step3-ind">
+            <div class="form-step__num">3</div>
+            <span>確認・送信</span>
+          </div>
+        </div>
+
+        <form id="reserve-form" novalidate>
+          <!-- ─── STEP 1: 施設・日時 ─── -->
+          <div id="step1" class="field-group">
+            <p class="form-section-title">
+              <span class="step-badge">1</span>ご利用内容を選択
+            </p>
+
+            <!-- 施設 -->
+            <div class="field">
+              <label>ご利用施設<span class="req">*</span></label>
+              <div class="facility-selector">
+                <div class="facility-opt">
+                  <input
+                    type="checkbox"
+                    id="fac-rest"
+                    name="facility"
+                    value="レストラン"
+                  />
+                  <label for="fac-rest">
+                    <div class="facility-opt__icon">🍕</div>
+                    <div class="facility-opt__body">
+                      <span class="fac-name">レストラン</span>
+                      <span class="fac-sub">石窯ピッツァ・コース料理</span>
+                    </div>
+                  </label>
+                </div>
+                <div class="facility-opt">
+                  <input
+                    type="checkbox"
+                    id="fac-cheese"
+                    name="facility"
+                    value="チーズ工房"
+                  />
+                  <label for="fac-cheese">
+                    <div class="facility-opt__icon">🧀</div>
+                    <div class="facility-opt__body">
+                      <span class="fac-name">チーズ工房</span>
+                      <span class="fac-sub">体験・見学</span>
+                    </div>
+                  </label>
+                </div>
+                <div class="facility-opt">
+                  <input
+                    type="checkbox"
+                    id="fac-golf"
+                    name="facility"
+                    value="パークゴルフ"
+                  />
+                  <label for="fac-golf">
+                    <div class="facility-opt__icon">⛳</div>
+                    <div class="facility-opt__body">
+                      <span class="fac-name">パークゴルフ</span>
+                      <span class="fac-sub">コース利用</span>
+                    </div>
+                  </label>
+                </div>
+                <div class="facility-opt">
+                  <input
+                    type="checkbox"
+                    id="fac-other"
+                    name="facility"
+                    value="その他"
+                  />
+                  <label for="fac-other">
+                    <div class="facility-opt__icon">✦</div>
+                    <div class="facility-opt__body">
+                      <span class="fac-name">その他</span>
+                      <span class="fac-sub">備考欄へ記入</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 日付 + 時間 -->
+            <div class="date-time-grid">
+              <div class="field">
+                <label for="visit-date"
+                  >ご来店日<span class="req">*</span></label
+                >
+                <input type="date" id="visit-date" name="date" />
+              </div>
+              <div class="field">
+                <label>ご希望のお時間<span class="req">*</span></label>
+                <div class="time-slots" id="time-slots">
+                  <div class="time-slot">
+                    <input
+                      type="radio"
+                      id="t1"
+                      name="time"
+                      value="11:00"
+                    /><label for="t1">11:00</label>
+                  </div>
+                  <div class="time-slot">
+                    <input
+                      type="radio"
+                      id="t2"
+                      name="time"
+                      value="12:00"
+                    /><label for="t2">12:00</label>
+                  </div>
+                  <div class="time-slot">
+                    <input
+                      type="radio"
+                      id="t3"
+                      name="time"
+                      value="13:00"
+                    /><label for="t3">13:00</label>
+                  </div>
+                  <div class="time-slot">
+                    <input
+                      type="radio"
+                      id="t4"
+                      name="time"
+                      value="18:00"
+                    /><label for="t4">18:00</label>
+                  </div>
+                  <div class="time-slot">
+                    <input
+                      type="radio"
+                      id="t5"
+                      name="time"
+                      value="19:00"
+                    /><label for="t5">19:00</label>
+                  </div>
+                  <div class="time-slot">
+                    <input
+                      type="radio"
+                      id="t6"
+                      name="time"
+                      value="20:00"
+                    /><label for="t6">20:00</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 人数 -->
+            <div class="field">
+              <label>人数<span class="req">*</span></label>
+              <div class="guest-row">
+                <div class="guest-item">
+                  <span class="guest-item__label">大人</span>
+                  <div class="guest-counter">
+                    <button
+                      type="button"
+                      class="guest-counter__btn"
+                      data-target="adult"
+                      data-action="minus"
+                      id="adult-minus"
+                    >
+                      −
+                    </button>
+                    <span class="guest-counter__val" id="adult-val">2</span>
+                    <button
+                      type="button"
+                      class="guest-counter__btn"
+                      data-target="adult"
+                      data-action="plus"
+                    >
+                      ＋
+                    </button>
+                  </div>
+                  <input
+                    type="hidden"
+                    id="adult-input"
+                    name="adult"
+                    value="2"
+                  />
+                </div>
+                <div class="guest-item">
+                  <span class="guest-item__label">お子様</span>
+                  <div class="guest-counter">
+                    <button
+                      type="button"
+                      class="guest-counter__btn"
+                      data-target="child"
+                      data-action="minus"
+                      id="child-minus"
+                    >
+                      −
+                    </button>
+                    <span class="guest-counter__val" id="child-val">0</span>
+                    <button
+                      type="button"
+                      class="guest-counter__btn"
+                      data-target="child"
+                      data-action="plus"
+                    >
+                      ＋
+                    </button>
+                  </div>
+                  <input
+                    type="hidden"
+                    id="child-input"
+                    name="child"
+                    value="0"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="btn-primary" id="next-btn">
+              次へ：お客様情報を入力
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M3 8h10M9 4l4 4-4 4"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <!-- ─── STEP 2: お客様情報 ─── -->
+          <div id="step2" class="field-group" style="display: none">
+            <p class="form-section-title">
+              <span class="step-badge">2</span>お客様情報のご入力
+            </p>
+
+            <div class="field--row">
+              <div class="field">
+                <label for="name-sei">姓<span class="req">*</span></label>
+                <input
+                  type="text"
+                  id="name-sei"
+                  name="sei"
+                  placeholder="緑野"
+                  autocomplete="family-name"
+                />
+              </div>
+              <div class="field">
+                <label for="name-mei">名<span class="req">*</span></label>
+                <input
+                  type="text"
+                  id="name-mei"
+                  name="mei"
+                  placeholder="太郎"
+                  autocomplete="given-name"
+                />
+              </div>
+            </div>
+
+            <div class="field--row">
+              <div class="field">
+                <label for="name-sei-kana"
+                  >姓（フリガナ）<span class="req">*</span></label
+                >
+                <input
+                  type="text"
+                  id="name-sei-kana"
+                  name="sei_kana"
+                  placeholder="ミドリノ"
+                />
+              </div>
+              <div class="field">
+                <label for="name-mei-kana"
+                  >名（フリガナ）<span class="req">*</span></label
+                >
+                <input
+                  type="text"
+                  id="name-mei-kana"
+                  name="mei_kana"
+                  placeholder="タロウ"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="email"
+                >メールアドレス<span class="req">*</span></label
+              >
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="example@email.com"
+                autocomplete="email"
+              />
+            </div>
+
+            <div class="field">
+              <label for="tel">電話番号<span class="req">*</span></label>
+              <input
+                type="tel"
+                id="tel"
+                name="tel"
+                placeholder="090-0000-0000"
+                autocomplete="tel"
+              />
+            </div>
+
+            <div class="field">
+              <label for="memo">ご要望・アレルギー等</label>
+              <textarea
+                id="memo"
+                name="memo"
+                placeholder="アレルギー情報・お席のご希望・記念日など、何でもお気軽にお書きください。"
+              ></textarea>
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="field">
+              <label>ご来店のきっかけ</label>
+              <div class="select-wrap">
+                <select name="source" id="source">
+                  <option value="">選択してください</option>
+                  <option value="Instagram">Instagram</option>
+                  <option value="Google">Google 検索</option>
+                  <option value="知人紹介">友人・知人の紹介</option>
+                  <option value="旅行サイト">旅行サイト</option>
+                  <option value="その他">その他</option>
+                </select>
+              </div>
+            </div>
+
+            <label class="privacy-check" id="privacy-wrap">
+              <input type="checkbox" id="privacy" name="privacy" />
+              <span
+                ><a href="#" target="_blank">プライバシーポリシー</a
+                >に同意する<span class="req">*</span></span
+              >
+            </label>
+
+            <div style="display: flex; gap: 12px; align-items: center">
+              <button type="button" class="btn-secondary" id="back-btn">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M10 3L5 8l5 5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                戻る
+              </button>
+              <button
+                type="button"
+                class="btn-primary"
+                id="confirm-btn"
+                style="flex: 1"
+              >
+                内容を確認する
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M3 8h10M9 4l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- ─── STEP 3: 確認・送信 ─── -->
+          <div id="step3" class="field-group" style="display: none">
+            <p class="form-section-title">
+              <span class="step-badge">3</span>ご予約内容の確認
+            </p>
+
+            <div class="confirm-block">
+              <p class="confirm-block__title">ご利用内容</p>
+              <div class="confirm-row">
+                <span class="confirm-row__label">施設</span>
+                <span class="confirm-row__value" id="c-facility">—</span>
+              </div>
+              <div class="confirm-row">
+                <span class="confirm-row__label">来店日</span>
+                <span class="confirm-row__value" id="c-date">—</span>
+              </div>
+              <div class="confirm-row">
+                <span class="confirm-row__label">時間</span>
+                <span class="confirm-row__value" id="c-time">—</span>
+              </div>
+              <div class="confirm-row">
+                <span class="confirm-row__label">人数</span>
+                <span class="confirm-row__value" id="c-guests">—</span>
+              </div>
+            </div>
+
+            <div class="confirm-block">
+              <p class="confirm-block__title">お客様情報</p>
+              <div class="confirm-row">
+                <span class="confirm-row__label">お名前</span>
+                <span class="confirm-row__value" id="c-name">—</span>
+              </div>
+              <div class="confirm-row">
+                <span class="confirm-row__label">フリガナ</span>
+                <span class="confirm-row__value" id="c-kana">—</span>
+              </div>
+              <div class="confirm-row">
+                <span class="confirm-row__label">メール</span>
+                <span class="confirm-row__value" id="c-email">—</span>
+              </div>
+              <div class="confirm-row">
+                <span class="confirm-row__label">電話</span>
+                <span class="confirm-row__value" id="c-tel">—</span>
+              </div>
+              <div class="confirm-row" id="c-memo-row">
+                <span class="confirm-row__label">ご要望</span>
+                <span
+                  class="confirm-row__value"
+                  id="c-memo"
+                  style="white-space: pre-wrap"
+                  >—</span
+                >
+              </div>
+            </div>
+
+            <p
+              style="
+                font-size: 0.75rem;
+                color: var(--text-3);
+                line-height: 1.9;
+                margin-bottom: 8px;
+              "
+            >
+              ※
+              上記の内容でよろしければ「予約を送信する」をクリックしてください。<br />
+              2営業日以内に確認メールをお送りします。
+            </p>
+
+            <div style="display: flex; gap: 12px; align-items: center">
+              <button type="button" class="btn-secondary" id="back2-btn">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M10 3L5 8l5 5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                修正する
+              </button>
+              <button
+                type="submit"
+                class="btn-primary"
+                id="submit-btn"
+                style="flex: 1"
+              >
+                予約を送信する
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M2 8l12 0M8 2l6 6-6 6"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- ─── 送信完了 ─── -->
+        <div class="form-success" id="form-success">
+          <div class="form-success__icon">✓</div>
+          <p class="form-success__title">送信が完了しました</p>
+          <p class="form-success__sub">
+            ご予約リクエストを受け付けました。<br />
+            担当者より2営業日以内に<br />確認のご連絡をいたします。
+          </p>
+          <p class="form-success__ref" id="success-ref"></p>
+          <p
+            style="
+              font-size: 0.72rem;
+              color: var(--text-3);
+              margin-bottom: 28px;
+            "
+          >
+            ※ メールが届かない場合はお電話（0X0-XXXX-XXXX）にてご確認ください。
+          </p>
+          <a href="midori-place.html" class="btn-back-to-top">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M10 3L5 8l5 5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            トップページに戻る
+          </a>
+        </div>
+      </div>
+      <!-- /form-card -->
+    </div>
+    <!-- /reserve-body -->
+
+    <!-- ── Footer ── -->
+    <footer class="page-footer">
+      <div class="page-footer__inner">
+        <div class="page-footer__logo">
+          <strong>MIDORI PLACE</strong>
+        </div>
+        <p class="page-footer__copy">© MIDORI PLACE All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      /* ── Helpers ── */
+      function $(id) {
+        return document.getElementById(id);
+      }
+      function qv(id) {
+        const el = $(id);
+        return el ? el.value.trim() : "";
+      }
+
+      function markError(id, msg) {
+        const el = $(id);
+        if (!el) return;
+        el.classList.add("error");
+        let hint = el.parentElement.querySelector(".err-hint");
+        if (!hint) {
+          hint = document.createElement("p");
+          hint.className = "err-hint";
+          hint.innerHTML =
+            '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#e05252" stroke-width="1.2"/><path d="M6 4v2.5M6 8h.01" stroke="#e05252" stroke-width="1.2" stroke-linecap="round"/></svg> ' +
+            msg;
+          el.parentElement.appendChild(hint);
+        } else {
+          hint.innerHTML =
+            '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#e05252" stroke-width="1.2"/><path d="M6 4v2.5M6 8h.01" stroke="#e05252" stroke-width="1.2" stroke-linecap="round"/></svg> ' +
+            msg;
+        }
+      }
+      function clearError(id) {
+        const el = $(id);
+        if (!el) return;
+        el.classList.remove("error");
+        const hint = el.parentElement.querySelector(".err-hint");
+        if (hint) hint.remove();
+      }
+      function clearGroupError(containerSel) {
+        const c = document.querySelector(containerSel);
+        if (!c) return;
+        const hint = c.parentElement.querySelector(".err-hint");
+        if (hint) hint.remove();
+      }
+      function addGroupError(containerSel, msg) {
+        const c = document.querySelector(containerSel);
+        if (!c) return;
+        if (c.parentElement.querySelector(".err-hint")) return;
+        const h = document.createElement("p");
+        h.className = "err-hint";
+        h.innerHTML =
+          '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#e05252" stroke-width="1.2"/><path d="M6 4v2.5M6 8h.01" stroke="#e05252" stroke-width="1.2" stroke-linecap="round"/></svg> ' +
+          msg;
+        c.parentElement.appendChild(h);
+      }
+
+      /* ── Guest Counter ── */
+      const counts = { adult: 2, child: 0 };
+      function updateCounter(target) {
+        $(`${target}-val`).textContent = counts[target];
+        $(`${target}-input`).value = counts[target];
+        const minusBtn = $(`${target}-minus`);
+        if (minusBtn)
+          minusBtn.disabled = counts[target] <= (target === "adult" ? 1 : 0);
+      }
+      document.querySelectorAll(".guest-counter__btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const t = btn.dataset.target;
+          const a = btn.dataset.action;
+          if (a === "plus") counts[t] = Math.min(counts[t] + 1, 20);
+          else counts[t] = Math.max(counts[t] - 1, t === "adult" ? 1 : 0);
+          updateCounter(t);
+        });
+      });
+      updateCounter("adult");
+      updateCounter("child");
+
+      /* ── Step Navigation ── */
+      function showStep(n) {
+        [1, 2, 3].forEach((i) => {
+          const el = $(`step${i}`);
+          if (el) el.style.display = i === n ? "flex" : "none";
+        });
+        ["step1-ind", "step2-ind", "step3-ind"].forEach((id, i) => {
+          const el = $(id);
+          if (!el) return;
+          el.classList.remove("active", "done");
+          if (i + 1 === n) el.classList.add("active");
+          if (i + 1 < n) el.classList.add("done");
+        });
+        ["line1", "line2"].forEach((id, i) => {
+          const el = $(id);
+          if (!el) return;
+          el.classList.toggle("done", n > i + 1);
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      /* ── Validation ── */
+      function validateStep1() {
+        let ok = true;
+        // Facility
+        const facs = [
+          ...document.querySelectorAll('input[name="facility"]:checked'),
+        ];
+        if (facs.length === 0) {
+          addGroupError(
+            ".facility-selector",
+            "ご利用施設を1つ以上選択してください",
+          );
+          ok = false;
+        } else {
+          clearGroupError(".facility-selector");
+        }
+
+        // Date
+        const dv = qv("visit-date");
+        if (!dv) {
+          markError("visit-date", "ご来店日を選択してください");
+          ok = false;
+        } else {
+          const d = new Date(dv),
+            today = new Date();
+          today.setHours(0, 0, 0, 0);
+          if (d < today) {
+            markError("visit-date", "本日以降の日付を選択してください");
+            ok = false;
+          } else clearError("visit-date");
+        }
+
+        // Time
+        if (!document.querySelector('input[name="time"]:checked')) {
+          addGroupError("#time-slots", "ご希望のお時間を選択してください");
+          ok = false;
+        } else {
+          clearGroupError("#time-slots");
+        }
+
+        return ok;
+      }
+
+      function validateStep2() {
+        let ok = true;
+        const fields = [
+          { id: "name-sei", msg: "姓を入力してください" },
+          { id: "name-mei", msg: "名を入力してください" },
+          { id: "name-sei-kana", msg: "姓（フリガナ）を入力してください" },
+          { id: "name-mei-kana", msg: "名（フリガナ）を入力してください" },
+        ];
+        fields.forEach((f) => {
+          if (!qv(f.id)) {
+            markError(f.id, f.msg);
+            ok = false;
+          } else clearError(f.id);
+        });
+
+        const email = qv("email");
+        if (!email) {
+          markError("email", "メールアドレスを入力してください");
+          ok = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          markError("email", "正しいメールアドレスを入力してください");
+          ok = false;
+        } else clearError("email");
+
+        const tel = qv("tel");
+        if (!tel) {
+          markError("tel", "電話番号を入力してください");
+          ok = false;
+        } else if (!/^[\d\-\+\(\)\s]{7,}$/.test(tel)) {
+          markError("tel", "正しい電話番号を入力してください");
+          ok = false;
+        } else clearError("tel");
+
+        const prv = $("privacy");
+        if (!prv.checked) {
+          const wrap = $("privacy-wrap");
+          if (!wrap.parentElement.querySelector(".err-hint")) {
+            const h = document.createElement("p");
+            h.className = "err-hint";
+            h.innerHTML =
+              '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#e05252" stroke-width="1.2"/><path d="M6 4v2.5M6 8h.01" stroke="#e05252" stroke-width="1.2" stroke-linecap="round"/></svg> プライバシーポリシーへの同意が必要です';
+            wrap.after(h);
+          }
+          ok = false;
+        } else {
+          const hint =
+            $("privacy-wrap").parentElement.querySelector(".err-hint");
+          if (hint) hint.remove();
+        }
+
+        return ok;
+      }
+
+      /* ── Build Confirmation ── */
+      function buildConfirm() {
+        const facs = [
+          ...document.querySelectorAll('input[name="facility"]:checked'),
+        ]
+          .map((el) => el.value)
+          .join("・");
+        const dateRaw = qv("visit-date");
+        const dateStr = dateRaw
+          ? new Date(dateRaw).toLocaleDateString("ja-JP", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              weekday: "short",
+            })
+          : "—";
+        const timeEl = document.querySelector('input[name="time"]:checked');
+        const guests =
+          `大人 ${counts.adult}名` +
+          (counts.child > 0 ? `・お子様 ${counts.child}名` : "");
+
+        $("c-facility").textContent = facs || "—";
+        $("c-date").textContent = dateStr;
+        $("c-time").textContent = timeEl ? timeEl.value : "—";
+        $("c-guests").textContent = guests;
+        $("c-name").textContent =
+          (qv("name-sei") + " " + qv("name-mei")).trim() || "—";
+        $("c-kana").textContent =
+          (qv("name-sei-kana") + " " + qv("name-mei-kana")).trim() || "—";
+        $("c-email").textContent = qv("email") || "—";
+        $("c-tel").textContent = qv("tel") || "—";
+        const memo = qv("memo");
+        $("c-memo").textContent = memo || "—";
+        $("c-memo-row").style.display = memo ? "" : "none";
+      }
+
+      /* ── Buttons ── */
+      $("next-btn").addEventListener("click", () => {
+        if (validateStep1()) showStep(2);
+      });
+      $("back-btn").addEventListener("click", () => showStep(1));
+      $("confirm-btn").addEventListener("click", () => {
+        if (validateStep2()) {
+          buildConfirm();
+          showStep(3);
+        }
+      });
+      $("back2-btn").addEventListener("click", () => showStep(2));
+
+      /* ── Submit ── */
+      $("reserve-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const btn = $("submit-btn");
+        btn.disabled = true;
+        btn.textContent = "送信中…";
+
+        // 受付番号を生成
+        const ref = "MP-" + Date.now().toString(36).toUpperCase().slice(-6);
+        $("success-ref").textContent = "受付番号：" + ref;
+
+        setTimeout(() => {
+          $("steps-bar").style.transition = "opacity 0.3s";
+          $("steps-bar").style.opacity = "0";
+          $("reserve-form").style.transition = "opacity 0.4s, transform 0.4s";
+          $("reserve-form").style.opacity = "0";
+          $("reserve-form").style.transform = "translateY(-10px)";
+
+          setTimeout(() => {
+            $("steps-bar").style.display = "none";
+            $("reserve-form").style.display = "none";
+            $("form-success").style.display = "block";
+          }, 400);
+        }, 800);
+      });
+
+      /* ── Live error clear ── */
+      document
+        .querySelectorAll(
+          "#reserve-form input, #reserve-form textarea, #reserve-form select",
+        )
+        .forEach((el) => {
+          el.addEventListener("input", () => {
+            if (el.id) clearError(el.id);
+          });
+        });
+      document.querySelectorAll('input[name="facility"]').forEach((el) => {
+        el.addEventListener("change", () =>
+          clearGroupError(".facility-selector"),
+        );
+      });
+      document.querySelectorAll('input[name="time"]').forEach((el) => {
+        el.addEventListener("change", () => clearGroupError("#time-slots"));
+      });
+
+      /* ── Init ── */
+      showStep(1);
+    </script>
+  </body>
+</html>

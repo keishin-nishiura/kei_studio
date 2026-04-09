@@ -1,0 +1,1114 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mocks — keistudio</title>
+    <meta
+      name="description"
+      content="keistudio が制作した HP モックアップの一覧。デザイン案を気軽にご覧ください。"
+    />
+    <meta property="og:title" content="Mocks — keistudio" />
+    <meta
+      property="og:description"
+      content="keistudio が制作した HP モックアップの一覧。デザイン案を気軽にご覧ください。"
+    />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#070b0f" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─── Design Tokens ─────────────────────────────── */
+      :root {
+        --bg: #070b0f;
+        --surface: rgba(255, 255, 255, 0.032);
+        --surface-hi: rgba(255, 255, 255, 0.058);
+        --border: rgba(255, 255, 255, 0.078);
+        --border-hi: rgba(255, 255, 255, 0.14);
+        --text: #eef2f7;
+        --text-2: #a8b6c6;
+        --text-3: #6e7e90;
+        --accent: #86d8ff;
+        --accent-2: #9b8bff;
+        --accent-3: #9ff3d2;
+        --max: 1200px;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        font-family:
+          "Noto Sans JP", "Inter", ui-sans-serif, system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.9;
+        overflow-x: hidden;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        line-break: strict;
+        word-break: normal;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      /* ─── Background Orbs ─────────────────────────── */
+      .bg-orbs {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .bg-orbs__orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0;
+        animation: orbFloat 22s ease-in-out infinite;
+      }
+      .bg-orbs__orb:nth-child(1) {
+        width: 600px;
+        height: 600px;
+        background: rgba(134, 216, 255, 0.1);
+        top: -200px;
+        left: -150px;
+        animation-delay: 0s;
+      }
+      .bg-orbs__orb:nth-child(2) {
+        width: 500px;
+        height: 500px;
+        background: rgba(155, 139, 255, 0.09);
+        top: 30%;
+        right: -180px;
+        animation-delay: -8s;
+      }
+      .bg-orbs__orb:nth-child(3) {
+        width: 400px;
+        height: 400px;
+        background: rgba(159, 243, 210, 0.07);
+        bottom: -100px;
+        left: 35%;
+        animation-delay: -15s;
+      }
+      @keyframes orbFloat {
+        0% {
+          opacity: 0;
+          transform: translateY(0) scale(1);
+        }
+        15% {
+          opacity: 1;
+        }
+        50% {
+          transform: translateY(-40px) scale(1.06);
+        }
+        85% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      /* Grid Background */
+      .bg-grid {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.022) 1px,
+            transparent 1px
+          );
+        background-size: 48px 48px;
+        mask-image: radial-gradient(
+          ellipse 80% 60% at 50% 0%,
+          black,
+          transparent
+        );
+        opacity: 0.6;
+      }
+
+      /* ─── Layout ─────────────────────────────────── */
+      .site {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .wrap {
+        width: min(var(--max), calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      /* ─── Hero ───────────────────────────────────── */
+      .hero {
+        padding: 88px 0 72px;
+      }
+      .hero__eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 16px;
+      }
+      .hero__eyebrow::before {
+        content: "";
+        width: 18px;
+        height: 1px;
+        background: var(--accent);
+        opacity: 0.7;
+      }
+      .hero__title {
+        font-size: clamp(2.6rem, 6vw, 4.8rem);
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        line-height: 1;
+        margin-bottom: 18px;
+      }
+      .hero__title span {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero__desc {
+        font-size: 1.05rem;
+        color: var(--text-2);
+        max-width: 500px;
+        line-height: 1.85;
+        margin-bottom: 32px;
+      }
+
+      /* ─── Filter Tabs ─────────────────────────────── */
+      .filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 48px;
+      }
+      .filter-btn {
+        padding: 8px 18px;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-2);
+        cursor: pointer;
+        transition: all 0.25s var(--ease);
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
+      .filter-btn:hover {
+        border-color: var(--border-hi);
+        color: var(--text);
+        background: var(--surface-hi);
+      }
+      .filter-btn.active {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        border-color: transparent;
+        color: #030c14;
+      }
+      .filter-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        font-size: 0.68rem;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.12);
+        margin-left: 4px;
+      }
+      .filter-btn.active .filter-count {
+        background: rgba(3, 12, 20, 0.2);
+      }
+
+      /* ─── Mocks Grid ──────────────────────────────── */
+      .mocks-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 28px;
+        margin-bottom: 80px;
+      }
+
+      /* ─── Mock Card ───────────────────────────────── */
+      .mock-card {
+        position: relative;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: linear-gradient(
+          160deg,
+          rgba(255, 255, 255, 0.04),
+          rgba(255, 255, 255, 0.015)
+        );
+        overflow: hidden;
+        transition:
+          transform 0.35s var(--ease),
+          border-color 0.35s var(--ease),
+          box-shadow 0.35s var(--ease);
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+      }
+      .mock-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--border-hi);
+        box-shadow:
+          0 24px 60px rgba(0, 0, 0, 0.4),
+          0 0 0 1px rgba(255, 255, 255, 0.06);
+      }
+      .mock-card[data-hidden="true"] {
+        display: none;
+      }
+
+      /* Thumbnail */
+      .mock-card__thumb {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.03);
+        flex-shrink: 0;
+      }
+      .mock-card__thumb-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.78rem;
+        transition: opacity 0.3s;
+      }
+      .mock-card__thumb-placeholder .icon {
+        font-size: 2.8rem;
+        opacity: 0.55;
+      }
+      .mock-card__thumb-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          transparent 40%,
+          rgba(7, 11, 15, 0.85) 100%
+        );
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        padding: 14px;
+        opacity: 0;
+        transition: opacity 0.3s var(--ease);
+      }
+      .mock-card:hover .mock-card__thumb-overlay {
+        opacity: 1;
+      }
+      .mock-card__open-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: rgba(134, 216, 255, 0.15);
+        border: 1px solid rgba(134, 216, 255, 0.3);
+        color: var(--accent);
+        font-size: 0.78rem;
+        font-weight: 600;
+        backdrop-filter: blur(8px);
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+      .mock-card__open-btn:hover {
+        background: rgba(134, 216, 255, 0.25);
+      }
+
+      /* Status badge */
+      .mock-card__status {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        backdrop-filter: blur(8px);
+      }
+      .status--new {
+        background: rgba(134, 216, 255, 0.18);
+        border: 1px solid rgba(134, 216, 255, 0.35);
+        color: var(--accent);
+      }
+      .status--wip {
+        background: rgba(255, 200, 100, 0.15);
+        border: 1px solid rgba(255, 200, 100, 0.3);
+        color: #ffc864;
+      }
+      .status--done {
+        background: rgba(159, 243, 210, 0.12);
+        border: 1px solid rgba(159, 243, 210, 0.25);
+        color: var(--accent-3);
+      }
+
+      /* Body */
+      .mock-card__body {
+        padding: 22px 24px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+      }
+      .mock-card__category {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-3);
+      }
+      .mock-card__title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        line-height: 1.4;
+        color: var(--text);
+        letter-spacing: -0.01em;
+      }
+      .mock-card__desc {
+        font-size: 0.86rem;
+        color: var(--text-2);
+        line-height: 1.75;
+        flex: 1;
+      }
+      .mock-card__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 4px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+      .mock-card__tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .tag {
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--border);
+        color: var(--text-3);
+        letter-spacing: 0.04em;
+      }
+      .mock-card__date {
+        font-size: 0.72rem;
+        color: var(--text-3);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      /* ─── Empty State ─────────────────────────────── */
+      .empty-state {
+        display: none;
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--text-3);
+        grid-column: 1 / -1;
+      }
+      .empty-state .icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+        opacity: 0.4;
+      }
+      .empty-state p {
+        font-size: 0.95rem;
+      }
+
+      /* ─── Lightbox ────────────────────────────────── */
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s var(--ease);
+      }
+      .lightbox.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .lightbox__backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(4, 8, 13, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+      .lightbox__panel {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 1140px;
+        max-height: calc(100vh - 40px);
+        border-radius: 20px;
+        border: 1px solid var(--border-hi);
+        background: #0c1219;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transform: scale(0.95) translateY(20px);
+        transition: transform 0.35s var(--ease);
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+      }
+      .lightbox.open .lightbox__panel {
+        transform: scale(1) translateY(0);
+      }
+      .lightbox__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+      .lightbox__title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-2);
+      }
+      .lightbox__actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .lightbox__btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 8px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-2);
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .lightbox__btn:hover {
+        background: var(--surface-hi);
+        border-color: var(--border-hi);
+        color: var(--text);
+      }
+      .lightbox__close {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-2);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+        flex-shrink: 0;
+      }
+      .lightbox__close:hover {
+        background: var(--surface-hi);
+        color: var(--text);
+      }
+      .lightbox__content {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+      }
+      .lightbox__iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        min-height: 600px;
+      }
+
+      /* ─── Footer ─────────────────────────────────── */
+      .footer {
+        margin-top: auto;
+        padding: 40px 0;
+        border-top: 1px solid var(--border);
+        text-align: center;
+        color: var(--text-3);
+        font-size: 0.8rem;
+      }
+
+      /* ─── Animations ─────────────────────────────── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .anim {
+        opacity: 0;
+        animation: fadeUp 0.6s var(--ease) forwards;
+      }
+      .anim--d1 {
+        animation-delay: 0.05s;
+      }
+      .anim--d2 {
+        animation-delay: 0.12s;
+      }
+      .anim--d3 {
+        animation-delay: 0.19s;
+      }
+      .anim--d4 {
+        animation-delay: 0.26s;
+      }
+
+      /* ─── Responsive ─────────────────────────────── */
+      @media (max-width: 640px) {
+        .hero {
+          padding: 64px 0 48px;
+        }
+        .mocks-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        .filter-bar {
+          gap: 6px;
+        }
+        .filter-btn {
+          font-size: 0.78rem;
+          padding: 7px 14px;
+        }
+        .lightbox__panel {
+          border-radius: 14px;
+        }
+        .lightbox__iframe {
+          min-height: 420px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background -->
+    <div class="bg-orbs" aria-hidden="true">
+      <div class="bg-orbs__orb"></div>
+      <div class="bg-orbs__orb"></div>
+      <div class="bg-orbs__orb"></div>
+    </div>
+    <div class="bg-grid" aria-hidden="true"></div>
+
+    <!-- Header (header.js が注入) -->
+    <div id="site-header"></div>
+
+    <div class="site">
+      <main>
+        <section class="hero">
+          <div class="wrap">
+            <p class="hero__eyebrow anim anim--d1">Mockups</p>
+            <h1 class="hero__title anim anim--d2">
+              HP <span>モック</span>一覧
+            </h1>
+            <p class="hero__desc anim anim--d3">
+              制作したウェブサイトのデザインモックアップを一覧にまとめています。<br />
+              カードをクリックするとプレビューを確認できます。
+            </p>
+
+            <!-- Filter Tabs -->
+            <div class="filter-bar anim anim--d4" id="filter-bar">
+              <button class="filter-btn active" data-filter="all">
+                すべて <span class="filter-count" id="count-all">0</span>
+              </button>
+              <button class="filter-btn" data-filter="corp">
+                コーポレート <span class="filter-count" id="count-corp">0</span>
+              </button>
+              <button class="filter-btn" data-filter="lp">
+                ランディングページ
+                <span class="filter-count" id="count-lp">0</span>
+              </button>
+              <button class="filter-btn" data-filter="portfolio">
+                ポートフォリオ
+                <span class="filter-count" id="count-portfolio">0</span>
+              </button>
+              <button class="filter-btn" data-filter="ec">
+                EC / ショップ <span class="filter-count" id="count-ec">0</span>
+              </button>
+              <button class="filter-btn" data-filter="other">
+                その他 <span class="filter-count" id="count-other">0</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Mocks Grid -->
+        <section class="wrap">
+          <div class="mocks-grid" id="mocks-grid">
+            <!-- ── モックカードはここに JS で生成されます ── -->
+            <div class="empty-state" id="empty-state">
+              <div class="icon">🔍</div>
+              <p>該当するモックが見つかりません</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="wrap">
+          <p>© 2025 keishinnishiura / keistudio</p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Lightbox -->
+    <div
+      class="lightbox"
+      id="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="モックプレビュー"
+    >
+      <div class="lightbox__backdrop" id="lightbox-backdrop"></div>
+      <div class="lightbox__panel">
+        <div class="lightbox__header">
+          <span class="lightbox__title" id="lightbox-title">プレビュー</span>
+          <div class="lightbox__actions">
+            <a
+              class="lightbox__btn"
+              id="lightbox-open"
+              href="#"
+              target="_blank"
+              rel="noopener"
+            >
+              ↗ 新しいタブで開く
+            </a>
+            <button
+              class="lightbox__close"
+              id="lightbox-close"
+              aria-label="閉じる"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+        <div class="lightbox__content">
+          <iframe
+            class="lightbox__iframe"
+            id="lightbox-iframe"
+            src=""
+            title="モックプレビュー"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <script src="header.js" defer></script>
+    <script>
+      /* ═══════════════════════════════════════════════
+         モックデータ — ここにモックを追加してください
+         ═══════════════════════════════════════════════
+         各オブジェクトのフィールド:
+           id       : 一意のID（文字列）
+           title    : 表示タイトル
+           desc     : 短い説明文
+           category : "corp" | "lp" | "portfolio" | "ec" | "other"
+           tags     : タグの配列（例: ["React", "飲食業"]）
+           status   : "new" | "wip" | "done"
+           date     : 作成日 (YYYY-MM-DD)
+           url      : モックのURL or HTMLファイルパス（null の場合はプレースホルダー表示）
+      ══════════════════════════════════════════════════ */
+      const MOCKS = [
+        {
+          id: "mock-001",
+          title: "レストラン コーポレートサイト",
+          desc: "落ち着いた高級感のある飲食店向けコーポレートサイトのデザイン案。フルスクリーンビジュアルとメニュー展開を重視。",
+          category: "corp",
+          tags: ["飲食業", "ダーク"],
+          status: "done",
+          date: "2025-03-10",
+          url: "mocks/restaurant-corp.html",
+        },
+        {
+          id: "mock-002",
+          title: "フィットネスジム LP",
+          desc: "入会促進を目的としたランディングページ。CTA を中心にビジュアル訴求とプラン比較テーブルで構成。",
+          category: "lp",
+          tags: ["スポーツ", "グラデーション"],
+          status: "done",
+          date: "2025-03-22",
+          url: null,
+        },
+        {
+          id: "mock-003",
+          title: "クリエイター ポートフォリオ",
+          desc: "フォトグラファー・デザイナー向けポートフォリオサイト。作品グリッドと問い合わせフォームを配置。",
+          category: "portfolio",
+          tags: ["写真", "ミニマル"],
+          status: "wip",
+          date: "2025-04-01",
+          url: null,
+        },
+        {
+          id: "mock-004",
+          title: "ハンドメイド EC サイト",
+          desc: "ハンドメイドアクセサリーブランドのオンラインショップ。商品一覧・カート・購入フローのモック。",
+          category: "ec",
+          tags: ["ショップ", "ライト"],
+          status: "wip",
+          date: "2025-04-03",
+          url: null,
+        },
+        {
+          id: "mock-005",
+          title: "クリニック 医療法人サイト",
+          desc: "内科・小児科クリニック向けコーポレートサイト。診療時間・アクセス・オンライン予約を前面に。",
+          category: "corp",
+          tags: ["医療", "ホワイト"],
+          status: "new",
+          date: "2025-04-06",
+          url: null,
+        },
+        {
+          id: "mock-006",
+          title: "SaaS プロダクト LP",
+          desc: "B2B SaaS 向けランディングページ。機能比較・料金プラン・ヒーローアニメーションを含む本格的な構成。",
+          category: "lp",
+          tags: ["Tech", "SaaS", "ダーク"],
+          status: "new",
+          date: "2025-04-07",
+          url: null,
+        },
+        {
+          id: "mock-007",
+          title: "KIRAHA PLACE — 自然体験型複合施設",
+          desc: "架空の複合施設サイトのモック。雄大な自然を活かしたグリーン×ナチュラルデザイン。高原レストラン・体験工房・アウトドアアクティビティなどの施設紹介を含む。",
+          category: "corp",
+          tags: ["観光", "飲食業", "ナチュラル", "グリーン"],
+          status: "done",
+          date: "2026-04-08",
+          url: "mocks/midori-place.html",
+        },
+        {
+          id: "mock-008",
+          title: "ASOYAMA PLACE — 阿蘇山麓 複合リゾート施設",
+          desc: "熊本・阿蘇山麓に佇む複合リゾート施設のサイトモック。大自然のなかでの食事・体験・宿泊をテーマに、迫力ある火山景観とラグジュアリーな宿泊施設を組み合わせたデザイン案。",
+          category: "corp",
+          tags: ["観光", "リゾート", "ナチュラル", "阿蘇"],
+          status: "done",
+          date: "2026-05-01",
+          url: "mocks/asoyama-place.html",
+        },
+        {
+          id: "mock-009",
+          title: "ASOYAMA PLACE — 予約・お問い合わせフォーム",
+          desc: "ASOYAMA PLACE 向けの宿泊・レストラン予約フォームのモック。マルチステップフォーム・バリデーション・確認画面・送信完了の全フローを含む。",
+          category: "other",
+          tags: ["予約", "フォーム", "マルチステップ", "阿蘇"],
+          status: "done",
+          date: "2026-05-01",
+          url: "mocks/asoyama-reserve.html",
+        },
+        {
+          id: "mock-010",
+          title: "MIDORI VALLEY — 南阿蘇グランピングリゾート",
+          desc: "熊本・南阿蘇の森に佇むグランピングリゾートのサイトモック。農園カフェ・星空テラス・フォレストトレイルを擁する自然体験型施設。ASOYAMA PLACE デザインシステムをベースに、よりリゾート感を強調したデザイン案。",
+          category: "corp",
+          tags: ["観光", "リゾート", "グランピング", "ナチュラル", "グリーン"],
+          status: "done",
+          date: "2026-04-09",
+          url: "mocks/midori-valley.html",
+        },
+        {
+          id: "mock-011",
+          title: "KIRAHA RESORT — 3カラム没入型レイアウト",
+          desc: "架空の自然体験型複合リゾートサイト。スクロールスナップ・縦書きテキスト列・右サイドナビ・毛筆アニメ見出しを組み合わせた没入感のある3カラムレイアウト。左写真固定＋右コンテンツスクロール構成。",
+          category: "corp",
+          tags: ["観光", "飲食業", "ナチュラル", "グリーン", "没入型"],
+          status: "done",
+          date: "2026-04-10",
+          url: "mocks/kiraha-resort.html",
+        },
+      ];
+
+      /* ═══════════════════════════════════════════════
+         カテゴリ表示名
+      ══════════════════════════════════════════════════ */
+      const CATEGORY_LABEL = {
+        corp: "コーポレート",
+        lp: "ランディングページ",
+        portfolio: "ポートフォリオ",
+        ec: "EC / ショップ",
+        other: "その他",
+      };
+
+      const STATUS_LABEL = {
+        new: "New",
+        wip: "制作中",
+        done: "完成",
+      };
+
+      /* ═══════════════════════════════════════════════
+         カウントを更新
+      ══════════════════════════════════════════════════ */
+      function updateCounts() {
+        const categories = ["corp", "lp", "portfolio", "ec", "other"];
+        document.getElementById("count-all").textContent = MOCKS.length;
+        categories.forEach((cat) => {
+          const el = document.getElementById(`count-${cat}`);
+          if (el)
+            el.textContent = MOCKS.filter((m) => m.category === cat).length;
+        });
+      }
+
+      /* ═══════════════════════════════════════════════
+         カードを生成
+      ══════════════════════════════════════════════════ */
+      function formatDate(dateStr) {
+        const d = new Date(dateStr);
+        return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
+      }
+
+      /* ─── Thumbnail palette per category ──────────── */
+      const THUMB_STYLE = {
+        corp: {
+          bg: "linear-gradient(135deg,#1a2e3b 0%,#0f1e2a 100%)",
+          icon: "🏢",
+        },
+        lp: {
+          bg: "linear-gradient(135deg,#1e1a3b 0%,#120f28 100%)",
+          icon: "📄",
+        },
+        portfolio: {
+          bg: "linear-gradient(135deg,#1a1a2e 0%,#0d0d1e 100%)",
+          icon: "🎨",
+        },
+        ec: {
+          bg: "linear-gradient(135deg,#2e1a1a 0%,#1e0f0f 100%)",
+          icon: "🛍️",
+        },
+        other: {
+          bg: "linear-gradient(135deg,#1a2e1e 0%,#0f1e14 100%)",
+          icon: "✦",
+        },
+      };
+
+      function createCard(mock) {
+        const card = document.createElement("article");
+        card.className = "mock-card";
+        card.dataset.category = mock.category;
+        card.dataset.id = mock.id;
+
+        const thumb = THUMB_STYLE[mock.category] ?? THUMB_STYLE.other;
+        const previewLabel = mock.url
+          ? '<span style="font-size:0.7rem;opacity:0.5;letter-spacing:0.08em;">クリックでプレビュー</span>'
+          : '<span style="font-size:0.7rem;opacity:0.5;">準備中</span>';
+        const tagsHtml = mock.tags
+          .map(function (t) {
+            return '<span class="tag">' + t + "</span>";
+          })
+          .join("");
+
+        card.innerHTML =
+          '<div class="mock-card__thumb">' +
+          '<div class="mock-card__thumb-placeholder" style="background:' +
+          thumb.bg +
+          ';">' +
+          '<span class="icon">' +
+          thumb.icon +
+          "</span>" +
+          previewLabel +
+          "</div>" +
+          '<div class="mock-card__thumb-overlay">' +
+          '<span class="mock-card__open-btn">' +
+          '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+          '<path d="M2.5 9.5L9.5 2.5M9.5 2.5H5.5M9.5 2.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+          "</svg>" +
+          "プレビュー" +
+          "</span>" +
+          "</div>" +
+          '<span class="mock-card__status status--' +
+          mock.status +
+          '">' +
+          STATUS_LABEL[mock.status] +
+          "</span>" +
+          "</div>" +
+          '<div class="mock-card__body">' +
+          '<span class="mock-card__category">' +
+          (CATEGORY_LABEL[mock.category] || mock.category) +
+          "</span>" +
+          '<h2 class="mock-card__title">' +
+          mock.title +
+          "</h2>" +
+          '<p class="mock-card__desc">' +
+          mock.desc +
+          "</p>" +
+          '<div class="mock-card__footer">' +
+          '<div class="mock-card__tags">' +
+          tagsHtml +
+          "</div>" +
+          '<span class="mock-card__date">' +
+          formatDate(mock.date) +
+          "</span>" +
+          "</div>" +
+          "</div>";
+
+        card.addEventListener("click", function () {
+          openLightbox(mock);
+        });
+        return card;
+      }
+
+      /* ═══════════════════════════════════════════════
+         グリッドを描画
+      ══════════════════════════════════════════════════ */
+      function renderGrid(filter = "all") {
+        const grid = document.getElementById("mocks-grid");
+        const empty = document.getElementById("empty-state");
+
+        // 既存カードを削除
+        grid.querySelectorAll(".mock-card").forEach((el) => el.remove());
+
+        const filtered =
+          filter === "all" ? MOCKS : MOCKS.filter((m) => m.category === filter);
+
+        if (filtered.length === 0) {
+          empty.style.display = "block";
+        } else {
+          empty.style.display = "none";
+          filtered.forEach(function (mock, i) {
+            const card = createCard(mock);
+            const delay = (0.05 + i * 0.07).toFixed(2);
+            card.style.animationDelay = delay + "s";
+            card.style.opacity = "0";
+            card.style.animation =
+              "fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) " + delay + "s forwards";
+            grid.appendChild(card);
+          });
+        }
+      }
+
+      /* ═══════════════════════════════════════════════
+         フィルターボタン
+      ══════════════════════════════════════════════════ */
+      document.getElementById("filter-bar").addEventListener("click", (e) => {
+        const btn = e.target.closest(".filter-btn");
+        if (!btn) return;
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderGrid(btn.dataset.filter);
+      });
+
+      /* ═══════════════════════════════════════════════
+         Lightbox
+      ══════════════════════════════════════════════════ */
+      const lightbox = document.getElementById("lightbox");
+      const lbIframe = document.getElementById("lightbox-iframe");
+      const lbTitle = document.getElementById("lightbox-title");
+      const lbOpen = document.getElementById("lightbox-open");
+
+      function openLightbox(mock) {
+        if (!mock.url) {
+          lbIframe.srcdoc = [
+            '<html><body style="margin:0;background:#0c1219;display:flex;',
+            "align-items:center;justify-content:center;min-height:600px;",
+            'font-family:sans-serif;color:#6e7e90;flex-direction:column;gap:16px;">',
+            '<div style="font-size:3rem;opacity:0.3">\uD83D\uDDBC\uFE0F<\/div>',
+            '<p style="font-size:0.9rem;">\u3053\u306E\u30E2\u30C3\u30AF\u306E\u30D7\u30EC\u30D3\u30E5\u30FC\u306F\u307E\u3060\u6E96\u5099\u4E2D\u3067\u3059<\/p>',
+            "<\/body><\/html>",
+          ].join("");
+          lbIframe.src = "";
+          lbOpen.style.display = "none";
+        } else {
+          lbIframe.srcdoc = "";
+          lbIframe.src = mock.url;
+          lbOpen.href = mock.url;
+          lbOpen.style.display = "inline-flex";
+        }
+        lbTitle.textContent = mock.title;
+        lightbox.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        document.body.style.overflow = "";
+        setTimeout(() => {
+          lbIframe.src = "";
+          lbIframe.srcdoc = "";
+        }, 350);
+      }
+
+      document
+        .getElementById("lightbox-close")
+        .addEventListener("click", closeLightbox);
+      document
+        .getElementById("lightbox-backdrop")
+        .addEventListener("click", closeLightbox);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && lightbox.classList.contains("open"))
+          closeLightbox();
+      });
+
+      /* ═══════════════════════════════════════════════
+         初期化
+      ══════════════════════════════════════════════════ */
+      document.addEventListener("DOMContentLoaded", () => {
+        updateCounts();
+        renderGrid();
+      });
+    </script>
+  </body>
+</html>

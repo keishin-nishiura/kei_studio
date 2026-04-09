@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UBUYAMA PLACE | しぜんとひとが集まる場所。</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f8f3ea;
+        --paper: #fdfaf5;
+        --ink: #1d1309;
+        --ink-soft: rgba(29, 19, 9, 0.65);
+        --accent: #355c4e;
+        --accent-soft: rgba(53, 92, 78, 0.12);
+        --border: rgba(29, 19, 9, 0.12);
+        --gold: #c89f65;
+        --cream: #f1e5d3;
+        --white: #ffffff;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Zen Kaku Gothic New", "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: radial-gradient(circle at 20% 20%, rgba(200, 159, 101, 0.08), transparent 55%),
+          radial-gradient(circle at 80% 0%, rgba(53, 92, 78, 0.09), transparent 60%), var(--bg);
+        color: var(--ink);
+        line-height: 1.9;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+        border-radius: 18px;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wrap {
+        width: min(1180px, calc(100% - 64px));
+        margin: 0 auto;
+      }
+
+      header,
+      main,
+      section,
+      footer {
+        width: 100%;
+      }
+
+      /* ─ Navigation ─ */
+      .nav {
+        position: fixed;
+        inset: 0 0 auto;
+        height: 92px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 48px;
+        background: rgba(248, 243, 234, 0.86);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+        z-index: 40;
+      }
+      .nav__branding {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        letter-spacing: 0.16em;
+      }
+      .nav__branding strong {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.35rem;
+        letter-spacing: 0.36em;
+      }
+      .nav__branding span {
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+      }
+      .nav__links {
+        display: flex;
+        gap: 32px;
+        list-style: none;
+      }
+      .nav__links a {
+        font-size: 0.78rem;
+        letter-spacing: 0.24em;
+        color: var(--ink-soft);
+        position: relative;
+        padding-bottom: 6px;
+        text-transform: uppercase;
+      }
+      .nav__links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        transform: scaleX(0);
+        transform-origin: left;
+        background: var(--ink);
+        transition: transform 0.3s var(--ease);
+      }
+      .nav__links a:hover::after,
+      .nav__links a:focus-visible::after {
+        transform: scaleX(1);
+      }
+      .nav__actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .nav__btn {
+        font-size: 0.7rem;
+        letter-spacing: 0.32em;
+        padding: 12px 22px 11px;
+        border: 1px solid var(--ink);
+        border-radius: 999px;
+        text-transform: uppercase;
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+        transition: background 0.3s var(--ease), color 0.3s var(--ease);
+      }
+      .nav__btn--solid {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .nav__btn:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      /* ─ Hero ─ */
+      .hero {
+        padding-top: 140px;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 30% auto auto 60%;
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.7), transparent 65%);
+        filter: blur(30px);
+        z-index: 0;
+      }
+      .hero__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 48px;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+      }
+      .hero__copy span {
+        display: inline-block;
+        font-size: 0.78rem;
+        letter-spacing: 0.48em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        margin-bottom: 22px;
+      }
+      .hero__copy h1 {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(3rem, 6vw, 4.6rem);
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        line-height: 1.05;
+        margin-bottom: 22px;
+      }
+      .hero__copy p {
+        font-size: 1.04rem;
+        color: var(--ink-soft);
+        margin-bottom: 28px;
+        max-width: 520px;
+      }
+      .hero__cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 28px;
+        border-radius: 38px;
+        background: var(--ink);
+        color: var(--paper);
+        letter-spacing: 0.28em;
+        font-size: 0.72rem;
+      }
+      .hero__card {
+        background: url("https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=900&q=80") center/cover;
+        border-radius: 36px;
+        height: 460px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero__card::after {
+        content: "UBUYAMA";
+        position: absolute;
+        bottom: 26px;
+        left: 28px;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 2rem;
+        letter-spacing: 0.38em;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .hero__languages {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.74rem;
+        margin-top: 32px;
+      }
+      .hero__languages button {
+        border: 1px solid var(--border);
+        padding: 6px 18px;
+        border-radius: 999px;
+        background: transparent;
+        letter-spacing: 0.26em;
+        font-size: 0.65rem;
+      }
+      .hero__languages button.active {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+      }
+      .hero__marquee {
+        margin-top: 80px;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 18px 0;
+        overflow: hidden;
+      }
+      .hero__marquee p {
+        display: inline-block;
+        min-width: 100%;
+        animation: marquee 18s linear infinite;
+        letter-spacing: 0.6em;
+        font-size: 0.72rem;
+        color: var(--ink-soft);
+        text-transform: uppercase;
+      }
+      @keyframes marquee {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* ─ Story / statement ─ */
+      .statement {
+        padding: 96px 0 32px;
+      }
+      .statement__body {
+        columns: 2;
+        column-gap: 48px;
+        font-size: 1.08rem;
+        color: var(--ink-soft);
+      }
+      @media (max-width: 880px) {
+        .statement__body {
+          columns: 1;
+        }
+      }
+
+      /* ─ Gallery strip ─ */
+      .gallery {
+        padding: 32px 0 96px;
+      }
+      .gallery__row {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(220px, 1fr);
+        gap: 24px;
+        overflow-x: auto;
+        padding-bottom: 12px;
+      }
+      .gallery__row figure {
+        min-height: 260px;
+        border-radius: 26px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+      }
+      .gallery__row figcaption {
+        position: absolute;
+        inset: auto 18px 18px;
+        font-size: 0.82rem;
+        letter-spacing: 0.32em;
+        color: var(--white);
+      }
+
+      /* ─ Section shared ─ */
+      section.block {
+        padding: 112px 0;
+      }
+      .eyebrow {
+        letter-spacing: 0.5em;
+        font-size: 0.72rem;
+        color: var(--ink-soft);
+        text-transform: uppercase;
+      }
+      .sec-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(2.4rem, 4vw, 3.4rem);
+        font-weight: 500;
+        margin-top: 18px;
+        margin-bottom: 18px;
+      }
+      .sec-lead {
+        max-width: 620px;
+        font-size: 1rem;
+        color: var(--ink-soft);
+      }
+
+      /* ─ Eat & Drink ─ */
+      .eat {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 40px;
+        align-items: center;
+      }
+      .eat__images {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+      }
+      .eat__images div {
+        border-radius: 28px;
+        padding-bottom: 140%;
+        background-size: cover;
+        background-position: center;
+      }
+      .eat__images div:nth-child(1) {
+        grid-column: span 4;
+        background-image: url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=900&q=80");
+      }
+      .eat__images div:nth-child(2) {
+        grid-column: span 2;
+        background-image: url("https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=600&q=80");
+      }
+      .eat__images div:nth-child(3) {
+        grid-column: span 2;
+        background-image: url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80");
+      }
+      .eat__images div:nth-child(4) {
+        grid-column: span 4;
+        background-image: url("https://images.unsplash.com/photo-1421622548261-c45bfe178854?auto=format&fit=crop&w=900&q=80");
+      }
+      .pill-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        letter-spacing: 0.3em;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        margin-top: 26px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--ink);
+      }
+
+      /* ─ Facility ─ */
+      .facilities {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 24px;
+        margin-top: 48px;
+      }
+      .facility-card {
+        border: 1px solid var(--border);
+        border-radius: 32px;
+        padding: 28px;
+        background: var(--paper);
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .facility-card h4 {
+        font-size: 0.86rem;
+        letter-spacing: 0.3em;
+      }
+      .facility-card p {
+        font-size: 0.92rem;
+        color: var(--ink-soft);
+      }
+
+      /* ─ News ─ */
+      .news-list {
+        margin-top: 48px;
+        border-top: 1px solid var(--border);
+      }
+      .news-item {
+        padding: 28px 0;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        align-items: center;
+      }
+      .news-item time {
+        font-size: 0.78rem;
+        letter-spacing: 0.24em;
+        color: var(--ink-soft);
+        flex: 0 0 160px;
+      }
+      .news-item h5 {
+        flex: 1;
+        font-size: 1.05rem;
+      }
+      .news-item a {
+        letter-spacing: 0.28em;
+        font-size: 0.66rem;
+        text-transform: uppercase;
+      }
+
+      /* ─ Contact ─ */
+      .contact {
+        background: var(--paper);
+        border-radius: 48px;
+        padding: 72px;
+        margin-top: 64px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 40px;
+        border: 1px solid var(--border);
+      }
+      .contact__stack h3 {
+        font-size: 2.2rem;
+        font-family: "Cormorant Garamond", serif;
+      }
+      .contact__stack p {
+        color: var(--ink-soft);
+      }
+      .contact-card {
+        border-radius: 28px;
+        padding: 24px;
+        border: 1px solid var(--border);
+      }
+      .contact-card h4 {
+        font-size: 0.78rem;
+        letter-spacing: 0.4em;
+        margin-bottom: 10px;
+      }
+      .contact-card a {
+        font-size: 1.4rem;
+        letter-spacing: 0.08em;
+        display: inline-block;
+      }
+      .hours {
+        display: flex;
+        gap: 36px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+      }
+      .hours div {
+        min-width: 180px;
+      }
+      .hours strong {
+        display: block;
+        font-size: 0.78rem;
+        letter-spacing: 0.32em;
+        margin-bottom: 6px;
+      }
+
+      /* ─ Footer ─ */
+      footer {
+        margin-top: 120px;
+        padding: 64px;
+        text-align: center;
+        border-top: 1px solid var(--border);
+      }
+      footer p {
+        font-size: 0.75rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+      }
+
+      @media (max-width: 960px) {
+        .nav {
+          height: auto;
+          flex-wrap: wrap;
+          gap: 12px;
+          padding: 22px;
+        }
+        .nav__links {
+          width: 100%;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        .hero {
+          padding-top: 160px;
+        }
+        .contact {
+          padding: 48px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .nav__links {
+          gap: 18px;
+        }
+        .nav__btn {
+          padding: 9px 16px;
+          letter-spacing: 0.18em;
+        }
+        .hero__card {
+          height: 360px;
+        }
+        .contact {
+          padding: 36px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="nav__branding">
+        <strong>UBUYAMA PLACE</strong>
+        <span>SHIZEN TO HITO GA ATSUMARU BASHO</span>
+      </div>
+      <nav>
+        <ul class="nav__links">
+          <li><a href="#home">HOME</a></li>
+          <li><a href="#eat">EAT &amp; DRINK</a></li>
+          <li><a href="#facility">FACILITY</a></li>
+          <li><a href="#news">NEWS</a></li>
+          <li><a href="#contact">CONTACT</a></li>
+        </ul>
+      </nav>
+      <div class="nav__actions">
+        <button class="nav__btn">日本語</button>
+        <button class="nav__btn">EN</button>
+        <button class="nav__btn nav__btn--solid">RESERVE</button>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <div class="wrap hero__grid">
+          <div class="hero__copy">
+            <span>しぜんとひとが集まる場所。</span>
+            <h1>ここから始まる、阿蘇の余白時間。</h1>
+            <p>
+              ここUBUYAMA PLACEでは、風のにおい、草原のまぶしさ、窯からの香ばしさが混ざり合う。
+              あなたのリズムで過ごす自由な時間が生まれ、自然と人とが緩やかにつながっていきます。
+            </p>
+            <a class="hero__cta" href="#contact">レストランご予約</a>
+            <div class="hero__languages">
+              <button class="active">日本語</button>
+              <button>English</button>
+              <button>繁體字</button>
+              <button>한국어</button>
+            </div>
+          </div>
+          <div class="hero__card" aria-label="阿蘇草原の写真"></div>
+        </div>
+        <div class="hero__marquee">
+          <p>
+            しぜんとひとが集まる場所。 UBUYAMA PLACE UBUYAMA PLACE しぜんとひとが集まる場所。
+            UBUYAMA PLACE UBUYAMA PLACE しぜんとひとが集まる場所。
+          </p>
+        </div>
+      </section>
+
+      <section class="statement wrap">
+        <div class="statement__body">
+          ここUBUYAMA PLACEは、熊本県産山村の大地と風をそのまま感じてもらうために作られた複合施設です。
+          牧草の香りのする朝、低空を漂う雲、夜空に近い星たち。何も足さない豊かな余白が、訪れる人の心に緩やかに広がります。
+          新しいレストラン、チーズ工房、パークゴルフ場、そして広場。過ごしかたはあなた次第です。
+          誰かと笑いながら、ひとりで深呼吸しながら、阿蘇の自然を五感で味わってください。
+          ここは、経験と感動がゆっくりと積み重なっていく「PLACE」です。
+        </div>
+      </section>
+
+      <section class="gallery wrap" aria-label="ビジュアルギャラリー">
+        <div class="gallery__row">
+          <figure style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80');">
+            <figcaption>GRASSLAND</figcaption>
+          </figure>
+          <figure style="background-image:url('https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?auto=format&fit=crop&w=600&q=80');">
+            <figcaption>MORNING</figcaption>
+          </figure>
+          <figure style="background-image:url('https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&q=80');">
+            <figcaption>DINING</figcaption>
+          </figure>
+          <figure style="background-image:url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80');">
+            <figcaption>BLUE SKY</figcaption>
+          </figure>
+          <figure style="background-image:url('https://images.unsplash.com/photo-1438463815761-d94b0deddca2?auto=format&fit=crop&w=600&q=80');">
+            <figcaption>CAMPFIRE</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="eat" class="block">
+        <div class="wrap eat">
+          <div>
+            <p class="eyebrow">EAT &amp; DRINK</p>
+            <h2 class="sec-title">そよ風がおいしい香りを、あなたへ。</h2>
+            <p class="sec-lead">
+              シンボルである大きな石窯で焼き上げるピッツァや、地元チーズを使ったデリ、季節のハーブティー。
+              産山の空気といっしょに味わうことで、素材そのものの声が聞こえてきます。
+            </p>
+            <a class="pill-link" href="#contact">RESTAURANT RESERVE</a>
+          </div>
+          <div class="eat__images" aria-hidden="true">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="facility" class="block">
+        <div class="wrap">
+          <p class="eyebrow">FACILITY</p>
+          <h2 class="sec-title">こころを豊かにする余白がひろがる。</h2>
+          <p class="sec-lead">
+            レストラン、チーズ工房、パークゴルフ、そして草原と空。自然とアートと食が緩やかに混ざり合い、訪れるたびに違う顔を見せる。
+          </p>
+          <div class="facilities">
+            <article class="facility-card">
+              <h4>RESTAURANT</h4>
+              <p>石窯キッチンと吹き抜けのダイニング。大きな窓が阿蘇の稜線を額縁のように包みます。</p>
+            </article>
+            <article class="facility-card">
+              <h4>CHEESE FACTORY</h4>
+              <p>新鮮な生乳を使ったチーズが並ぶ工房。ガラス越しに職人たちの手仕事を見ることができます。</p>
+            </article>
+            <article class="facility-card">
+              <h4>PARK GOLF</h4>
+              <p>朝露の芝を感じながらスイング。家族で楽しめる緩やかなコースが広がります。</p>
+            </article>
+            <article class="facility-card">
+              <h4>AND MORE</h4>
+              <p>季節のマーケット、星空イベント、朝ヨガなど、余白時間を楽しむプログラムを準備しています。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="news" class="block">
+        <div class="wrap">
+          <p class="eyebrow">NEWS</p>
+          <h2 class="sec-title">お知らせ</h2>
+          <div class="news-list">
+            <article class="news-item">
+              <time datetime="2026-02-03">2026.02.03</time>
+              <h5>【INFORMATION】休業日のお知らせ：PIZZERIA・SHOP</h5>
+              <a href="#">READ</a>
+            </article>
+            <article class="news-item">
+              <time datetime="2024-06-28">2024.06.28</time>
+              <h5>【INFORMATION】7月13日(土) 阿蘇の草原にNEWレストランOPEN</h5>
+              <a href="#">READ</a>
+            </article>
+            <article class="news-item">
+              <time datetime="2024-04-15">2024.04.15</time>
+              <h5>ゴールデンウィークの営業時間について</h5>
+              <a href="#">READ</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="block">
+        <div class="wrap contact">
+          <div class="contact__stack">
+            <p class="eyebrow">CONTACT</p>
+            <h3>お問い合わせはこちら</h3>
+            <p>お気軽にお電話、またはフォームよりご相談ください。撮影・貸切・イベント利用も承ります。</p>
+            <a class="pill-link" href="#">WEBでのお問い合わせ</a>
+          </div>
+          <div>
+            <div class="contact-card">
+              <h4>お電話でのお問い合わせ</h4>
+              <a href="tel:0967254010">0967-25-4010</a>
+              <p>受付時間：10:00-20:00</p>
+            </div>
+            <div class="contact-card" style="margin-top: 16px;">
+              <h4>所在地</h4>
+              <p>〒869-2703 熊本県阿蘇郡産山村山鹿2100-3</p>
+            </div>
+          </div>
+          <div>
+            <div class="hours">
+              <div>
+                <strong>平日</strong>
+                <p>11:00〜20:00 (L.O. 19:00)</p>
+              </div>
+              <div>
+                <strong>土日祝日</strong>
+                <p>8:00〜20:00 (L.O. 19:00)</p>
+              </div>
+            </div>
+            <p style="margin-top: 24px; color: var(--ink-soft);">
+              ※天候やイベントにより変動する場合があります。最新情報はNEWSをご覧ください。
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>UBUYAMA PLACE — SHIZEN TO HITO GA ATSUMARU BASHO — © 2026</p>
+    </footer>
+  </body>
+</html>

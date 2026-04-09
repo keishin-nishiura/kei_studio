@@ -1,0 +1,1915 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UBUYAMA PLACE | しぜんとひとが集まる場所。</title>
+    <meta
+      name="description"
+      content="熊本・産山村。しぜんとひとが集まる場所、UBUYAMA PLACE。石窯ピッツァ・チーズ工房・パークゴルフ。"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Yuji+Syuku&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─── Reset ─── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Noto Sans JP", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden; /* 3カラムレイアウト：body はスクロールしない */
+        height: 100svh;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      /* ─── Design Tokens ─── */
+      :root {
+        --bg: #f5f3ef;
+        --bg-dark: #2d4a3e;
+        --bg-paper: #faf8f4;
+        --green: #5a9a8a;
+        --green-dk: #2d4a3e;
+        --green-lt: #a8c5b8;
+        --cream: #e8e4dc;
+        --text: #2a2a2a;
+        --text-2: #4a4a4a;
+        --text-3: #8a8a8a;
+        --border: rgba(42, 42, 42, 0.1);
+        --white: #ffffff;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      /* ════════════════════════════
+         3-COLUMN SHELL
+      ════════════════════════════ */
+      .shell {
+        display: flex;
+        height: 100svh;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      /* ── Col A: 左写真固定 ＋ 右コンテンツスクロール ── */
+      .col-main {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* 左：写真固定エリア */
+      .photo-fixed {
+        width: 45%;
+        flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* 写真はクロスフェードで切り替わる */
+      .photo-fixed__slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        pointer-events: none;
+      }
+      .photo-fixed__slide.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .photo-fixed__slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.04);
+        transition:
+          transform 20s ease,
+          opacity 0.9s ease;
+      }
+      .photo-fixed__slide.active img {
+        transform: scale(1);
+      }
+      .photo-fixed__overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.08) 0%,
+          transparent 40%,
+          rgba(0, 0, 0, 0.32) 100%
+        );
+        pointer-events: none;
+      }
+
+      /* 右：コンテンツスクロールエリア */
+      .col-scroll {
+        flex: 1;
+        overflow-y: auto;
+        scroll-snap-type: y mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+      .col-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .col-scroll {
+        scrollbar-width: none;
+      }
+
+      /* ── Col B: Vertical scroll text ── */
+      .col-text {
+        width: 56px;
+        background: #f0ece4;
+        border-left: 1px solid rgba(0, 0, 0, 0.06);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .scroll-chars {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 40px 0;
+        flex: 1;
+        justify-content: center;
+      }
+
+      .scroll-char {
+        font-family: "Noto Serif JP", serif;
+        font-size: 1.1rem;
+        letter-spacing: 0.08em;
+        color: var(--green);
+        line-height: 1.5;
+        opacity: 0;
+        transform: translateY(12px) scale(0.88);
+        filter: blur(3px);
+        transition:
+          opacity 0.5s var(--ease),
+          transform 0.5s var(--ease),
+          filter 0.5s var(--ease);
+        writing-mode: horizontal-tb;
+        user-select: none;
+      }
+      .scroll-char.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+
+      /* ── Col B ─ top line decoration ── */
+      .col-text::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 1px;
+        height: 36px;
+        background: linear-gradient(to bottom, transparent, var(--green));
+      }
+      .col-text::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 1px;
+        height: 36px;
+        background: linear-gradient(to top, transparent, var(--green-lt));
+      }
+
+      /* Scroll dots */
+      .scroll-dots {
+        position: absolute;
+        bottom: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+      }
+      .scroll-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #d0ccc4;
+        transition:
+          background 0.4s,
+          transform 0.4s;
+      }
+      .scroll-dot.active {
+        background: var(--green);
+        transform: scale(1.3);
+      }
+
+      /* ── Col C: Sidebar nav ── */
+      .col-sidebar {
+        width: 148px;
+        background: var(--white);
+        border-left: 1px solid rgba(0, 0, 0, 0.06);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 16px;
+        flex-shrink: 0;
+        gap: 0;
+      }
+
+      /* Sidebar nav links */
+      .sb-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+      }
+      .sb-nav__link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.6rem;
+        letter-spacing: 0.18em;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: var(--text);
+        transition: color 0.2s;
+        white-space: nowrap;
+        position: relative;
+      }
+      .sb-nav__link::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--green);
+        transition: width 0.3s var(--ease);
+      }
+      .sb-nav__link:hover::after {
+        width: 100%;
+      }
+      .sb-nav__link:hover {
+        color: var(--green);
+      }
+      .sb-nav__dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #d0ccc4;
+        flex-shrink: 0;
+        transition:
+          background 0.3s,
+          transform 0.3s;
+      }
+      .sb-nav__link.active .sb-nav__dot {
+        background: var(--green);
+        transform: scale(1.3);
+      }
+
+      /* SNS icons */
+      .sb-sns {
+        display: flex;
+        gap: 14px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+      .sb-sns__link {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        border-radius: 50%;
+        transition:
+          color 0.2s,
+          transform 0.2s;
+      }
+      .sb-sns__link:hover {
+        color: var(--green);
+        transform: translateY(-2px) scale(1.1);
+      }
+      .sb-sns__link svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      /* Language selector */
+      .sb-lang {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .sb-lang p {
+        font-size: 0.55rem;
+        letter-spacing: 0.14em;
+        color: var(--text-3);
+        text-transform: uppercase;
+      }
+      .sb-lang select {
+        font-family: "Noto Sans JP", sans-serif;
+        font-size: 0.65rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 4px 8px;
+        background: #fff;
+        color: var(--text);
+        cursor: pointer;
+        transition: border-color 0.2s;
+        appearance: none;
+        text-align: center;
+        width: 88px;
+      }
+      .sb-lang select:hover {
+        border-color: var(--green);
+      }
+
+      /* Spacer */
+      .sb-spacer {
+        flex: 1;
+      }
+
+      /* Reserve button (circle) */
+      .sb-reserve {
+        position: relative;
+        width: 108px;
+        height: 108px;
+        border-radius: 50%;
+        border: 2px solid var(--text);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        cursor: pointer;
+        transition: border-color 0.4s;
+        flex-shrink: 0;
+      }
+      .sb-reserve::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--text);
+        border-radius: 50%;
+        transform: scale(0);
+        transition: transform 0.5s var(--ease);
+        transform-origin: bottom center;
+      }
+      .sb-reserve:hover {
+        border-color: var(--green);
+      }
+      .sb-reserve:hover::before {
+        transform: scale(1);
+        background: var(--green-dk);
+      }
+      .sb-reserve__text {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+      }
+      .sb-reserve__ja {
+        font-size: 0.55rem;
+        color: var(--text);
+        letter-spacing: 0.05em;
+        transition: color 0.3s;
+        line-height: 1.6;
+        text-align: center;
+      }
+      .sb-reserve__en {
+        font-size: 0.5rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        color: var(--text);
+        transition: color 0.3s;
+        text-align: center;
+        line-height: 1.4;
+      }
+      .sb-reserve:hover .sb-reserve__ja,
+      .sb-reserve:hover .sb-reserve__en {
+        color: #fff;
+      }
+      .sb-reserve__arrow {
+        position: relative;
+        z-index: 1;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 6px;
+        transition: transform 0.3s var(--ease);
+      }
+      .sb-reserve:hover .sb-reserve__arrow {
+        transform: translateX(3px);
+      }
+      .sb-reserve__arrow svg {
+        width: 13px;
+        height: 13px;
+        color: #fff;
+      }
+
+      /* ════════════════════════════
+         SECTION COMMONS（右スクロール内）
+      ════════════════════════════ */
+      .section {
+        min-height: 100svh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        scroll-snap-align: start;
+        position: relative;
+      }
+
+      /* ── Content panel ── */
+      .content-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+        min-height: 100svh;
+      }
+      .content-panel--cream {
+        background: var(--bg);
+      }
+      .content-panel--dark {
+        background: var(--bg-dark);
+        color: #fff;
+      }
+
+      /* Logo overlay on photo */
+      .photo-logo {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        text-align: center;
+        padding: 24px;
+      }
+      .photo-logo__tagline {
+        font-size: 0.82rem;
+        letter-spacing: 0.28em;
+        margin-bottom: 16px;
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.7s 0.3s var(--ease),
+          transform 0.7s 0.3s var(--ease);
+      }
+      .photo-logo__name {
+        font-family: "Noto Serif JP", serif;
+        font-size: clamp(1.8rem, 3vw, 3rem);
+        font-weight: 400;
+        letter-spacing: 0.32em;
+        line-height: 1.1;
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.7s 0.5s var(--ease),
+          transform 0.7s 0.5s var(--ease);
+      }
+      .photo-logo__place {
+        font-family: "Noto Serif JP", serif;
+        font-size: clamp(1.2rem, 2vw, 2rem);
+        font-weight: 300;
+        letter-spacing: 0.5em;
+        margin-top: 4px;
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.7s 0.7s var(--ease),
+          transform 0.7s 0.7s var(--ease);
+      }
+      /* Particles */
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        animation: floatParticle 6s ease-in-out infinite;
+      }
+      @keyframes floatParticle {
+        0%,
+        100% {
+          transform: translateY(0) translateX(0);
+          opacity: 0.3;
+        }
+        50% {
+          transform: translateY(-24px) translateX(10px);
+          opacity: 0.7;
+        }
+      }
+      /* Vertical label on right edge of photo */
+      .photo-label {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        writing-mode: vertical-rl;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.6rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.65);
+        opacity: 0;
+        transition: opacity 0.8s 0.8s var(--ease);
+      }
+      /* Bottom logo (facility section) */
+      .photo-bottom {
+        position: absolute;
+        bottom: 44px;
+        left: 28px;
+        color: #fff;
+        opacity: 0;
+        transform: translateX(-16px);
+        transition:
+          opacity 0.7s 0.3s var(--ease),
+          transform 0.7s 0.3s var(--ease);
+      }
+      .photo-bottom__tagline {
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        margin-bottom: 6px;
+      }
+      .photo-bottom__name {
+        font-family: "Noto Serif JP", serif;
+        font-size: 1.5rem;
+        letter-spacing: 0.3em;
+      }
+      .photo-bottom__sub {
+        font-family: "Noto Serif JP", serif;
+        font-size: 1rem;
+        letter-spacing: 0.45em;
+        font-weight: 300;
+        margin-top: 2px;
+      }
+
+      /* loaded state：写真スライドが active になったとき */
+      .photo-fixed__slide.active .photo-logo__tagline,
+      .photo-fixed__slide.active .photo-logo__name,
+      .photo-fixed__slide.active .photo-logo__place,
+      .photo-fixed__slide.active .photo-label,
+      .photo-fixed__slide.active .photo-bottom {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* コンテンツアニメーション：section が visible クラスを持つとき */
+      .section.visible .fac-intro,
+      .section.visible .fac-aerial,
+      .section.visible .fac-food-illust,
+      .section.visible .news-hd,
+      .section.visible .contact-block,
+      .section.visible .access-block {
+        opacity: 1;
+        transform: none;
+      }
+      .section.visible .fac-card:nth-child(1) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.7s;
+      }
+      .section.visible .fac-card:nth-child(2) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.85s;
+      }
+      .section.visible .news-item:nth-child(1) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.35s;
+      }
+      .section.visible .news-item:nth-child(2) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.48s;
+      }
+      .section.visible .news-item:nth-child(3) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.61s;
+      }
+      .section.visible .news-item:nth-child(4) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.74s;
+      }
+
+      /* 重複定義を削除（上で再定義済み） */
+
+      /* ════════════════════════════
+         SECTION 0 — HERO
+      ════════════════════════════ */
+      .hero-content {
+        padding: 48px 40px 48px 52px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+      }
+
+      /* Brush-stroke headline */
+      .hero-headline {
+        margin-bottom: 32px;
+        overflow: hidden;
+      }
+      .hero-headline__line {
+        display: block;
+        font-family: "Yuji Syuku", "Noto Serif JP", serif;
+        font-size: clamp(2.4rem, 4.5vw, 4rem);
+        color: var(--text);
+        line-height: 1.25;
+        clip-path: inset(0 100% 0 0);
+        opacity: 0;
+        animation: brushReveal 0.9s var(--ease) forwards;
+      }
+      .hero-headline__line:nth-child(1) {
+        animation-delay: 0.6s;
+      }
+      .hero-headline__line:nth-child(2) {
+        animation-delay: 0.9s;
+        margin-top: 6px;
+      }
+      .hero-headline__line:nth-child(3) {
+        animation-delay: 1.2s;
+        margin-top: 6px;
+      }
+      @keyframes brushReveal {
+        from {
+          clip-path: inset(0 100% 0 0);
+          opacity: 0;
+        }
+        to {
+          clip-path: inset(0 0% 0 0);
+          opacity: 1;
+        }
+      }
+
+      /* Mountain illustration placeholder */
+      .hero-illust {
+        width: 260px;
+        max-width: 70%;
+        height: 60px;
+        margin-bottom: 32px;
+        opacity: 0;
+        transform: translateY(10px);
+        animation: fadeUp 0.8s 1.4s var(--ease) forwards;
+        display: flex;
+        align-items: center;
+        gap: 0;
+      }
+      /* Simple SVG mountain */
+      .hero-illust svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .hero-body {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        font-size: 0.86rem;
+        line-height: 1.95;
+        color: var(--text-2);
+      }
+      .hero-body p {
+        opacity: 0;
+        transform: translateY(16px);
+        animation: fadeUp 0.7s var(--ease) forwards;
+      }
+      .hero-body p:nth-child(1) {
+        animation-delay: 1.2s;
+      }
+      .hero-body p:nth-child(2) {
+        animation-delay: 1.5s;
+      }
+      .hero-body p:nth-child(3) {
+        animation-delay: 1.8s;
+        font-style: italic;
+        color: var(--text-3);
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* ════════════════════════════
+         SECTION 1 — FACILITY
+      ════════════════════════════ */
+      .facility-content {
+        padding: 40px 36px 40px 44px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow-y: auto;
+      }
+      .facility-content::-webkit-scrollbar {
+        display: none;
+      }
+
+      .fac-intro {
+        font-size: 0.82rem;
+        line-height: 1.9;
+        color: rgba(255, 255, 255, 0.72);
+        margin-bottom: 24px;
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.7s 0.3s var(--ease),
+          transform 0.7s 0.3s var(--ease);
+      }
+      .section.visible .fac-intro {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* Aerial photo */
+      .fac-aerial {
+        border-radius: 10px;
+        overflow: hidden;
+        aspect-ratio: 4/3;
+        margin-bottom: 28px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.8s 0.5s var(--ease),
+          transform 0.8s 0.5s var(--ease);
+        flex-shrink: 0;
+      }
+      .section.visible .fac-aerial {
+        opacity: 1;
+        transform: none;
+      }
+      .fac-aerial img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.7s var(--ease);
+      }
+      .fac-aerial:hover img {
+        transform: scale(1.05);
+      }
+
+      /* Food illustration */
+      .fac-food-illust {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+        opacity: 0;
+        transform: translateY(8px);
+        transition:
+          opacity 0.8s 0.4s var(--ease),
+          transform 0.8s 0.4s var(--ease);
+      }
+      .section.visible .fac-food-illust {
+        opacity: 1;
+        transform: none;
+      }
+      .fac-food-illust__circle {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1.5px solid rgba(255, 255, 255, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        animation: gentleFloat 4s ease-in-out infinite;
+      }
+      @keyframes gentleFloat {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      /* Facility cards grid */
+      .fac-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        flex-shrink: 0;
+      }
+      .fac-card {
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.6s var(--ease),
+          transform 0.6s var(--ease);
+      }
+      .section.visible .fac-card:nth-child(1) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.7s;
+      }
+      .section.visible .fac-card:nth-child(2) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.85s;
+      }
+      .fac-card__img {
+        aspect-ratio: 4/3;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .fac-card__img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s var(--ease);
+      }
+      .fac-card:hover .fac-card__img img {
+        transform: scale(1.06);
+      }
+      .fac-card__body {
+        padding: 12px 0 4px;
+      }
+      .fac-card__en {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--green-lt);
+        display: block;
+        margin-bottom: 2px;
+        transition: color 0.2s;
+      }
+      .fac-card:hover .fac-card__en {
+        color: #fff;
+      }
+      .fac-card__name {
+        font-family: "Noto Serif JP", serif;
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.85);
+        letter-spacing: 0.05em;
+      }
+
+      /* ════════════════════════════
+         SECTION 2 — NEWS & CONTACT
+      ════════════════════════════ */
+      .news-content {
+        padding: 40px 40px 40px 52px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        overflow-y: auto;
+      }
+      .news-content::-webkit-scrollbar {
+        display: none;
+      }
+
+      .news-hd {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        opacity: 0;
+        transform: translateY(14px);
+        transition:
+          opacity 0.7s 0.2s var(--ease),
+          transform 0.7s 0.2s var(--ease);
+      }
+      .section.visible .news-hd {
+        opacity: 1;
+        transform: none;
+      }
+      .news-hd__title {
+        font-family: "Noto Serif JP", serif;
+        font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+        font-weight: 300;
+        color: var(--text);
+        letter-spacing: 0.04em;
+      }
+      .news-hd__more {
+        font-size: 0.65rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.2s;
+        border-bottom: 1px solid transparent;
+        padding-bottom: 2px;
+      }
+      .news-hd__more:hover {
+        color: var(--green);
+        border-color: var(--green);
+      }
+      .news-hd__more svg {
+        width: 12px;
+        height: 12px;
+      }
+
+      .news-list {
+        border-top: 1px solid var(--border);
+        margin-bottom: 32px;
+        flex-shrink: 0;
+      }
+      .news-item {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(12px);
+        transition:
+          opacity 0.5s var(--ease),
+          transform 0.5s var(--ease),
+          background 0.2s;
+        border-radius: 4px;
+        padding-inline: 6px;
+        margin-inline: -6px;
+      }
+      .section.visible .news-item:nth-child(1) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.35s;
+      }
+      .section.visible .news-item:nth-child(2) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.48s;
+      }
+      .section.visible .news-item:nth-child(3) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.61s;
+      }
+      .section.visible .news-item:nth-child(4) {
+        opacity: 1;
+        transform: none;
+        transition-delay: 0.74s;
+      }
+      .news-item:hover {
+        background: rgba(90, 154, 138, 0.04);
+      }
+      .news-item:hover .news-item__read {
+        color: var(--green);
+      }
+      .news-item__cat {
+        font-size: 0.52rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--green);
+        border: 1px solid var(--green);
+        border-radius: 100px;
+        padding: 2px 8px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .news-item__date {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.8rem;
+        color: var(--text-3);
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        flex-shrink: 0;
+        min-width: 80px;
+      }
+      .news-item__title {
+        font-size: 0.82rem;
+        color: var(--text);
+        line-height: 1.6;
+        flex: 1;
+      }
+      .news-item__read {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        white-space: nowrap;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: color 0.2s;
+      }
+      .news-item__read svg {
+        width: 10px;
+        height: 10px;
+      }
+
+      /* Contact block */
+      .contact-block {
+        background: var(--green-dk);
+        border-radius: 14px;
+        padding: 28px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        flex-shrink: 0;
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.7s 0.8s var(--ease),
+          transform 0.7s 0.8s var(--ease);
+      }
+      .section.visible .contact-block {
+        opacity: 1;
+        transform: none;
+      }
+      .contact-block__label {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.55rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.45);
+        display: block;
+        margin-bottom: 8px;
+      }
+      .contact-block__title {
+        font-family: "Noto Serif JP", serif;
+        font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+        font-weight: 300;
+        color: #fff;
+        line-height: 1.65;
+        letter-spacing: 0.03em;
+        margin-bottom: 10px;
+      }
+      .contact-block__tel {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.5rem;
+        color: #fff;
+        letter-spacing: 0.08em;
+        display: block;
+        margin-bottom: 3px;
+      }
+      .contact-block__hours {
+        font-size: 0.62rem;
+        color: rgba(255, 255, 255, 0.45);
+        letter-spacing: 0.06em;
+      }
+      .contact-block__btns {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex-shrink: 0;
+      }
+      .contact-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 10px;
+        padding: 13px 18px;
+        transition: background 0.25s;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .contact-btn:hover {
+        background: rgba(255, 255, 255, 0.17);
+      }
+      .contact-btn__icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 0.9rem;
+      }
+      .contact-btn__lbl {
+        font-size: 0.52rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.45);
+        margin-bottom: 2px;
+      }
+      .contact-btn__val {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.9rem;
+        color: #fff;
+        letter-spacing: 0.05em;
+      }
+
+      /* Access block */
+      .access-block {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 20px;
+        flex-shrink: 0;
+        opacity: 0;
+        transform: translateY(14px);
+        transition:
+          opacity 0.7s 1s var(--ease),
+          transform 0.7s 1s var(--ease);
+      }
+      .section.visible .access-block {
+        opacity: 1;
+        transform: none;
+      }
+      .access-map {
+        border-radius: 10px;
+        overflow: hidden;
+        aspect-ratio: 16/10;
+        background: #e2ddd4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .access-map svg {
+        opacity: 0.35;
+        width: 36px;
+        height: 36px;
+      }
+      .access-map p {
+        font-size: 0.65rem;
+        color: var(--text-3);
+        letter-spacing: 0.1em;
+      }
+      .access-info {
+        font-size: 0.78rem;
+        color: var(--text-2);
+        line-height: 2;
+      }
+      .access-info strong {
+        display: block;
+        font-size: 0.9rem;
+        color: var(--text);
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+      .access-info__row {
+        display: flex;
+        gap: 10px;
+        border-bottom: 1px solid var(--border);
+        padding: 7px 0;
+        font-size: 0.72rem;
+      }
+      .access-info__dt {
+        color: var(--text-3);
+        width: 64px;
+        flex-shrink: 0;
+        font-size: 0.67rem;
+      }
+
+      /* ════════════════════════════
+         RESPONSIVE
+      ════════════════════════════ */
+      @media (max-width: 1000px) {
+        .col-text {
+          width: 48px;
+        }
+        .scroll-char {
+          font-size: 0.95rem;
+        }
+        .col-sidebar {
+          width: 120px;
+        }
+        .sb-reserve {
+          width: 90px;
+          height: 90px;
+        }
+        .photo-fixed {
+          width: 40%;
+        }
+      }
+      @media (max-width: 740px) {
+        body {
+          overflow: auto;
+        }
+        .shell {
+          flex-direction: column;
+          height: auto;
+        }
+        .col-main {
+          flex-direction: column;
+          overflow: visible;
+        }
+        .photo-fixed {
+          width: 100%;
+          height: 60svh;
+          flex-shrink: 0;
+        }
+        .photo-fixed__slide {
+          position: absolute;
+        }
+        .col-scroll {
+          overflow: visible;
+        }
+        .col-text {
+          display: none;
+        }
+        .col-sidebar {
+          width: 100%;
+          flex-direction: row;
+          height: auto;
+          padding: 14px 20px;
+          border-left: none;
+          border-bottom: 1px solid var(--border);
+          justify-content: space-between;
+          align-items: center;
+        }
+        .sb-nav {
+          flex-direction: row;
+          gap: 16px;
+        }
+        .sb-spacer {
+          display: none;
+        }
+        .sb-reserve {
+          width: 72px;
+          height: 72px;
+        }
+        .sb-lang {
+          display: none;
+        }
+        .sb-sns {
+          margin: 0;
+        }
+        .section {
+          min-height: auto;
+        }
+        .content-panel {
+          min-height: auto;
+        }
+        .content-panel--dark {
+          padding: 24px 20px 32px;
+        }
+        .hero-content {
+          padding: 28px 20px;
+        }
+        .facility-content,
+        .news-content {
+          padding: 24px 20px;
+        }
+        .fac-aerial {
+          aspect-ratio: 16/9;
+        }
+        .contact-block {
+          flex-direction: column;
+          gap: 16px;
+        }
+        .access-block {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <!-- ══ COL A: 左写真固定 ＋ 右コンテンツスクロール ══ -->
+      <div class="col-main">
+        <!-- ── 左：写真固定エリア（クロスフェード） ── -->
+        <div class="photo-fixed" id="photo-fixed">
+          <!-- SLIDE 0: Hero -->
+          <div class="photo-fixed__slide active" data-slide="0">
+            <img
+              src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=85"
+              alt="阿蘇の草原風景"
+            />
+            <div class="photo-fixed__overlay"></div>
+            <!-- Floating particles -->
+            <div
+              class="particle"
+              style="
+                left: 18%;
+                top: 22%;
+                animation-delay: 0s;
+                animation-duration: 5s;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                left: 33%;
+                top: 47%;
+                animation-delay: 0.8s;
+                animation-duration: 6s;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                left: 52%;
+                top: 33%;
+                animation-delay: 1.6s;
+                animation-duration: 4.5s;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                left: 70%;
+                top: 60%;
+                animation-delay: 2.4s;
+                animation-duration: 7s;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                left: 80%;
+                top: 25%;
+                animation-delay: 0.4s;
+                animation-duration: 6.5s;
+              "
+            ></div>
+            <div class="photo-logo">
+              <p class="photo-logo__tagline">しぜんとひとが集まる場所。</p>
+              <h1 class="photo-logo__name">UBUYAMA</h1>
+              <p class="photo-logo__place">PLACE</p>
+            </div>
+            <span class="photo-label">UBUYAMA PLACE PIZZERIA</span>
+          </div>
+
+          <!-- SLIDE 1: Facility -->
+          <div class="photo-fixed__slide" data-slide="1">
+            <img
+              src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=85"
+              alt="UBUYAMA PLACE 外観"
+              loading="lazy"
+            />
+            <div class="photo-fixed__overlay"></div>
+            <div class="photo-bottom">
+              <p class="photo-bottom__tagline">しぜんとひとが集まる場所。</p>
+              <p class="photo-bottom__name">UBUYAMA</p>
+              <p class="photo-bottom__sub">PLACE</p>
+            </div>
+            <span class="photo-label">UBUYAMA PLACE PIZZERIA</span>
+          </div>
+
+          <!-- SLIDE 2: News -->
+          <div class="photo-fixed__slide" data-slide="2">
+            <img
+              src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=85"
+              alt="阿蘇の風景"
+              loading="lazy"
+            />
+            <div class="photo-fixed__overlay"></div>
+            <div class="photo-bottom">
+              <p class="photo-bottom__tagline">しぜんとひとが集まる場所。</p>
+              <p class="photo-bottom__name">UBUYAMA</p>
+              <p class="photo-bottom__sub">PLACE</p>
+            </div>
+          </div>
+        </div>
+        <!-- /photo-fixed -->
+
+        <!-- ── 右：コンテンツスクロールエリア ── -->
+        <div class="col-scroll" id="col-scroll">
+          <!-- ─── SECTION 0: HERO ─── -->
+          <section class="section" id="sec-hero" data-section="0">
+            <div class="content-panel content-panel--cream">
+              <div class="hero-content">
+                <!-- Brush-stroke headline -->
+                <div
+                  class="hero-headline"
+                  aria-label="私のリズム、見つけたかも。"
+                >
+                  <span class="hero-headline__line">私のリズム、</span>
+                  <span class="hero-headline__line">見つけた</span>
+                  <span class="hero-headline__line">かも。</span>
+                </div>
+
+                <!-- Mountain illustration (SVG) -->
+                <div class="hero-illust">
+                  <svg
+                    viewBox="0 0 300 70"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 65 L40 20 L65 45 L100 5 L140 55 L180 25 L210 50 L240 15 L270 40 L300 65Z"
+                      fill="#c8d8d0"
+                      opacity="0.5"
+                    />
+                    <path
+                      d="M0 70 L55 30 L100 55 L140 10 L185 60 L220 35 L260 55 L300 70Z"
+                      fill="#5a9a8a"
+                      opacity="0.25"
+                    />
+                    <circle
+                      cx="155"
+                      cy="18"
+                      r="6"
+                      fill="#f5e6b4"
+                      opacity="0.7"
+                    />
+                  </svg>
+                </div>
+
+                <!-- Body text -->
+                <div class="hero-body">
+                  <p>
+                    ここはどこまでも自由で、<br />
+                    あなたの時間をあなたのリズムで過ごせる。<br />
+                    そんな『PLACE』が産山村に生まれました。
+                  </p>
+                  <p>
+                    はじめての体験は、経験と感動をあたえ、<br />
+                    どこまでも広がる阿蘇の自然は、癒しと笑顔をはこび、<br />
+                    出来立ての料理はお腹と心を満たすでしょう。
+                  </p>
+                  <p>
+                    心地いい風がそよそよと。<br />
+                    牧草たちがさわさわと。<br />
+                    入道雲がふわふわと。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ─── SECTION 1: FACILITY ─── -->
+          <section class="section" id="sec-facility" data-section="1">
+            <div class="content-panel content-panel--dark">
+              <div class="facility-content">
+                <!-- Intro text -->
+                <p class="fac-intro">
+                  これからも新たな魅力が見つかる場所として成長していきます。<br />
+                  阿蘇の大草原、そよぐ風、満天の星空。<br />
+                  この場所でしか味わえない特別な時間をお楽しみください。
+                </p>
+
+                <!-- Food illustration -->
+                <div class="fac-food-illust">
+                  <div class="fac-food-illust__circle">🧀</div>
+                </div>
+
+                <!-- Aerial photo -->
+                <div class="fac-aerial">
+                  <img
+                    src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=900&q=80"
+                    alt="UBUYAMA PLACE 俯瞰"
+                    loading="lazy"
+                  />
+                </div>
+
+                <!-- Facility cards -->
+                <div class="fac-grid">
+                  <a href="#" class="fac-card">
+                    <div class="fac-card__img">
+                      <img
+                        src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80"
+                        alt="レストラン"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="fac-card__body">
+                      <span class="fac-card__en">Restaurant</span>
+                      <span class="fac-card__name">レストラン</span>
+                    </div>
+                  </a>
+
+                  <a href="#" class="fac-card">
+                    <div class="fac-card__img">
+                      <img
+                        src="https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=600&q=80"
+                        alt="チーズ工房"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="fac-card__body">
+                      <span class="fac-card__en">Cheese Factory</span>
+                      <span class="fac-card__name">チーズ工房</span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ─── SECTION 2: NEWS + ACCESS ─── -->
+          <section class="section" id="sec-news" data-section="2">
+            <!-- News + Contact -->
+            <div class="content-panel content-panel--cream">
+              <div class="news-content">
+                <!-- News header -->
+                <div class="news-hd">
+                  <h2 class="news-hd__title">News</h2>
+                  <a href="#" class="news-hd__more">
+                    View More
+                    <svg viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2 6h8M7 3l3 3-3 3"
+                        stroke="currentColor"
+                        stroke-width="1.4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </div>
+
+                <!-- News list -->
+                <div class="news-list">
+                  <a href="#" class="news-item">
+                    <span class="news-item__date">2026.04.01</span>
+                    <span class="news-item__cat">Information</span>
+                    <span class="news-item__title"
+                      >2026年度 春シーズン営業開始のお知らせ</span
+                    >
+                    <span class="news-item__read"
+                      >Read
+                      <svg viewBox="0 0 10 10" fill="none">
+                        <path
+                          d="M1.5 5h7M6 2l3 3-3 3"
+                          stroke="currentColor"
+                          stroke-width="1.3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                  <a href="#" class="news-item">
+                    <span class="news-item__date">2026.02.03</span>
+                    <span class="news-item__cat">Information</span>
+                    <span class="news-item__title"
+                      >休業日のお知らせ：PIZZERIA・SHOP</span
+                    >
+                    <span class="news-item__read"
+                      >Read
+                      <svg viewBox="0 0 10 10" fill="none">
+                        <path
+                          d="M1.5 5h7M6 2l3 3-3 3"
+                          stroke="currentColor"
+                          stroke-width="1.3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                  <a href="#" class="news-item">
+                    <span class="news-item__date">2025.07.13</span>
+                    <span class="news-item__cat">Information</span>
+                    <span class="news-item__title"
+                      >阿蘇の草原に NEW レストラン OPEN</span
+                    >
+                    <span class="news-item__read"
+                      >Read
+                      <svg viewBox="0 0 10 10" fill="none">
+                        <path
+                          d="M1.5 5h7M6 2l3 3-3 3"
+                          stroke="currentColor"
+                          stroke-width="1.3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                  <a href="#" class="news-item">
+                    <span class="news-item__date">2025.04.01</span>
+                    <span class="news-item__cat">Information</span>
+                    <span class="news-item__title"
+                      >2025年度 営業時間のご案内</span
+                    >
+                    <span class="news-item__read"
+                      >Read
+                      <svg viewBox="0 0 10 10" fill="none">
+                        <path
+                          d="M1.5 5h7M6 2l3 3-3 3"
+                          stroke="currentColor"
+                          stroke-width="1.3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                </div>
+
+                <!-- Contact -->
+                <div class="contact-block">
+                  <div class="contact-block__left">
+                    <span class="contact-block__label">Contact</span>
+                    <h3 class="contact-block__title">
+                      UBUYAMA PLACEへの<br />お問い合わせはこちら
+                    </h3>
+                    <a href="tel:0967252900" class="contact-block__tel"
+                      >0967-25-2900</a
+                    >
+                    <p class="contact-block__hours">受付時間：10:00〜17:00</p>
+                  </div>
+                  <div class="contact-block__btns">
+                    <a href="tel:0967252900" class="contact-btn">
+                      <div class="contact-btn__icon">📞</div>
+                      <div>
+                        <p class="contact-btn__lbl">電話でのお問い合わせ</p>
+                        <p class="contact-btn__val">0967-25-2900</p>
+                      </div>
+                    </a>
+                    <a href="#" class="contact-btn">
+                      <div class="contact-btn__icon">📋</div>
+                      <div>
+                        <p class="contact-btn__lbl">Webでのお問い合わせ</p>
+                        <p class="contact-btn__val">CONTACT</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Access -->
+                <div class="access-block">
+                  <div class="access-map">
+                    <svg viewBox="0 0 48 48" fill="none">
+                      <circle
+                        cx="24"
+                        cy="20"
+                        r="8"
+                        stroke="#9e9890"
+                        stroke-width="2"
+                      />
+                      <path
+                        d="M24 4C15.16 4 8 11.16 8 20c0 12 16 28 16 28s16-16 16-28c0-8.84-7.16-16-16-16z"
+                        stroke="#9e9890"
+                        stroke-width="2"
+                        fill="none"
+                      />
+                    </svg>
+                    <p>Map Placeholder</p>
+                  </div>
+                  <div class="access-info">
+                    <strong>UBUYAMA PLACE</strong>
+                    <div class="access-info__row">
+                      <span class="access-info__dt">住所</span>
+                      <span>〒869-2704<br />熊本県阿蘇郡産山村田尻771</span>
+                    </div>
+                    <div class="access-info__row">
+                      <span class="access-info__dt">TEL</span>
+                      <span>0967-25-2900</span>
+                    </div>
+                    <div class="access-info__row">
+                      <span class="access-info__dt">営業時間</span>
+                      <span>10:00〜17:00（不定休）</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <!-- /col-scroll -->
+      </div>
+      <!-- /col-main -->
+
+      <!-- ══ COL B: SCROLL TEXT ══ -->
+      <div class="col-text" id="col-text">
+        <div class="scroll-chars" id="scroll-chars" aria-hidden="true">
+          <span class="scroll-char" data-idx="0">し</span>
+          <span class="scroll-char" data-idx="1">ぜ</span>
+          <span class="scroll-char" data-idx="2">ん</span>
+          <span class="scroll-char" data-idx="3">と</span>
+          <span class="scroll-char" data-idx="4">ひ</span>
+          <span class="scroll-char" data-idx="5">と</span>
+          <span class="scroll-char" data-idx="6">が</span>
+          <span class="scroll-char" data-idx="7">あ</span>
+          <span class="scroll-char" data-idx="8">つ</span>
+          <span class="scroll-char" data-idx="9">ま</span>
+          <span class="scroll-char" data-idx="10">る</span>
+        </div>
+        <div class="scroll-dots" id="scroll-dots">
+          <div class="scroll-dot active" data-sec="0"></div>
+          <div class="scroll-dot" data-sec="1"></div>
+          <div class="scroll-dot" data-sec="2"></div>
+        </div>
+      </div>
+
+      <!-- ══ COL C: SIDEBAR ══ -->
+      <div class="col-sidebar" id="col-sidebar">
+        <!-- Nav -->
+        <nav class="sb-nav">
+          <a
+            href="#sec-hero"
+            class="sb-nav__link active"
+            data-sec="0"
+            id="nav-0"
+          >
+            <span class="sb-nav__dot"></span>HOME
+          </a>
+          <a href="#sec-facility" class="sb-nav__link" data-sec="1" id="nav-1">
+            <span class="sb-nav__dot"></span>FACILITY
+          </a>
+          <a href="#sec-news" class="sb-nav__link" data-sec="2" id="nav-2">
+            <span class="sb-nav__dot"></span>NEWS
+          </a>
+        </nav>
+
+        <!-- SNS -->
+        <div class="sb-sns">
+          <a href="#" class="sb-sns__link" aria-label="Instagram">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle
+                cx="17.5"
+                cy="6.5"
+                r="0.5"
+                fill="currentColor"
+                stroke="none"
+              />
+            </svg>
+          </a>
+          <a href="#" class="sb-sns__link" aria-label="Facebook">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+              />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Spacer -->
+        <div class="sb-spacer"></div>
+
+        <!-- Language -->
+        <div class="sb-lang">
+          <p>Language</p>
+          <select aria-label="言語選択">
+            <option value="ja">日本語</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+
+        <!-- Reserve button -->
+        <a href="#" class="sb-reserve">
+          <div class="sb-reserve__text">
+            <span class="sb-reserve__ja">レストランご予約</span>
+            <span class="sb-reserve__en">RESTAURANT<br />RESERVE</span>
+          </div>
+          <div class="sb-reserve__arrow">
+            <svg
+              viewBox="0 0 14 14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M2 7h10M8 3l4 4-4 4" />
+            </svg>
+          </div>
+        </a>
+      </div>
+    </div>
+    <!-- /shell -->
+
+    <script>
+      const scrollEl = document.getElementById("col-scroll");
+      const slides = document.querySelectorAll(".photo-fixed__slide");
+      const chars = document.querySelectorAll(".scroll-char");
+      const dots = document.querySelectorAll(".scroll-dot");
+      const navLinks = document.querySelectorAll(".sb-nav__link");
+      const sections = document.querySelectorAll(".section");
+
+      /* ─ 写真スライド切り替え ─ */
+      function activateSlide(idx) {
+        slides.forEach((s, i) => s.classList.toggle("active", i === idx));
+      }
+
+      /* ─ Initial load ─ */
+      window.addEventListener("DOMContentLoaded", () => {
+        activateSlide(0);
+        sections[0].classList.add("visible");
+        // 最初から数文字を表示
+        chars.forEach((c, i) => {
+          if (i < 4) {
+            setTimeout(() => c.classList.add("visible"), i * 120);
+          }
+        });
+      });
+
+      /* ─ Scroll handler ─ */
+      scrollEl.addEventListener(
+        "scroll",
+        () => {
+          const scrollTop = scrollEl.scrollTop;
+          const scrollHeight = scrollEl.scrollHeight - scrollEl.clientHeight;
+          const progress = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
+
+          /* 文字の出現制御 */
+          const getVisibleCount = (p) => {
+            if (p < 0.02) return 4;
+            if (p < 0.2) return 5;
+            if (p < 0.35) return 6;
+            if (p < 0.5) return 7;
+            if (p < 0.65) return 9;
+            if (p < 0.8) return 10;
+            return 11;
+          };
+          const visibleCount = getVisibleCount(progress);
+          chars.forEach((c, i) => {
+            c.classList.toggle("visible", i < visibleCount);
+            c.style.transitionDelay =
+              i < visibleCount ? `${(i % 4) * 60}ms` : "0ms";
+          });
+
+          /* セクション判定 */
+          const clientH = scrollEl.clientHeight;
+          const currentSec = Math.round(scrollTop / clientH);
+
+          /* 写真スライド切り替え */
+          activateSlide(currentSec);
+
+          /* ドット */
+          dots.forEach((d, i) =>
+            d.classList.toggle("active", i === currentSec),
+          );
+
+          /* ナビ */
+          navLinks.forEach((l, i) =>
+            l.classList.toggle("active", i === currentSec),
+          );
+
+          /* セクション visible クラス */
+          sections.forEach((s, i) => {
+            if (i <= currentSec + 1) s.classList.add("visible");
+          });
+        },
+        { passive: true },
+      );
+
+      /* ─ Smooth scroll on nav click ─ */
+      navLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const secIdx = +link.dataset.sec;
+          scrollEl.scrollTo({
+            top: scrollEl.clientHeight * secIdx,
+            behavior: "smooth",
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

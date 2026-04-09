@@ -1,0 +1,2363 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASOYAMA PLACE | しぜんとひとが集まる場所。</title>
+    <meta
+      name="description"
+      content="熊本・阿蘇。しぜんとひとが集まる場所、ASOYAMA PLACE。石窯ピッツァレストラン、チーズ工房、パークゴルフ場。"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─── Reset ─── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Noto Sans JP", sans-serif;
+        background: #fff;
+        color: #333;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      /* ─── Design Tokens ─── */
+      :root {
+        --green: #3a6b46;
+        --green-2: #4e8a5e;
+        --green-dk: #2a5034;
+        --green-lt: #e8f2ea;
+        --cream: #faf7f0;
+        --cream-2: #f5f0e8;
+        --beige: #f0e9dc;
+        --sand: #e8dfd0;
+        --brown: #7a5c3e;
+        --text: #1e1c1a;
+        --text-2: #5a5550;
+        --text-3: #9e9890;
+        --border: rgba(58, 107, 70, 0.13);
+        --border-2: rgba(30, 28, 26, 0.08);
+        --white: #ffffff;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* ─── Wrapper ─── */
+      .inner {
+        width: min(1140px, calc(100% - 64px));
+        margin: 0 auto;
+      }
+      .inner--wide {
+        width: min(1400px, calc(100% - 48px));
+        margin: 0 auto;
+      }
+
+      /* ══════════════════════════
+         HEADER
+      ══════════════════════════ */
+      #site-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 500;
+        height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 44px;
+        transition:
+          background 0.45s var(--ease),
+          box-shadow 0.45s,
+          height 0.45s;
+      }
+      #site-header.scrolled {
+        background: rgba(250, 247, 240, 0.97);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+        height: 68px;
+      }
+
+      /* Logo */
+      .hd-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 10;
+      }
+      .hd-logo__mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1.5px solid rgba(255, 255, 255, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.4s,
+          border-color 0.4s;
+        flex-shrink: 0;
+      }
+      #site-header.scrolled .hd-logo__mark {
+        background: var(--green-lt);
+        border-color: var(--border);
+      }
+      .hd-logo__text {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .hd-logo__name {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        color: #fff;
+        line-height: 1;
+        transition: color 0.4s;
+      }
+      #site-header.scrolled .hd-logo__name {
+        color: var(--green);
+      }
+      .hd-logo__sub {
+        font-size: 0.5rem;
+        letter-spacing: 0.2em;
+        color: rgba(255, 255, 255, 0.55);
+        text-transform: uppercase;
+        transition: color 0.4s;
+      }
+      #site-header.scrolled .hd-logo__sub {
+        color: var(--text-3);
+      }
+
+      /* Nav */
+      .hd-nav {
+        display: flex;
+        align-items: center;
+        gap: 34px;
+      }
+      .hd-nav__link {
+        font-size: 0.68rem;
+        letter-spacing: 0.18em;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.88);
+        transition: color 0.2s;
+      }
+      #site-header.scrolled .hd-nav__link {
+        color: var(--text-2);
+      }
+      .hd-nav__link:hover {
+        color: var(--green) !important;
+      }
+      .hd-nav__reserve {
+        padding: 9px 22px;
+        border-radius: 100px;
+        border: 1.5px solid rgba(255, 255, 255, 0.65);
+        font-size: 0.63rem;
+        letter-spacing: 0.18em;
+        color: rgba(255, 255, 255, 0.9);
+        text-transform: uppercase;
+        transition: all 0.25s;
+      }
+      #site-header.scrolled .hd-nav__reserve {
+        border-color: var(--green);
+        color: var(--green);
+      }
+      .hd-nav__reserve:hover {
+        background: var(--green) !important;
+        border-color: var(--green) !important;
+        color: #fff !important;
+      }
+
+      /* Hamburger */
+      .hd-hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        z-index: 600;
+      }
+      .hd-hamburger span {
+        display: block;
+        width: 24px;
+        height: 1.5px;
+        background: #fff;
+        transition: all 0.3s;
+      }
+      #site-header.scrolled .hd-hamburger span {
+        background: var(--text);
+      }
+      .hd-hamburger.open span:nth-child(1) {
+        transform: translateY(6.5px) rotate(45deg);
+      }
+      .hd-hamburger.open span:nth-child(2) {
+        opacity: 0;
+      }
+      .hd-hamburger.open span:nth-child(3) {
+        transform: translateY(-6.5px) rotate(-45deg);
+      }
+
+      /* Drawer */
+      .hd-drawer {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(250, 247, 240, 0.97);
+        backdrop-filter: blur(20px);
+        z-index: 400;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 44px;
+        opacity: 0;
+        transition: opacity 0.3s var(--ease);
+        pointer-events: none;
+      }
+      .hd-drawer.open {
+        display: flex;
+        opacity: 1;
+        pointer-events: all;
+      }
+      .hd-drawer a {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 2.2rem;
+        font-weight: 300;
+        letter-spacing: 0.1em;
+        color: var(--text);
+        transition: color 0.2s;
+      }
+      .hd-drawer a:hover {
+        color: var(--green);
+      }
+
+      /* ══════════════════════════
+         KV
+      ══════════════════════════ */
+      .kv {
+        position: relative;
+        height: 100svh;
+        min-height: 600px;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+      }
+      .kv__slides {
+        position: absolute;
+        inset: 0;
+      }
+      .kv__slide {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        transform: scale(1.06);
+        transition:
+          opacity 1.2s ease,
+          transform 8s ease;
+      }
+      .kv__slide.active {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .kv__overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(10, 22, 12, 0.3) 0%,
+          rgba(10, 22, 12, 0.15) 40%,
+          rgba(10, 22, 12, 0.65) 100%
+        );
+        z-index: 1;
+      }
+      .kv__content {
+        position: relative;
+        z-index: 2;
+        padding: 0 52px 80px;
+        max-width: 680px;
+      }
+      .kv__eyebrow {
+        display: inline-block;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.65rem;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 20px;
+        animation: kvFadeUp 1s 0.3s var(--ease) both;
+      }
+      .kv__catchcopy {
+        font-family: "Noto Serif JP", serif;
+        font-size: clamp(2.4rem, 5vw, 4rem);
+        font-weight: 300;
+        color: #fff;
+        line-height: 1.45;
+        letter-spacing: 0.04em;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+        margin-bottom: 24px;
+        animation: kvFadeUp 1s 0.5s var(--ease) both;
+      }
+      .kv__sub {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.75);
+        line-height: 1.9;
+        margin-bottom: 40px;
+        animation: kvFadeUp 1s 0.7s var(--ease) both;
+      }
+      .kv__btns {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        animation: kvFadeUp 1s 0.9s var(--ease) both;
+      }
+      @keyframes kvFadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .btn-kv-white {
+        padding: 14px 34px;
+        border-radius: 100px;
+        background: #fff;
+        color: var(--green);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        transition:
+          background 0.25s,
+          transform 0.3s var(--ease);
+      }
+      .btn-kv-white:hover {
+        background: var(--green-lt);
+        transform: translateY(-2px);
+      }
+      .btn-kv-ghost {
+        padding: 13px 34px;
+        border-radius: 100px;
+        border: 1.5px solid rgba(255, 255, 255, 0.65);
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        transition:
+          background 0.25s,
+          border-color 0.25s,
+          transform 0.3s var(--ease);
+      }
+      .btn-kv-ghost:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: #fff;
+        transform: translateY(-2px);
+      }
+
+      /* KV Dots */
+      .kv__dots {
+        position: absolute;
+        bottom: 36px;
+        right: 52px;
+        z-index: 3;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .kv__dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.35);
+        cursor: pointer;
+        transition:
+          background 0.3s,
+          transform 0.3s;
+        border: none;
+      }
+      .kv__dot.active {
+        background: #fff;
+        transform: scale(1.4);
+      }
+
+      /* KV Scroll arrow */
+      .kv__scroll-hint {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.6rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+        animation: scrollBounce 2.4s ease-in-out infinite;
+      }
+      .kv__scroll-hint::after {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 36px;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.5),
+          transparent
+        );
+      }
+      @keyframes scrollBounce {
+        0%,
+        100% {
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          transform: translateX(-50%) translateY(7px);
+        }
+      }
+
+      /* ══════════════════════════
+         TICKER / MARQUEE
+      ══════════════════════════ */
+      .ticker {
+        background: var(--green);
+        padding: 13px 0;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .ticker__inner {
+        display: inline-flex;
+        animation: ticker 24s linear infinite;
+      }
+      .ticker__item {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.65);
+        padding: 0 36px;
+      }
+      .ticker__sep {
+        color: rgba(255, 255, 255, 0.25);
+      }
+      @keyframes ticker {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* ══════════════════════════
+         SECTION COMMONS
+      ══════════════════════════ */
+      .sec-en {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.62rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--green);
+        display: block;
+        margin-bottom: 14px;
+      }
+      .sec-title {
+        font-family: "Noto Serif JP", serif;
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        font-weight: 300;
+        line-height: 1.55;
+        letter-spacing: 0.04em;
+        color: var(--text);
+      }
+      .sec-lead {
+        font-size: 0.88rem;
+        line-height: 2.1;
+        color: var(--text-2);
+      }
+
+      .btn-green {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 28px;
+        border-radius: 100px;
+        background: var(--green);
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        transition:
+          background 0.25s,
+          transform 0.3s var(--ease);
+      }
+      .btn-green:hover {
+        background: var(--green-2);
+        transform: translateY(-2px);
+      }
+
+      .btn-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 26px;
+        border-radius: 100px;
+        border: 1.5px solid var(--green);
+        color: var(--green);
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        transition:
+          background 0.25s,
+          color 0.25s;
+      }
+      .btn-outline:hover {
+        background: var(--green);
+        color: #fff;
+      }
+
+      /* Scroll reveal */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 0.8s var(--ease),
+          transform 0.8s var(--ease);
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* ══════════════════════════
+         CONCEPT
+      ══════════════════════════ */
+      .concept {
+        padding: 120px 0 100px;
+        background: var(--cream);
+      }
+      .concept__grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 72px;
+        align-items: center;
+      }
+      .concept__imgs {
+        position: relative;
+      }
+      .concept__img-main {
+        aspect-ratio: 4/5;
+        border-radius: 4px;
+        overflow: hidden;
+        background: var(--beige);
+      }
+      .concept__img-main img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .concept__img-sub {
+        position: absolute;
+        bottom: -28px;
+        right: -28px;
+        width: 42%;
+        aspect-ratio: 1;
+        border-radius: 4px;
+        border: 5px solid #fff;
+        overflow: hidden;
+        background: var(--beige);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      }
+      .concept__img-sub img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .concept__text {
+        padding-left: 8px;
+      }
+      .concept__catch {
+        font-family: "Noto Serif JP", serif;
+        font-size: clamp(1.1rem, 2vw, 1.4rem);
+        font-weight: 300;
+        color: var(--text);
+        line-height: 1.9;
+        letter-spacing: 0.06em;
+        margin-bottom: 28px;
+      }
+      .concept__divider {
+        width: 32px;
+        height: 2px;
+        background: var(--green);
+        opacity: 0.5;
+        margin-bottom: 28px;
+      }
+      .concept__body {
+        font-size: 0.86rem;
+        line-height: 2.2;
+        color: var(--text-2);
+        margin-bottom: 20px;
+      }
+      .concept__illust-band {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 28px 0 0;
+        border-top: 1px solid var(--border);
+        margin-top: 36px;
+      }
+      .concept__illust-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: var(--green-lt);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        flex-shrink: 0;
+      }
+      .concept__illust-text {
+        font-family: "Noto Serif JP", serif;
+        font-size: 1rem;
+        font-weight: 300;
+        color: var(--text);
+        line-height: 1.8;
+        letter-spacing: 0.04em;
+      }
+      .cinema-strip {
+        margin-top: 80px;
+        border-radius: 8px;
+        overflow: hidden;
+        aspect-ratio: 16/6;
+        background: var(--beige);
+      }
+      .cinema-strip img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .concept__family {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 16px;
+      }
+      .concept__family-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--green-lt);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.4rem;
+      }
+
+      /* ══════════════════════════
+         EAT & DRINK
+      ══════════════════════════ */
+      .eat {
+        background: #fff;
+        padding: 96px 0;
+        overflow: hidden;
+      }
+      .eat__grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 72px;
+        align-items: center;
+      }
+      .eat__tag {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.6rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--green);
+        border-bottom: 1px solid var(--green);
+        padding-bottom: 3px;
+        display: inline-block;
+        margin-bottom: 20px;
+      }
+      .eat__title {
+        font-family: "Noto Serif JP", serif;
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        font-weight: 300;
+        line-height: 1.55;
+        letter-spacing: 0.04em;
+        color: var(--text);
+        margin-bottom: 24px;
+      }
+      .eat__body {
+        font-size: 0.86rem;
+        line-height: 2.2;
+        color: var(--text-2);
+        margin-bottom: 32px;
+      }
+      .eat__staff {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+      }
+      .eat__staff-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: var(--beige);
+        flex-shrink: 0;
+      }
+      .eat__staff-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .eat__staff-name {
+        font-size: 0.78rem;
+        color: var(--text);
+        font-weight: 500;
+      }
+      .eat__staff-role {
+        font-size: 0.68rem;
+        color: var(--text-3);
+        letter-spacing: 0.06em;
+      }
+      .eat__img-main {
+        border-radius: 8px;
+        overflow: hidden;
+        aspect-ratio: 4/3;
+        background: var(--beige);
+        margin-bottom: 10px;
+      }
+      .eat__img-main img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .eat__img-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      .eat__img-row-item {
+        aspect-ratio: 1;
+        border-radius: 6px;
+        overflow: hidden;
+        background: var(--beige);
+      }
+      .eat__img-row-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* ══════════════════════════
+         FACILITY
+      ══════════════════════════ */
+      .facility {
+        background: var(--cream);
+        padding: 96px 0;
+      }
+      .facility__head {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 56px;
+        align-items: center;
+        margin-bottom: 64px;
+      }
+      .facility__kama {
+        border-radius: 8px;
+        overflow: hidden;
+        aspect-ratio: 3/2;
+        background: var(--beige);
+      }
+      .facility__kama img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .facility__figure-band {
+        margin-bottom: 48px;
+        border-radius: 8px;
+        overflow: hidden;
+        aspect-ratio: 16/5;
+        background: var(--beige);
+      }
+      .facility__figure-band img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .facility__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .fac-card {
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 16px rgba(58, 107, 70, 0.07);
+        transition:
+          transform 0.3s var(--ease),
+          box-shadow 0.3s;
+      }
+      .fac-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 40px rgba(58, 107, 70, 0.13);
+      }
+      .fac-card__img {
+        aspect-ratio: 3/2;
+        overflow: hidden;
+        background: var(--beige);
+      }
+      .fac-card__img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s var(--ease);
+      }
+      .fac-card:hover .fac-card__img img {
+        transform: scale(1.06);
+      }
+      .fac-card__body {
+        padding: 22px 24px;
+      }
+      .fac-card__en {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.6rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--green);
+        display: block;
+        margin-bottom: 6px;
+      }
+      .fac-card__name {
+        font-family: "Noto Serif JP", serif;
+        font-size: 1.08rem;
+        font-weight: 400;
+        color: var(--text);
+        margin-bottom: 10px;
+      }
+      .fac-card__desc {
+        font-size: 0.8rem;
+        line-height: 1.9;
+        color: var(--text-2);
+      }
+      .facility__andmore {
+        text-align: center;
+        padding-top: 40px;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1rem;
+        font-style: italic;
+        letter-spacing: 0.12em;
+        color: var(--text-3);
+      }
+
+      /* ══════════════════════════
+         FULLBLEED QUOTE
+      ══════════════════════════ */
+      .fullbleed {
+        position: relative;
+        height: 400px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .fullbleed__bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        transform: scale(1.06);
+        transition: transform 6s ease;
+      }
+      .fullbleed:hover .fullbleed__bg {
+        transform: scale(1);
+      }
+      .fullbleed__overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(12, 28, 14, 0.56);
+      }
+      .fullbleed__content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+      }
+      .fullbleed__en {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: clamp(2.2rem, 5vw, 4rem);
+        color: rgba(255, 255, 255, 0.18);
+        letter-spacing: 0.1em;
+        margin-bottom: 12px;
+        line-height: 1;
+      }
+      .fullbleed__ja {
+        font-family: "Noto Serif JP", serif;
+        font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+        font-weight: 300;
+        color: #fff;
+        letter-spacing: 0.2em;
+      }
+
+      /* ══════════════════════════
+         NEWS
+      ══════════════════════════ */
+      .news {
+        background: #fff;
+        padding: 96px 0;
+      }
+      .news__head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 48px;
+      }
+      .news__content {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 56px;
+        align-items: start;
+      }
+      .news__list {
+        border-top: 1px solid var(--border);
+      }
+      .news-row {
+        display: flex;
+        align-items: baseline;
+        gap: 16px;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.2s;
+        cursor: pointer;
+      }
+      .news-row:hover {
+        background: rgba(58, 107, 70, 0.02);
+      }
+      .news-row__date {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.85rem;
+        color: var(--text-3);
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+        flex-shrink: 0;
+        min-width: 90px;
+      }
+      .news-row__cat {
+        font-size: 0.58rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--green);
+        border: 1px solid var(--green);
+        border-radius: 100px;
+        padding: 3px 9px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .news-row__title {
+        font-size: 0.86rem;
+        color: var(--text);
+        line-height: 1.6;
+        flex: 1;
+      }
+      .news-row__read {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
+        color: var(--text-3);
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: color 0.2s;
+      }
+      .news-row:hover .news-row__read {
+        color: var(--green);
+      }
+      .news__side-img {
+        border-radius: 8px;
+        overflow: hidden;
+        aspect-ratio: 4/3;
+        background: var(--beige);
+      }
+      .news__side-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* ══════════════════════════
+         CONTACT
+      ══════════════════════════ */
+      .contact-sec {
+        background: var(--green);
+        padding: 84px 0;
+        position: relative;
+        overflow: hidden;
+      }
+      .contact-sec::before {
+        content: "CONTACT";
+        position: absolute;
+        bottom: -20px;
+        right: -10px;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 10rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.04);
+        letter-spacing: 0.1em;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+      .contact-sec__inner {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 48px;
+        align-items: center;
+      }
+      .contact-sec__label {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.65rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.55);
+        display: block;
+        margin-bottom: 14px;
+      }
+      .contact-sec__title {
+        font-family: "Noto Serif JP", serif;
+        font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+        font-weight: 300;
+        color: #fff;
+        line-height: 1.65;
+        letter-spacing: 0.04em;
+        margin-bottom: 20px;
+      }
+      .contact-sec__tel {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 2rem;
+        color: #fff;
+        letter-spacing: 0.1em;
+        margin-bottom: 4px;
+        display: block;
+      }
+      .contact-sec__hours {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.55);
+        letter-spacing: 0.08em;
+      }
+      .contact-sec__cards {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 270px;
+      }
+      .contact-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 10px;
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: background 0.25s;
+      }
+      .contact-card:hover {
+        background: rgba(255, 255, 255, 0.17);
+      }
+      .contact-card__icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.1rem;
+      }
+      .contact-card__lbl {
+        font-size: 0.6rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 3px;
+      }
+      .contact-card__val {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.05rem;
+        color: #fff;
+        letter-spacing: 0.06em;
+      }
+      .contact-card__sub {
+        font-size: 0.63rem;
+        color: rgba(255, 255, 255, 0.45);
+        margin-top: 2px;
+      }
+      .contact-sec__foot {
+        text-align: center;
+        padding-top: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        opacity: 0.7;
+      }
+      .contact-sec__foot-icon {
+        font-size: 2rem;
+      }
+      .contact-sec__foot-text {
+        font-family: "Noto Serif JP", serif;
+        font-size: 1rem;
+        font-weight: 300;
+        color: #fff;
+        letter-spacing: 0.12em;
+      }
+
+      /* ══════════════════════════
+         FOOTER
+      ══════════════════════════ */
+      footer {
+        background: #111f14;
+        padding: 64px 0 28px;
+      }
+      .footer__grid {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr 1fr;
+        gap: 48px;
+        padding-bottom: 48px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        margin-bottom: 28px;
+      }
+      .footer__logo {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.4rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        color: rgba(255, 255, 255, 0.78);
+        margin-bottom: 6px;
+      }
+      .footer__tagline {
+        font-family: "Noto Serif JP", serif;
+        font-size: 0.75rem;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.35);
+        letter-spacing: 0.1em;
+        margin-bottom: 20px;
+      }
+      .footer__address {
+        font-size: 0.73rem;
+        color: rgba(255, 255, 255, 0.35);
+        line-height: 2;
+      }
+      .footer__col-label {
+        font-size: 0.58rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+        font-weight: 600;
+        margin-bottom: 18px;
+        display: block;
+      }
+      .footer__links {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .footer__links a {
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.45);
+        letter-spacing: 0.04em;
+        transition: color 0.2s;
+      }
+      .footer__links a:hover {
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .footer__hours-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 7px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.76rem;
+      }
+      .footer__hours-dt {
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 0.7rem;
+      }
+      .footer__hours-dd {
+        color: rgba(255, 255, 255, 0.55);
+      }
+      .footer__sponsors {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .footer__sponsors a {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.3);
+        transition: color 0.2s;
+      }
+      .footer__sponsors a:hover {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .footer__bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .footer__copy {
+        font-size: 0.66rem;
+        color: rgba(255, 255, 255, 0.2);
+        letter-spacing: 0.08em;
+      }
+      .footer__sns {
+        display: flex;
+        gap: 10px;
+      }
+      .footer__sns a {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.35);
+        font-size: 0.75rem;
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        transition:
+          border-color 0.2s,
+          color 0.2s;
+      }
+      .footer__sns a:hover {
+        border-color: rgba(255, 255, 255, 0.4);
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      /* ══════════════════════════
+         HORIZONTAL PHOTO GALLERY
+      ══════════════════════════ */
+      .hgallery {
+        background: var(--cream-2);
+        padding: 72px 0;
+        overflow: hidden;
+      }
+      .hgallery__head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 36px;
+        padding: 0 44px;
+      }
+      .hgallery__scroll {
+        display: flex;
+        gap: 16px;
+        padding: 0 44px 20px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: var(--sand) transparent;
+        cursor: grab;
+      }
+      .hgallery__scroll:active {
+        cursor: grabbing;
+      }
+      .hgallery__scroll::-webkit-scrollbar {
+        height: 4px;
+      }
+      .hgallery__scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .hgallery__scroll::-webkit-scrollbar-thumb {
+        background: var(--sand);
+        border-radius: 2px;
+      }
+      .hgallery__item {
+        flex: 0 0 320px;
+        scroll-snap-align: start;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+      }
+      .hgallery__item img {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        border-radius: 0;
+        transition: transform 0.6s var(--ease);
+        display: block;
+      }
+      .hgallery__item:hover img {
+        transform: scale(1.04);
+      }
+      .hgallery__caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 40px 18px 18px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.8rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      /* ══════════════════════════
+         SNS BAND
+      ══════════════════════════ */
+      .sns-band {
+        background: var(--green-dk);
+        padding: 48px 44px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .sns-band__text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(1.1rem, 2vw, 1.45rem);
+        letter-spacing: 0.1em;
+        color: rgba(255, 255, 255, 0.85);
+        font-style: italic;
+      }
+      .sns-band__links {
+        display: flex;
+        gap: 12px;
+      }
+      .sns-band__link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 22px;
+        border-radius: 100px;
+        border: 1.5px solid rgba(255, 255, 255, 0.28);
+        font-size: 0.65rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.75);
+        transition:
+          background 0.25s,
+          border-color 0.25s,
+          color 0.25s;
+      }
+      .sns-band__link:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.6);
+        color: #fff;
+      }
+
+      /* ══════════════════════════
+         ACCESS / MAP
+      ══════════════════════════ */
+      .access {
+        background: var(--cream);
+        padding: 96px 0;
+      }
+      .access__grid {
+        display: grid;
+        grid-template-columns: 1fr 1.4fr;
+        gap: 64px;
+        align-items: start;
+      }
+      .access__map {
+        border-radius: 10px;
+        overflow: hidden;
+        aspect-ratio: 4/3;
+        background: var(--beige);
+        position: relative;
+      }
+      .access__map iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+      }
+      .access__map-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 12px;
+        background: var(--sand);
+      }
+      .access__map-placeholder svg {
+        opacity: 0.35;
+      }
+      .access__map-placeholder p {
+        font-size: 0.72rem;
+        color: var(--text-3);
+        letter-spacing: 0.1em;
+      }
+      .access__info {
+        padding-top: 8px;
+      }
+      .access__addr {
+        font-size: 0.9rem;
+        color: var(--text-2);
+        line-height: 2;
+        margin-bottom: 28px;
+      }
+      .access__addr strong {
+        display: block;
+        font-size: 1rem;
+        color: var(--text);
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+      .access__table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+        color: var(--text-2);
+        margin-bottom: 28px;
+      }
+      .access__table tr {
+        border-bottom: 1px solid var(--border-2);
+      }
+      .access__table td {
+        padding: 10px 0;
+        vertical-align: top;
+      }
+      .access__table td:first-child {
+        width: 90px;
+        color: var(--text-3);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        padding-right: 16px;
+        white-space: nowrap;
+      }
+      .access__note {
+        font-size: 0.73rem;
+        color: var(--text-3);
+        line-height: 1.9;
+        padding: 14px 0 0;
+        border-top: 1px solid var(--border-2);
+      }
+
+      /* ══════════════════════════
+         INFOGRAPHIC / STATS
+      ══════════════════════════ */
+      .stats {
+        background: var(--green);
+        padding: 72px 44px;
+      }
+      .stats__grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+      }
+      .stat-item {
+        padding: 40px 32px;
+        background: rgba(255, 255, 255, 0.04);
+        text-align: center;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        transition: background 0.3s;
+      }
+      .stat-item:last-child {
+        border-right: none;
+      }
+      .stat-item:hover {
+        background: rgba(255, 255, 255, 0.07);
+      }
+      .stat-item__num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(2.2rem, 4vw, 3.2rem);
+        font-weight: 300;
+        color: #fff;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+      .stat-item__unit {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.5);
+        vertical-align: super;
+        font-family: "Cormorant Garamond", serif;
+        margin-left: 2px;
+      }
+      .stat-item__label {
+        font-size: 0.67rem;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      /* ══════════════════════════
+         RESPONSIVE
+      ══════════════════════════ */
+      @media (max-width: 920px) {
+        .hd-nav {
+          display: none;
+        }
+        .hd-hamburger {
+          display: flex;
+        }
+        .concept__grid,
+        .eat__grid,
+        .facility__head,
+        .contact-sec__inner,
+        .access__grid {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+        .eat__visual {
+          order: -1;
+        }
+        .concept__img-sub {
+          right: 0;
+        }
+        .facility__grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .news__content {
+          grid-template-columns: 1fr;
+        }
+        .news__side-img {
+          display: none;
+        }
+        .footer__grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .stats__grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .sns-band {
+          flex-direction: column;
+          text-align: center;
+        }
+        .hgallery__head,
+        .hgallery__scroll {
+          padding-left: 24px;
+          padding-right: 24px;
+        }
+      }
+      @media (max-width: 560px) {
+        #site-header {
+          padding: 0 20px;
+        }
+        .kv__content {
+          padding: 0 24px 64px;
+        }
+        .kv__dots {
+          right: 24px;
+        }
+        .facility__grid {
+          grid-template-columns: 1fr;
+        }
+        .footer__grid {
+          grid-template-columns: 1fr;
+        }
+        .footer__bottom {
+          flex-direction: column;
+          gap: 10px;
+        }
+        .news-row {
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+        .news-row__read {
+          display: none;
+        }
+        .eat__img-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stats__grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .hgallery__item {
+          flex: 0 0 260px;
+        }
+        .access {
+          padding: 64px 0;
+        }
+        .sns-band {
+          padding: 36px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ════ HEADER ════ -->
+    <header id="site-header">
+      <a href="#" class="hd-logo">
+        <div class="hd-logo__mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 2L22 20H2Z"
+              stroke="rgba(255,255,255,0.92)"
+              stroke-width="1.6"
+              fill="rgba(255,255,255,0.08)"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <div class="hd-logo__text">
+          <span class="hd-logo__name">ASOYAMA PLACE</span>
+          <span class="hd-logo__sub">Aso · Kumamoto · Japan</span>
+        </div>
+      </a>
+      <nav class="hd-nav">
+        <a href="#concept" class="hd-nav__link">Concept</a>
+        <a href="#eat" class="hd-nav__link">Eat &amp; Drink</a>
+        <a href="#facility" class="hd-nav__link">Facility</a>
+        <a href="#news" class="hd-nav__link">News</a>
+        <a href="#access" class="hd-nav__link">Access</a>
+        <a href="asoyama-reserve.html" class="hd-nav__reserve"
+          >予約・お問い合わせ</a
+        >
+      </nav>
+      <button class="hd-hamburger" id="hamburger" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+
+    <!-- Drawer -->
+    <div class="hd-drawer" id="drawer">
+      <a href="#concept">Concept</a>
+      <a href="#eat">Eat &amp; Drink</a>
+      <a href="#facility">Facility</a>
+      <a href="#news">News</a>
+      <a href="#access">Access</a>
+      <a href="asoyama-reserve.html" style="color: var(--green)"
+        >予約・お問い合わせ</a
+      >
+    </div>
+
+    <!-- ════ KV ════ -->
+    <section class="kv" id="top">
+      <div class="kv__slides" id="kv-slides">
+        <div
+          class="kv__slide active"
+          style="
+            background-image: url(&quot;https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1920&q=85&quot;);
+          "
+        ></div>
+        <div
+          class="kv__slide"
+          style="
+            background-image: url(&quot;https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=85&quot;);
+          "
+        ></div>
+        <div
+          class="kv__slide"
+          style="
+            background-image: url(&quot;https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=85&quot;);
+          "
+        ></div>
+        <div
+          class="kv__slide"
+          style="
+            background-image: url(&quot;https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1920&q=85&quot;);
+          "
+        ></div>
+      </div>
+      <div class="kv__overlay"></div>
+
+      <div class="kv__content">
+        <span class="kv__eyebrow">ASOYAMA PLACE — Aso · Kumamoto</span>
+        <h1 class="kv__catchcopy">しぜんとひとが<br />集まる場所。</h1>
+        <p class="kv__sub">
+          私のリズム、見つけたかも。<br />
+          ここはどこまでも自由で、あなたの時間を<br />
+          あなたのリズムで過ごせる場所。
+        </p>
+        <div class="kv__btns">
+          <a href="#concept" class="btn-kv-white">詳しく見る</a>
+          <a href="asoyama-reserve.html" class="btn-kv-ghost"
+            >レストランご予約</a
+          >
+        </div>
+      </div>
+
+      <div class="kv__dots" id="kv-dots">
+        <button
+          class="kv__dot active"
+          data-idx="0"
+          aria-label="Slide 1"
+        ></button>
+        <button class="kv__dot" data-idx="1" aria-label="Slide 2"></button>
+        <button class="kv__dot" data-idx="2" aria-label="Slide 3"></button>
+        <button class="kv__dot" data-idx="3" aria-label="Slide 4"></button>
+      </div>
+
+      <div class="kv__scroll-hint">Scroll</div>
+    </section>
+
+    <!-- ════ TICKER ════ -->
+    <div class="ticker">
+      <div class="ticker__inner">
+        <span class="ticker__item"
+          >ASOYAMA PLACE<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >しぜんとひとが集まる場所<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >Restaurant<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >Cheese Factory<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >Park Golf Course<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >Aso · Kumamoto<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >石窯ピッツァ<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >ASOYAMA PLACE<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >しぜんとひとが集まる場所<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >Restaurant<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >Cheese Factory<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >Park Golf Course<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >Aso · Kumamoto<span class="ticker__sep"> ✦ </span></span
+        >
+        <span class="ticker__item"
+          >石窯ピッツァ<span class="ticker__sep"> ✦ </span></span
+        >
+      </div>
+    </div>
+
+    <!-- ════ CONCEPT ════ -->
+    <section class="concept" id="concept">
+      <div class="inner">
+        <div class="concept__grid">
+          <div class="concept__imgs reveal">
+            <div class="concept__img-main">
+              <img
+                src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80"
+                alt="阿蘇の自然"
+                loading="lazy"
+              />
+            </div>
+            <div class="concept__img-sub">
+              <img
+                src="https://images.unsplash.com/photo-1607968565043-36af90dde238?w=400&q=80"
+                alt="草原"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          <div class="concept__text reveal">
+            <span class="sec-en">Our Concept</span>
+            <h2 class="sec-title" style="margin-bottom: 20px">
+              しぜんとひとが<br />集まる場所
+            </h2>
+            <p class="concept__catch">私のリズム、見つけたかも。</p>
+            <div class="concept__divider"></div>
+            <p class="concept__body">
+              ここはどこまでも自由で、あなたの時間をあなたのリズムで過ごせる。
+              そんな『PLACE』がアソヤマ村に生まれました。
+            </p>
+            <p class="concept__body">
+              はじめての体験は、経験と感動をあたえ、どこまでも広がる阿蘇の自然は、
+              癒しと笑顔をはこび、出来立ての料理はお腹と心を満たすでしょう。
+            </p>
+            <p class="concept__body">
+              心地いい風がそよそよと。牧草たちがさわさわと。入道雲がふわふわと。<br />
+              楽しそうな声につられて、自然もゆっくりと集まってくる。
+            </p>
+
+            <div class="concept__illust-band">
+              <div class="concept__illust-icon">🏔️</div>
+              <p class="concept__illust-text">
+                ここはしぜんとひとが集まる場所。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cinema strip -->
+        <div class="cinema-strip reveal" style="margin-top: 72px">
+          <img
+            src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1600&q=80"
+            alt="パノラマ"
+            loading="lazy"
+          />
+        </div>
+
+        <div class="concept__family reveal">
+          <div class="concept__family-icon">👨‍👩‍👧‍👦</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ EAT & DRINK ════ -->
+    <section class="eat" id="eat">
+      <div class="inner">
+        <div class="eat__grid">
+          <div class="eat__text reveal">
+            <span class="eat__tag">EAT &amp; DRINK</span>
+            <h2 class="eat__title">そよ風がおいしい香りを、<br />あなたへ。</h2>
+            <p class="eat__body">
+              ASOYAMA PLACE
+              のシンボル、「大きな石窯」で作られる本格イタリアンピッツァをどうぞ。
+              ぷくぷくと膨れるモッツァレラチーズはのんびり浮かぶ白い雲のよう。
+              豊かな緑と風の香りに包まれながら、ほっぺもとろけるお食事をお楽しみください。
+            </p>
+            <a href="asoyama-reserve.html" class="btn-green">
+              レストランご予約
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                <path
+                  d="M2 6.5h9M7.5 3l3.5 3.5-3.5 3.5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+            <div class="eat__staff">
+              <div class="eat__staff-avatar">
+                <img
+                  src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=120&q=80"
+                  alt="シェフ"
+                  loading="lazy"
+                />
+              </div>
+              <div>
+                <p class="eat__staff-name">Head Chef — 石窯担当</p>
+                <p class="eat__staff-role">Local Ingredients × Italian Craft</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="eat__visual reveal">
+            <div class="eat__img-main">
+              <img
+                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80"
+                alt="石窯ピッツァ"
+                loading="lazy"
+              />
+            </div>
+            <div class="eat__img-row">
+              <div class="eat__img-row-item">
+                <img
+                  src="https://images.unsplash.com/photo-1528137871618-79d2761e3fd5?w=300&q=80"
+                  alt=""
+                  loading="lazy"
+                />
+              </div>
+              <div class="eat__img-row-item">
+                <img
+                  src="https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=300&q=80"
+                  alt=""
+                  loading="lazy"
+                />
+              </div>
+              <div class="eat__img-row-item">
+                <img
+                  src="https://images.unsplash.com/photo-1541014741259-de529411b96a?w=300&q=80"
+                  alt=""
+                  loading="lazy"
+                />
+              </div>
+              <div class="eat__img-row-item">
+                <img
+                  src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=300&q=80"
+                  alt=""
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ FACILITY ════ -->
+    <section class="facility" id="facility">
+      <div class="inner">
+        <div class="facility__head">
+          <div class="reveal">
+            <span class="sec-en">Facility</span>
+            <h2 class="sec-title" style="margin-bottom: 20px">
+              こころを豊かにする<br />「余白」がある場所
+            </h2>
+            <p class="sec-lead">
+              近くを浮かぶ雲、風に踊る草原、広大に広がる星空。
+              なにもないようで、なによりも贅沢な時間が流れる。 ここ ASOYAMA
+              PLACE は阿蘇の魅力と出会える場所として生まれ、
+              これからも新たな魅力が見つかる場所として成長していきます。
+            </p>
+          </div>
+          <div class="facility__kama reveal">
+            <img
+              src="https://images.unsplash.com/photo-1612966726499-d0e98aef1bbb?w=800&q=80"
+              alt="石窯"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <div class="facility__figure-band reveal">
+          <img
+            src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=1600&q=80"
+            alt="Facility overview"
+            loading="lazy"
+          />
+        </div>
+
+        <div class="facility__grid">
+          <div class="fac-card reveal">
+            <div class="fac-card__img">
+              <img
+                src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80"
+                alt="レストラン"
+                loading="lazy"
+              />
+            </div>
+            <div class="fac-card__body">
+              <span class="fac-card__en">Restaurant</span>
+              <h3 class="fac-card__name">レストラン</h3>
+              <p class="fac-card__desc">
+                大自然の中でいただく石窯焼きイタリアンピッツァ。
+                地元食材をふんだんに使ったランチ・ディナーをご用意しています。
+              </p>
+            </div>
+          </div>
+
+          <div class="fac-card reveal">
+            <div class="fac-card__img">
+              <img
+                src="https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=600&q=80"
+                alt="チーズ工房"
+                loading="lazy"
+              />
+            </div>
+            <div class="fac-card__body">
+              <span class="fac-card__en">Cheese Factory</span>
+              <h3 class="fac-card__name">チーズ工房</h3>
+              <p class="fac-card__desc">
+                地元の牧場から届く新鮮な牛乳で作る手作りチーズ。
+                工房見学や体験コースもご用意しています。
+              </p>
+            </div>
+          </div>
+
+          <div class="fac-card reveal">
+            <div class="fac-card__img">
+              <img
+                src="https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=600&q=80"
+                alt="パークゴルフ場"
+                loading="lazy"
+              />
+            </div>
+            <div class="fac-card__body">
+              <span class="fac-card__en">Park Golf Course</span>
+              <h3 class="fac-card__name">パークゴルフ場</h3>
+              <p class="fac-card__desc">
+                緑豊かな自然の中に広がる全18ホールのパークゴルフコース。
+                お子様から年配の方まで気軽に楽しめます。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="facility__andmore reveal">And more…</div>
+      </div>
+    </section>
+
+    <!-- ════ FULLBLEED QUOTE ════ -->
+    <div class="fullbleed">
+      <div
+        class="fullbleed__bg"
+        style="
+          background-image: url(&quot;https://images.unsplash.com/photo-1448375240586-882707db888b?w=1600&q=80&quot;);
+        "
+      ></div>
+      <div class="fullbleed__overlay"></div>
+      <div class="fullbleed__content reveal">
+        <p class="fullbleed__en">Nature &amp; People</p>
+        <p class="fullbleed__ja">しぜんとひとが集まる場所。</p>
+      </div>
+    </div>
+
+    <!-- ════ NEWS ════ -->
+    <section class="news" id="news">
+      <div class="inner">
+        <div class="news__head reveal">
+          <div>
+            <span class="sec-en">News</span>
+            <h2 class="sec-title" style="font-size: clamp(1.4rem, 2.5vw, 2rem)">
+              お知らせ
+            </h2>
+          </div>
+          <a href="#" class="btn-outline">
+            View More
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+              <path
+                d="M2 5.5h7M6.5 2.5l3 3-3 3"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
+
+        <div class="news__content">
+          <div class="news__list reveal">
+            <a href="#" class="news-row">
+              <span class="news-row__date">2026.02.03</span>
+              <span class="news-row__cat">Information</span>
+              <span class="news-row__title"
+                >休業日のお知らせ：PIZZERIA・SHOP</span
+              >
+              <span class="news-row__read"
+                >Read
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                  <path
+                    d="M1.5 4.5h6M5.5 2l2.5 2.5L5.5 7"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </a>
+            <a href="#" class="news-row">
+              <span class="news-row__date">2025.11.20</span>
+              <span class="news-row__cat">Service</span>
+              <span class="news-row__title"
+                >チーズ工房 秋の体験ワークショップ 特別コース開催</span
+              >
+              <span class="news-row__read"
+                >Read
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                  <path
+                    d="M1.5 4.5h6M5.5 2l2.5 2.5L5.5 7"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </a>
+            <a href="#" class="news-row">
+              <span class="news-row__date">2025.07.13</span>
+              <span class="news-row__cat">Information</span>
+              <span class="news-row__title"
+                >阿蘇の草原に NEW レストラン OPEN</span
+              >
+              <span class="news-row__read"
+                >Read
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                  <path
+                    d="M1.5 4.5h6M5.5 2l2.5 2.5L5.5 7"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </a>
+            <a href="#" class="news-row">
+              <span class="news-row__date">2025.04.01</span>
+              <span class="news-row__cat">Information</span>
+              <span class="news-row__title">2025年度 営業時間のご案内</span>
+              <span class="news-row__read"
+                >Read
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                  <path
+                    d="M1.5 4.5h6M5.5 2l2.5 2.5L5.5 7"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </a>
+          </div>
+
+          <div class="news__side-img reveal">
+            <img
+              src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=640&q=80"
+              alt="ピッツァ"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ CONTACT ════ -->
+    <section class="contact-sec" id="contact">
+      <div class="inner">
+        <div class="contact-sec__inner">
+          <div class="reveal">
+            <span class="contact-sec__label">Contact</span>
+            <h2 class="contact-sec__title">
+              ASOYAMA PLACEへの<br />お問い合わせはこちら
+            </h2>
+            <div>
+              <p
+                style="
+                  font-size: 0.78rem;
+                  color: rgba(255, 255, 255, 0.55);
+                  letter-spacing: 0.1em;
+                  margin-bottom: 10px;
+                "
+              >
+                お電話でのお問い合わせ
+              </p>
+              <a href="tel:0967254010" class="contact-sec__tel">0967-25-4010</a>
+              <p class="contact-sec__hours">（受付時間：10:00〜20:00）</p>
+            </div>
+          </div>
+
+          <div class="contact-sec__cards reveal">
+            <a href="tel:0967254010" class="contact-card">
+              <div class="contact-card__icon">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path
+                    d="M16.5 12.9v2.1a1.4 1.4 0 0 1-1.53 1.4A13.86 13.86 0 0 1 9 14.53a13.66 13.66 0 0 1-4.2-4.2 13.86 13.86 0 0 1-1.87-5.96A1.4 1.4 0 0 1 4.32 3H6.4a1.4 1.4 0 0 1 1.4 1.2 9 9 0 0 0 .49 1.97 1.4 1.4 0 0 1-.32 1.48L6.8 8.82a11.2 11.2 0 0 0 4.2 4.2l1.17-1.17a1.4 1.4 0 0 1 1.48-.32 9 9 0 0 0 1.97.49A1.4 1.4 0 0 1 16.5 12.9Z"
+                    stroke="white"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p class="contact-card__lbl">電話でのお問い合わせ</p>
+                <p class="contact-card__val">0967-25-4010</p>
+                <p class="contact-card__sub">受付 10:00 〜 20:00</p>
+              </div>
+            </a>
+            <a href="asoyama-reserve.html" class="contact-card">
+              <div class="contact-card__icon">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <rect
+                    x="2"
+                    y="4"
+                    width="14"
+                    height="11"
+                    rx="2"
+                    stroke="white"
+                    stroke-width="1.4"
+                  />
+                  <path
+                    d="M2 8h14M6 2v4M12 2v4"
+                    stroke="white"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p class="contact-card__lbl">Webでのお問い合わせ</p>
+                <p class="contact-card__val">CONTACT</p>
+                <p class="contact-card__sub">24時間受付</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="contact-sec__foot reveal">
+          <span class="contact-sec__foot-icon">🏔️</span>
+          <span class="contact-sec__foot-text">しぜんとひとが集まる場所。</span>
+          <span class="contact-sec__foot-icon">👨‍👩‍👧‍👦</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ FOOTER ════ -->
+    <footer>
+      <div class="inner">
+        <div class="footer__grid">
+          <div>
+            <p class="footer__logo">ASOYAMA PLACE</p>
+            <p class="footer__tagline">しぜんとひとが集まる場所。</p>
+            <p class="footer__address">
+              〒XXX-XXXX 熊本県阿蘇郡○○村○○ XXX-X<br />
+              TEL: 0967-25-4010<br />
+              平日 11:00〜20:00（L.O.19:00）<br />
+              土日祝 8:00〜20:00（L.O.19:00）
+            </p>
+            <div class="footer__sponsors">
+              <a href="#">カミチクグループ</a>
+              <a href="#">○○村</a>
+              <a href="#">株式会社MOTHERS</a>
+            </div>
+          </div>
+
+          <div>
+            <span class="footer__col-label">Navigation</span>
+            <div class="footer__links">
+              <a href="#top">Home</a>
+              <a href="#concept">Concept</a>
+              <a href="#eat">Eat &amp; Drink</a>
+              <a href="#facility">Facility</a>
+              <a href="#news">News</a>
+              <a href="asoyama-reserve.html">Contact / Reserve</a>
+            </div>
+          </div>
+
+          <div>
+            <span class="footer__col-label">Hours</span>
+            <div>
+              <div class="footer__hours-row">
+                <span class="footer__hours-dt">平日</span>
+                <span class="footer__hours-dd"
+                  >11:00 〜 20:00（L.O.19:00）</span
+                >
+              </div>
+              <div class="footer__hours-row">
+                <span class="footer__hours-dt">土日祝</span>
+                <span class="footer__hours-dd">8:00 〜 20:00（L.O.19:00）</span>
+              </div>
+              <div class="footer__hours-row">
+                <span class="footer__hours-dt">TEL</span>
+                <span class="footer__hours-dd">0967-25-4010</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer__bottom">
+          <p class="footer__copy">© ASOYAMA PLACE All Rights Reserved.</p>
+          <div class="footer__sns">
+            <a href="#" aria-label="Instagram">IG</a>
+            <a href="#" aria-label="Facebook">FB</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      /* ─── Header scroll ─── */
+      const hdr = document.getElementById("site-header");
+      const onScroll = () =>
+        hdr.classList.toggle("scrolled", window.scrollY > 60);
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      /* ─── Hamburger ─── */
+      const ham = document.getElementById("hamburger");
+      const drw = document.getElementById("drawer");
+      ham.addEventListener("click", () => {
+        const o = ham.classList.toggle("open");
+        drw.classList.toggle("open", o);
+        document.body.style.overflow = o ? "hidden" : "";
+      });
+      drw.querySelectorAll("a").forEach((a) => {
+        a.addEventListener("click", () => {
+          ham.classList.remove("open");
+          drw.classList.remove("open");
+          document.body.style.overflow = "";
+        });
+      });
+
+      /* ─── KV Slideshow ─── */
+      const slides = document.querySelectorAll(".kv__slide");
+      const dots = document.querySelectorAll(".kv__dot");
+      let cur = 0,
+        timer;
+      function goSlide(n) {
+        slides[cur].classList.remove("active");
+        dots[cur].classList.remove("active");
+        cur = (n + slides.length) % slides.length;
+        slides[cur].classList.add("active");
+        dots[cur].classList.add("active");
+      }
+      function autoPlay() {
+        clearInterval(timer);
+        timer = setInterval(() => goSlide(cur + 1), 5000);
+      }
+      dots.forEach((d) =>
+        d.addEventListener("click", () => {
+          goSlide(+d.dataset.idx);
+          autoPlay();
+        }),
+      );
+      autoPlay();
+
+      /* ─── Scroll reveal ─── */
+      const ro = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e, i) => {
+            if (e.isIntersecting) {
+              e.target.style.transitionDelay = (i % 4) * 0.08 + "s";
+              e.target.classList.add("visible");
+              ro.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => ro.observe(el));
+    </script>
+  </body>
+</html>

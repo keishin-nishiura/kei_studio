@@ -1,0 +1,1462 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MIDORI PLACE — ○○村の自然と出会う場所</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ── Reset & Tokens ─────────────────────── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --green: #3d6b4f;
+        --green-2: #5a8a68;
+        --green-lt: #e8f0ea;
+        --cream: #faf7f2;
+        --beige: #f0e9dc;
+        --brown: #7a5c3e;
+        --text: #2c2c2c;
+        --text-2: #6b6560;
+        --text-3: #a09890;
+        --border: rgba(61, 107, 79, 0.18);
+        --white: #ffffff;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+
+      body {
+        font-family: "Noto Sans JP", "Helvetica Neue", sans-serif;
+        background: var(--cream);
+        color: var(--text);
+        line-height: 1.8;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      /* ── Utility ────────────────────────────── */
+      .wrap {
+        width: min(1160px, calc(100% - 48px));
+        margin: 0 auto;
+      }
+      .serif {
+        font-family: "Cormorant Garamond", "Noto Serif JP", serif;
+      }
+      .eyebrow {
+        display: inline-block;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--green);
+        margin-bottom: 14px;
+      }
+      .sec-title {
+        font-family: "Cormorant Garamond", "Noto Serif JP", serif;
+        font-size: clamp(2rem, 4.5vw, 3.4rem);
+        font-weight: 400;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        color: var(--text);
+      }
+      .sec-title em {
+        font-style: italic;
+        color: var(--green);
+      }
+      .sec-sub {
+        font-size: 0.9rem;
+        color: var(--text-2);
+        line-height: 2;
+        max-width: 480px;
+        margin-top: 16px;
+      }
+
+      /* ── Nav ────────────────────────────────── */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 48px;
+        background: rgba(250, 247, 242, 0.88);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        transition: background 0.4s;
+      }
+      .nav-logo {
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+        gap: 2px;
+      }
+      .nav-logo strong {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        color: var(--green);
+      }
+      .nav-logo span {
+        font-size: 0.55rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--text-3);
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 36px;
+        list-style: none;
+      }
+      .nav-links a {
+        font-size: 0.78rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-2);
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        position: relative;
+        transition: color 0.2s;
+      }
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        right: 100%;
+        height: 1px;
+        background: var(--green);
+        transition: right 0.3s var(--ease);
+      }
+      .nav-links a:hover {
+        color: var(--green);
+      }
+      .nav-links a:hover::after {
+        right: 0;
+      }
+      .nav-reserve {
+        padding: 10px 24px;
+        border-radius: 2px;
+        background: var(--green);
+        color: var(--white) !important;
+        font-size: 0.72rem !important;
+        letter-spacing: 0.16em !important;
+        font-weight: 600;
+        transition: background 0.2s !important;
+      }
+      .nav-reserve::after {
+        display: none !important;
+      }
+      .nav-reserve:hover {
+        background: var(--green-2) !important;
+        color: var(--white) !important;
+      }
+      .nav-burger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 6px;
+      }
+      .nav-burger span {
+        display: block;
+        width: 22px;
+        height: 1.5px;
+        background: var(--text);
+        border-radius: 2px;
+      }
+
+      /* ── Hero ───────────────────────────────── */
+      .hero {
+        position: relative;
+        height: 100svh;
+        min-height: 600px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #1e3328;
+      }
+      .hero__bg {
+        position: absolute;
+        inset: 0;
+        background: url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1800&q=85")
+          center/cover no-repeat;
+        transform: scale(1.06);
+        animation: heroZoom 16s var(--ease) forwards;
+      }
+      @keyframes heroZoom {
+        from {
+          transform: scale(1.06);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+      .hero__overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(20, 35, 25, 0.3) 0%,
+          rgba(20, 35, 25, 0.15) 50%,
+          rgba(20, 35, 25, 0.55) 100%
+        );
+      }
+      .hero__inner {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: var(--white);
+        padding: 0 24px;
+      }
+      .hero__eyebrow {
+        display: inline-block;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.75);
+        margin-bottom: 28px;
+        opacity: 0;
+        animation: fadeUp 1s var(--ease) 0.3s forwards;
+      }
+      .hero__copy {
+        font-family: "Noto Serif JP", "Cormorant Garamond", serif;
+        font-size: clamp(2.6rem, 7vw, 6rem);
+        font-weight: 300;
+        line-height: 1.25;
+        letter-spacing: 0.06em;
+        margin-bottom: 28px;
+        opacity: 0;
+        animation: fadeUp 1s var(--ease) 0.55s forwards;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+      }
+      .hero__sub {
+        font-size: 0.88rem;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 2.2;
+        letter-spacing: 0.06em;
+        max-width: 440px;
+        margin: 0 auto 40px;
+        opacity: 0;
+        animation: fadeUp 1s var(--ease) 0.8s forwards;
+      }
+      .hero__btns {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+        opacity: 0;
+        animation: fadeUp 1s var(--ease) 1s forwards;
+      }
+      .btn-white {
+        padding: 14px 36px;
+        border-radius: 2px;
+        background: var(--white);
+        color: var(--green);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        transition:
+          background 0.2s,
+          transform 0.3s var(--ease);
+      }
+      .btn-white:hover {
+        background: var(--cream);
+        transform: translateY(-2px);
+      }
+      .btn-ghost-white {
+        padding: 13px 36px;
+        border-radius: 2px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        color: var(--white);
+        font-size: 0.78rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        transition:
+          background 0.2s,
+          transform 0.3s var(--ease);
+      }
+      .btn-ghost-white:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-2px);
+      }
+      .hero__scroll {
+        position: absolute;
+        bottom: 36px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.62rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        animation: scrollBounce 2s ease-in-out infinite;
+      }
+      .hero__scroll::after {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 48px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.6),
+          transparent
+        );
+      }
+      @keyframes scrollBounce {
+        0%,
+        100% {
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          transform: translateX(-50%) translateY(8px);
+        }
+      }
+
+      /* ── Concept ────────────────────────────── */
+      .concept {
+        background: var(--cream);
+        padding: 120px 0;
+      }
+      .concept__inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+      }
+      .concept__img {
+        position: relative;
+        border-radius: 4px;
+        overflow: hidden;
+        aspect-ratio: 4/5;
+      }
+      .concept__img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s var(--ease);
+      }
+      .concept__img:hover img {
+        transform: scale(1.04);
+      }
+      .concept__img-badge {
+        position: absolute;
+        bottom: 24px;
+        right: -20px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        padding: 18px 22px;
+        border-radius: 4px;
+        text-align: center;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+      }
+      .concept__img-badge strong {
+        display: block;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--green);
+        line-height: 1;
+      }
+      .concept__img-badge span {
+        font-size: 0.62rem;
+        letter-spacing: 0.12em;
+        color: var(--text-3);
+        text-transform: uppercase;
+      }
+      .concept__text {
+        padding-left: 20px;
+      }
+      .concept__lead {
+        font-family: "Noto Serif JP", serif;
+        font-size: 1.15rem;
+        font-weight: 400;
+        line-height: 2.2;
+        color: var(--text);
+        margin: 24px 0 20px;
+      }
+      .concept__divider {
+        width: 40px;
+        height: 1px;
+        background: var(--green);
+        margin: 28px 0;
+        opacity: 0.5;
+      }
+      .btn-green {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 32px;
+        border-radius: 2px;
+        background: var(--green);
+        color: var(--white);
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-top: 32px;
+        transition:
+          background 0.2s,
+          transform 0.3s var(--ease);
+      }
+      .btn-green svg {
+        transition: transform 0.3s var(--ease);
+      }
+      .btn-green:hover {
+        background: var(--green-2);
+        transform: translateY(-2px);
+      }
+      .btn-green:hover svg {
+        transform: translateX(4px);
+      }
+
+      /* ── EAT ────────────────────────────────── */
+      .eat {
+        background: var(--beige);
+        padding: 120px 0;
+        overflow: hidden;
+      }
+      .eat__inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+      }
+      .eat__text {
+        order: 1;
+      }
+      .eat__visual {
+        order: 2;
+      }
+      .eat__img-main {
+        border-radius: 4px;
+        overflow: hidden;
+        aspect-ratio: 4/3;
+        margin-bottom: 16px;
+      }
+      .eat__img-main img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s var(--ease);
+      }
+      .eat__img-main:hover img {
+        transform: scale(1.04);
+      }
+      .eat__img-sub {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .eat__img-sub-item {
+        border-radius: 4px;
+        overflow: hidden;
+        aspect-ratio: 4/3;
+      }
+      .eat__img-sub-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s var(--ease);
+      }
+      .eat__img-sub-item:hover img {
+        transform: scale(1.06);
+      }
+      .eat__tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 2px;
+        background: rgba(61, 107, 79, 0.1);
+        color: var(--green);
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+
+      /* ── Facility ───────────────────────────── */
+      .facility {
+        background: var(--cream);
+        padding: 120px 0;
+      }
+      .facility__head {
+        text-align: center;
+        margin-bottom: 72px;
+      }
+      .facility__head .sec-sub {
+        margin: 16px auto 0;
+        text-align: center;
+      }
+      .facility__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .facility-card {
+        border-radius: 4px;
+        overflow: hidden;
+        background: var(--white);
+        border: 1px solid var(--border);
+        transition:
+          transform 0.35s var(--ease),
+          box-shadow 0.35s var(--ease);
+      }
+      .facility-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 24px 48px rgba(61, 107, 79, 0.12);
+      }
+      .facility-card__img {
+        aspect-ratio: 4/3;
+        overflow: hidden;
+      }
+      .facility-card__img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s var(--ease);
+      }
+      .facility-card:hover .facility-card__img img {
+        transform: scale(1.06);
+      }
+      .facility-card__body {
+        padding: 24px 22px;
+      }
+      .facility-card__en {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--green);
+        margin-bottom: 6px;
+      }
+      .facility-card__title {
+        font-family: "Noto Serif JP", serif;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 10px;
+      }
+      .facility-card__desc {
+        font-size: 0.82rem;
+        color: var(--text-2);
+        line-height: 1.9;
+      }
+
+      /* ── Nature Banner ──────────────────────── */
+      .nature-banner {
+        position: relative;
+        height: 440px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #1e3328;
+      }
+      .nature-banner__bg {
+        position: absolute;
+        inset: 0;
+        background: url("https://images.unsplash.com/photo-1468276311594-df7cb65d8df6?w=1800&q=80")
+          center/cover no-repeat;
+        transform: scale(1.04);
+        transition: transform 0.8s var(--ease);
+      }
+      .nature-banner:hover .nature-banner__bg {
+        transform: scale(1);
+      }
+      .nature-banner__overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(15, 30, 20, 0.5);
+      }
+      .nature-banner__inner {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: var(--white);
+        padding: 0 24px;
+      }
+      .nature-banner__quote {
+        font-family: "Noto Serif JP", serif;
+        font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+        font-weight: 300;
+        line-height: 1.8;
+        letter-spacing: 0.1em;
+        margin-bottom: 16px;
+        text-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+      }
+      .nature-banner__en {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      /* ── News ───────────────────────────────── */
+      .news {
+        background: var(--beige);
+        padding: 100px 0;
+      }
+      .news__head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 48px;
+      }
+      .link-more {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.75rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--green);
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        transition: gap 0.2s;
+      }
+      .link-more:hover {
+        gap: 14px;
+      }
+      .news__list {
+        display: flex;
+        flex-direction: column;
+      }
+      .news-item {
+        display: grid;
+        grid-template-columns: 140px 80px 1fr;
+        gap: 24px;
+        align-items: center;
+        padding: 24px 0;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.2s;
+      }
+      .news-item:first-child {
+        border-top: 1px solid var(--border);
+      }
+      .news-item:hover {
+        background: rgba(61, 107, 79, 0.03);
+      }
+      .news-item__date {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.85rem;
+        color: var(--text-3);
+        letter-spacing: 0.08em;
+      }
+      .news-item__cat {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 2px;
+        background: rgba(61, 107, 79, 0.1);
+        color: var(--green);
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .news-item__title {
+        font-size: 0.88rem;
+        color: var(--text);
+        line-height: 1.6;
+        transition: color 0.2s;
+      }
+      .news-item:hover .news-item__title {
+        color: var(--green);
+      }
+
+      /* ── Contact ────────────────────────────── */
+      .contact {
+        background: var(--green);
+        padding: 100px 0;
+        text-align: center;
+        color: var(--white);
+      }
+      .contact .eyebrow {
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .contact .sec-title {
+        color: var(--white);
+      }
+      .contact .sec-sub {
+        color: rgba(255, 255, 255, 0.75);
+        margin: 16px auto 0;
+        text-align: center;
+      }
+      .contact__cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 600px;
+        margin: 48px auto 0;
+      }
+      .contact-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        padding: 28px 24px;
+        transition: background 0.2s;
+      }
+      .contact-card:hover {
+        background: rgba(255, 255, 255, 0.16);
+      }
+      .contact-card__label {
+        font-size: 0.7rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 12px;
+        font-family: "Cormorant Garamond", serif;
+      }
+      .contact-card__tel {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.7rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: var(--white);
+      }
+      .contact-card__hours {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 8px;
+      }
+      .contact-card__btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 28px;
+        margin-top: 12px;
+        border-radius: 2px;
+        background: var(--white);
+        color: var(--green);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        width: 100%;
+        transition: background 0.2s;
+      }
+      .contact-card__btn:hover {
+        background: var(--cream);
+      }
+
+      /* ── Footer ─────────────────────────────── */
+      footer {
+        background: #16281e;
+        color: rgba(255, 255, 255, 0.6);
+        padding: 60px 0 40px;
+      }
+      .footer__inner {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 48px;
+        align-items: start;
+        padding-bottom: 40px;
+        margin-bottom: 40px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .footer__logo strong {
+        display: block;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 6px;
+      }
+      .footer__logo span {
+        font-size: 0.65rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .footer__address {
+        font-size: 0.78rem;
+        line-height: 2;
+        margin-top: 16px;
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .footer__hours {
+        font-size: 0.78rem;
+        line-height: 1.9;
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .footer__hours strong {
+        display: block;
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 8px;
+      }
+      .footer__bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .footer__copyright {
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.3);
+      }
+      .footer__sns {
+        display: flex;
+        gap: 16px;
+      }
+      .footer__sns a {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+        transition:
+          border-color 0.2s,
+          color 0.2s;
+      }
+      .footer__sns a:hover {
+        border-color: rgba(255, 255, 255, 0.4);
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      /* ── Reserve CTA Section ─────────────────── */
+      .reserve-cta {
+        position: relative;
+        padding: 100px 0;
+        overflow: hidden;
+      }
+      .reserve-cta__bg {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(30, 58, 40, 0.92) 0%,
+            rgba(61, 107, 79, 0.88) 100%
+          ),
+          url("https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1600&q=80")
+            center/cover no-repeat;
+        z-index: 0;
+      }
+      .reserve-cta .wrap {
+        position: relative;
+        z-index: 1;
+      }
+      .reserve-cta__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 48px;
+      }
+      .reserve-cta__text {
+        flex: 1;
+      }
+      .reserve-cta__title {
+        font-family: "Cormorant Garamond", "Noto Serif JP", serif;
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 400;
+        color: #fff;
+        line-height: 1.2;
+        margin-bottom: 16px;
+      }
+      .reserve-cta__title em {
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .reserve-cta__sub {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.9;
+        margin-bottom: 28px;
+      }
+      .reserve-cta__info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .reserve-cta__tel {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.88rem;
+      }
+      .reserve-cta__tel span:first-of-type {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+      }
+      .reserve-cta__tel-sub {
+        font-size: 0.72rem !important;
+        color: rgba(255, 255, 255, 0.5) !important;
+        padding-left: 8px;
+        border-left: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .reserve-cta__hours {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.55);
+      }
+      .reserve-cta__dot {
+        color: rgba(255, 255, 255, 0.25);
+      }
+      .reserve-cta__btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 22px 44px;
+        border-radius: 100px;
+        background: #fff;
+        color: var(--green);
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition:
+          background 0.25s,
+          transform 0.3s var(--ease),
+          box-shadow 0.3s;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+      }
+      .reserve-cta__btn:hover {
+        background: var(--green-lt);
+        transform: translateY(-3px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+      }
+      @media (max-width: 860px) {
+        .reserve-cta__inner {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 36px;
+        }
+        .reserve-cta__btn {
+          width: 100%;
+          justify-content: center;
+          padding: 20px 32px;
+        }
+        .reserve-cta__hours {
+          gap: 6px;
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(32px);
+        transition:
+          opacity 0.7s var(--ease),
+          transform 0.7s var(--ease);
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── Responsive ──────────────────────────── */
+      @media (max-width: 860px) {
+        .nav {
+          padding: 0 20px;
+        }
+        .nav-links {
+          display: none;
+        }
+        .nav-burger {
+          display: flex;
+        }
+
+        .concept__inner,
+        .eat__inner {
+          grid-template-columns: 1fr;
+          gap: 48px;
+        }
+        .eat__text {
+          order: 2;
+        }
+        .eat__visual {
+          order: 1;
+        }
+        .concept__text {
+          padding-left: 0;
+        }
+        .concept__img-badge {
+          right: 0;
+        }
+
+        .facility__grid {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .news-item {
+          grid-template-columns: 1fr;
+          gap: 6px;
+          padding: 20px 0;
+        }
+
+        .contact__cards {
+          grid-template-columns: 1fr;
+          max-width: 360px;
+        }
+
+        .footer__inner {
+          grid-template-columns: 1fr;
+          gap: 32px;
+        }
+        .footer__bottom {
+          flex-direction: column;
+          gap: 16px;
+        }
+      }
+      @media (max-width: 540px) {
+        .facility__grid {
+          grid-template-columns: 1fr;
+        }
+        .hero__copy {
+          font-size: clamp(2.2rem, 9vw, 4rem);
+        }
+        .eat__img-sub {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── Nav ── -->
+    <nav class="nav">
+      <div class="nav-logo">
+        <strong>MIDORI PLACE</strong>
+        <span>○○村 — ○○県</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#concept">Concept</a></li>
+        <li><a href="#eat">Eat &amp; Drink</a></li>
+        <li><a href="#facility">Facility</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="midori-reserve.html" class="nav-reserve">Reserve</a></li>
+      </ul>
+      <div class="nav-burger" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </div>
+    </nav>
+
+    <!-- ── Hero ── -->
+    <section class="hero">
+      <div class="hero__bg"></div>
+      <div class="hero__overlay"></div>
+      <div class="hero__inner">
+        <p class="hero__eyebrow">○○ Village, ○○ Prefecture</p>
+        <h1 class="hero__copy">私のリズム、<br />見つけたかも。</h1>
+        <p class="hero__sub">
+          どこまでも広がる阿蘇の自然の中で、<br />
+          あなただけの時間を過ごしてください。
+        </p>
+        <div class="hero__btns">
+          <a href="#concept" class="btn-white">詳しく見る</a>
+          <a href="midori-reserve.html" class="btn-ghost-white"
+            >ご予約はこちら</a
+          >
+        </div>
+      </div>
+      <div class="hero__scroll">Scroll</div>
+    </section>
+
+    <!-- ── Concept ── -->
+    <section class="concept" id="concept">
+      <div class="wrap">
+        <div class="concept__inner">
+          <div class="concept__img reveal">
+            <img
+              src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=900&q=80"
+              alt="阿蘇の自然"
+              loading="lazy"
+            />
+            <div class="concept__img-badge">
+              <strong>2021</strong>
+              <span>Est. 20XX</span>
+            </div>
+          </div>
+          <div class="concept__text reveal">
+            <p class="eyebrow">Our Concept</p>
+            <h2 class="sec-title">しぜんとひとが<br /><em>集まる場所</em></h2>
+            <div class="concept__divider"></div>
+            <p class="concept__lead">
+              ここはどこまでも自由で、<br />
+              あなたの時間をあなたのリズムで過ごせる。
+            </p>
+            <p class="sec-sub">
+              はじめての体験は、経験と感動をあたえ、どこまでも広がる阿蘇の自然は、
+              癒しと笑顔をはこびます。近くを浮かぶ雲、風に踊る草原、広大に広がる星空。
+              なにもないようで、なによりも贅沢な時間が流れます。
+            </p>
+            <a href="#facility" class="btn-green">
+              施設を見る
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M3 8h10M9 4l4 4-4 4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Eat & Drink ── -->
+    <section class="eat" id="eat">
+      <div class="wrap">
+        <div class="eat__inner">
+          <div class="eat__text reveal">
+            <span class="eat__tag">Eat &amp; Drink</span>
+            <h2 class="sec-title">
+              そよ風がおいしい<br /><em>香りを、あなたへ。</em>
+            </h2>
+            <div
+              style="
+                width: 40px;
+                height: 1px;
+                background: var(--green);
+                opacity: 0.4;
+                margin: 24px 0;
+              "
+            ></div>
+            <p class="sec-sub">
+              MIDORI PLACE
+              のシンボル「大きな石窯」で作られる本格イタリアンピッツァをどうぞ。
+              ぷくぷくと膨れるモッツァレラチーズはのんびり浮かぶ白い雲のよう。
+              豊かな緑と風の香りに包まれながら、ほっぺもとろけるお食事をお楽しみください。
+            </p>
+            <a
+              href="midori-reserve.html"
+              class="btn-green"
+              style="margin-top: 28px"
+            >
+              レストランを予約する
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M3 8h10M9 4l4 4-4 4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+          <div class="eat__visual reveal">
+            <div class="eat__img-main">
+              <img
+                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80"
+                alt="石窯ピッツァ"
+                loading="lazy"
+              />
+            </div>
+            <div class="eat__img-sub">
+              <div class="eat__img-sub-item">
+                <img
+                  src="https://images.unsplash.com/photo-1528137871618-79d2761e3fd5?w=500&q=80"
+                  alt="食材"
+                  loading="lazy"
+                />
+              </div>
+              <div class="eat__img-sub-item">
+                <img
+                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&q=80"
+                  alt="料理"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Facility ── -->
+    <section class="facility" id="facility">
+      <div class="wrap">
+        <div class="facility__head reveal">
+          <p class="eyebrow">Facility</p>
+          <h2 class="sec-title">
+            こころを豊かにする<br /><em>「余白」がある場所</em>
+          </h2>
+          <p class="sec-sub">
+            ○○村の魅力と出会える場所として生まれ、これからも新たな魅力が見つかる場所として成長していきます。
+          </p>
+        </div>
+        <div class="facility__grid">
+          <div class="facility-card reveal">
+            <div class="facility-card__img">
+              <img
+                src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80"
+                alt="レストラン"
+                loading="lazy"
+              />
+            </div>
+            <div class="facility-card__body">
+              <p class="facility-card__en">Restaurant</p>
+              <h3 class="facility-card__title">レストラン</h3>
+              <p class="facility-card__desc">
+                石窯で焼き上げる本格ピッツァと、地元産の素材を使ったメニューをご堪能いただけます。
+              </p>
+            </div>
+          </div>
+          <div class="facility-card reveal">
+            <div class="facility-card__img">
+              <img
+                src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=700&q=80"
+                alt="チーズ工房"
+                loading="lazy"
+              />
+            </div>
+            <div class="facility-card__body">
+              <p class="facility-card__en">Cheese Factory</p>
+              <h3 class="facility-card__title">チーズ工房</h3>
+              <p class="facility-card__desc">
+                ○○村の新鮮な牛乳から作られたフレッシュチーズ。製造工程の見学や体験もお楽しみいただけます。
+              </p>
+            </div>
+          </div>
+          <div class="facility-card reveal">
+            <div class="facility-card__img">
+              <img
+                src="https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=700&q=80"
+                alt="パークゴルフ場"
+                loading="lazy"
+              />
+            </div>
+            <div class="facility-card__body">
+              <p class="facility-card__en">Park Golf Course</p>
+              <h3 class="facility-card__title">パークゴルフ場</h3>
+              <p class="facility-card__desc">
+                阿蘇の大自然を眺めながら楽しめるパークゴルフコース。ご家族やグループでお気軽にどうぞ。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Nature Banner ── -->
+    <div class="nature-banner">
+      <div class="nature-banner__bg"></div>
+      <div class="nature-banner__overlay"></div>
+      <div class="nature-banner__inner">
+        <p class="nature-banner__quote">
+          近くを浮かぶ雲、風に踊る草原、<br />
+          広大に広がる星空。
+        </p>
+        <p class="nature-banner__en">○○ Village — ○○ Prefecture</p>
+      </div>
+    </div>
+
+    <!-- ── News ── -->
+    <section class="news" id="news">
+      <div class="wrap">
+        <div class="news__head reveal">
+          <div>
+            <p class="eyebrow">News</p>
+            <h2 class="sec-title" style="font-size: clamp(1.6rem, 3vw, 2.4rem)">
+              お知らせ
+            </h2>
+          </div>
+          <a href="#" class="link-more">
+            View More
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path
+                d="M2 7h10M8 3l4 4-4 4"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
+        <div class="news__list reveal">
+          <a href="#" class="news-item">
+            <span class="news-item__date">2026.02.03</span>
+            <span class="news-item__cat">Information</span>
+            <span class="news-item__title"
+              >休業日のお知らせ：PIZZERIA・SHOP</span
+            >
+          </a>
+          <a href="#" class="news-item">
+            <span class="news-item__date">2025.09.15</span>
+            <span class="news-item__cat">Event</span>
+            <span class="news-item__title">秋の収穫祭 2025 開催のご案内</span>
+          </a>
+          <a href="#" class="news-item">
+            <span class="news-item__date">2025.07.13</span>
+            <span class="news-item__cat">Open</span>
+            <span class="news-item__title"
+              >阿蘇の草原に NEW レストラン OPEN</span
+            >
+          </a>
+          <a href="#" class="news-item">
+            <span class="news-item__date">2025.04.01</span>
+            <span class="news-item__cat">Information</span>
+            <span class="news-item__title">2025年度 営業時間のご案内</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Reserve CTA ── -->
+    <section class="reserve-cta" id="contact">
+      <div class="reserve-cta__bg"></div>
+      <div class="wrap">
+        <div class="reserve-cta__inner reveal">
+          <div class="reserve-cta__text">
+            <p class="eyebrow" style="color: rgba(255, 255, 255, 0.7)">
+              Reservation
+            </p>
+            <h2 class="reserve-cta__title">ご予約・<em>お問い合わせ</em></h2>
+            <p class="reserve-cta__sub">
+              レストラン・チーズ工房・パークゴルフのご予約は<br />
+              専用フォームよりお申し込みください。
+            </p>
+            <div class="reserve-cta__info">
+              <div class="reserve-cta__tel">
+                <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                  <path
+                    d="M16.5 12.9v2.1a1.4 1.4 0 0 1-1.53 1.4A13.86 13.86 0 0 1 9 14.53a13.66 13.66 0 0 1-4.2-4.2 13.86 13.86 0 0 1-1.87-5.96A1.4 1.4 0 0 1 4.32 3H6.4a1.4 1.4 0 0 1 1.4 1.2 9 9 0 0 0 .49 1.97 1.4 1.4 0 0 1-.32 1.48L6.8 8.82a11.2 11.2 0 0 0 4.2 4.2l1.17-1.17a1.4 1.4 0 0 1 1.48-.32 9 9 0 0 0 1.97.49A1.4 1.4 0 0 1 16.5 12.9Z"
+                    stroke="rgba(255,255,255,0.7)"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <span>0X0-XXXX-XXXX</span>
+                <span class="reserve-cta__tel-sub">受付 10:00–20:00</span>
+              </div>
+              <div class="reserve-cta__hours">
+                <span>平日 11:00–20:00</span>
+                <span class="reserve-cta__dot">·</span>
+                <span>土日祝 8:00–20:00</span>
+                <span class="reserve-cta__dot">·</span>
+                <span>定休 毎週○曜日</span>
+              </div>
+            </div>
+          </div>
+          <a href="midori-reserve.html" class="reserve-cta__btn">
+            <span>予約フォームへ</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M4 10h12M11 5l5 5-5 5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Footer ── -->
+    <footer>
+      <div class="wrap">
+        <div class="footer__inner">
+          <div>
+            <div class="footer__logo">
+              <strong>MIDORI PLACE</strong>
+              <span>○○ Village, ○○ Prefecture</span>
+            </div>
+            <p class="footer__address">
+              〒XXX-XXXX ○○県○○郡○○村○○ XXX-X<br />
+              TEL: 0X0-XXXX-XXXX
+            </p>
+          </div>
+          <div class="footer__hours">
+            <strong>Hours</strong>
+            平日　11:00 〜 20:00（L.O. 19:00）<br />
+            土日祝　8:00 〜 20:00（L.O. 19:00）
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <p class="footer__copyright">© MIDORI PLACE All Rights Reserved.</p>
+          <div class="footer__sns">
+            <a href="#" aria-label="Instagram">ig</a>
+            <a href="#" aria-label="Facebook">fb</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      /* ── Scroll Reveal ── */
+      const reveals = document.querySelectorAll(".reveal");
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+              entry.target.style.transitionDelay = (i % 4) * 0.1 + "s";
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: "0px 0px -60px 0px" },
+      );
+      reveals.forEach((el) => revealObserver.observe(el));
+    </script>
+  </body>
+</html>
