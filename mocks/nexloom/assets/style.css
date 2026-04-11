@@ -419,22 +419,19 @@ header {
   .top_image .image_wrap {
     -webkit-flex-basis: 57%;
     flex-basis: 57%;
-    overflow: visible;
+    overflow: hidden;
     position: relative;
     right: 0%;
-    top: 7vh; }
+    top: 7vh;
+    aspect-ratio: 1;
+    animation: fluidrotate 20s ease 0s infinite; }
     .top_image .image_wrap img {
-      width: 120%;
-      animation: fluidrotate 20s ease 0s infinite;
-      animation-duration: 20s;
-      animation-timing-function: ease;
-      animation-delay: 0s;
-      animation-iteration-count: infinite;
-      animation-direction: normal;
-      animation-fill-mode: none;
-      animation-play-state: running;
-      animation-name: fluidrotate; }
-    .top_image .image_wrap.image_wrap_stop img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      animation: none; }
+    .top_image .image_wrap.image_wrap_stop {
       animation: inherit; }
   .top_image .tx1 {
     color: #fff;
@@ -456,42 +453,24 @@ header {
     opacity: 1;
     transform: translateY(0); } }
 @keyframes fluidrotate {
-  0%, 100% {
-    border-radius: 63% 37% 54% 46%/55% 48% 52% 45%; }
-  56% {
-    border-radius: 50% 39% 67% 33%/70% 50% 50% 30%; } }
+  0%, 100% { border-radius: 50% 50% 48% 52% / 50% 50% 50% 50%; }
+  33%       { border-radius: 52% 48% 50% 50% / 48% 52% 48% 52%; }
+  66%       { border-radius: 48% 52% 52% 48% / 52% 48% 52% 48%; } }
 @keyframes fluidrotate_2 {
-  0%, 100% {
-    border-radius: 63% 37% 54% 46%/55% 48% 52% 45%; }
-  14% {
-    border-radius: 40% 60% 54% 46%/49% 60% 40% 51%; }
-  28% {
-    border-radius: 54% 46% 38% 62%/49% 70% 30% 51%; }
-  42% {
-    border-radius: 61% 39% 55% 45%/61% 38% 62% 39%; }
-  56% {
-    border-radius: 61% 39% 67% 33%/70% 50% 50% 30%; }
-  70% {
-    border-radius: 50% 50% 34% 66%/56% 68% 32% 44%; }
-  84% {
-    border-radius: 46% 54% 50% 50%/35% 61% 39% 65%; } }
+  0%, 100% { border-radius: 50% 50% 48% 52% / 50% 50% 50% 50%; }
+  25%       { border-radius: 52% 48% 50% 50% / 48% 52% 50% 50%; }
+  50%       { border-radius: 48% 52% 52% 48% / 52% 48% 48% 52%; }
+  75%       { border-radius: 50% 50% 48% 52% / 50% 48% 52% 50%; } }
 @keyframes fluidrotate_3 {
-  0%, 100% {
-    border-radius: 25% 75% 63% 37% / 44% 59% 41% 56%; }
-  36% {
-    border-radius: 47% 53% 35% 65%/68% 44% 56% 32%; }
-  76% {
-    border-radius: 45% 62% 48% 55%/46% 84% 40% 70%; } }
+  0%, 100% { border-radius: 50% 50% 50% 50% / 50% 48% 52% 50%; }
+  40%       { border-radius: 48% 52% 50% 50% / 50% 52% 48% 50%; }
+  80%       { border-radius: 52% 48% 48% 52% / 48% 50% 50% 52%; } }
 @keyframes fluidrotate_4 {
-  0%, 100% {
-    border-radius: 47% 53% 35% 65%/68% 44% 56% 32%; }
-  56% {
-    border-radius: 39% 61% 64% 36%/45% 82% 28% 55%; } }
+  0%, 100% { border-radius: 50% 50% 48% 52% / 52% 48% 50% 50%; }
+  50%       { border-radius: 48% 52% 52% 48% / 50% 52% 48% 50%; } }
 @keyframes fluidrotate_5 {
-  0%, 100% {
-    border-radius: 47% 53% 55% 65%/68% 44% 56% 42%; }
-  56% {
-    border-radius: 39% 61% 64% 36%/45% 82% 28% 55%; } }
+  0%, 100% { border-radius: 50% 50% 52% 48% / 48% 52% 50% 50%; }
+  50%       { border-radius: 52% 48% 48% 52% / 52% 48% 52% 48%; } }
 canvas {
   position: absolute;
   top: 0;
@@ -656,17 +635,16 @@ section.bg_wrap {
 /*------------------------------
 サービス
 ------------------------------*/
+.toppage #service .image_wrap {
+  overflow: hidden;
+  aspect-ratio: 1;
+  animation: fluidrotate_4 10s ease 0s infinite; }
 .toppage #service .image_wrap img {
-  width: 120%;
-  animation: fluidrotate_4 10s ease 0s infinite;
-  animation-duration: 10s;
-  animation-timing-function: ease;
-  animation-delay: 0s;
-  animation-iteration-count: infinite;
-  animation-direction: normal;
-  animation-fill-mode: none;
-  animation-play-state: running;
-  animation-name: fluidrotate_4; }
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  animation: none; }
 
 /*------------------------------
 採用情報
@@ -675,19 +653,18 @@ section#recruit {
   background-color: rgba(0, 0, 0, 0.06); }
   section#recruit .cont_wrap {
     position: relative; }
+    section#recruit .cont_wrap .image_wrap {
+      overflow: hidden;
+      aspect-ratio: 1;
+      animation: fluidrotate_3 10s ease 0s infinite; }
     section#recruit .cont_wrap .image_wrap img {
-      position: absolute;
-      left: -20%;
-      width: 120%;
-      animation: fluidrotate_3 20s ease 0s infinite;
-      animation-duration: 10s;
-      animation-timing-function: ease;
-      animation-delay: 0s;
-      animation-iteration-count: infinite;
-      animation-direction: normal;
-      animation-fill-mode: none;
-      animation-play-state: running;
-      animation-name: fluidrotate_3; }
+      position: static;
+      left: auto;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      animation: none; }
 
 /*------------------------------
 会社情報
@@ -703,18 +680,17 @@ section#company .image_wrap {
   top: -10px;
   right: -10%;
   margin-top: -130px;
-  margin-right: -60px; }
+  margin-right: -60px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  animation: fluidrotate_4 20s ease 0s infinite; }
   section#company .image_wrap img {
-    position: absolute;
-    animation: fluidrotate_4 20s ease 0s infinite;
-    animation-duration: 20s;
-    animation-timing-function: ease;
-    animation-delay: 0s;
-    animation-iteration-count: infinite;
-    animation-direction: normal;
-    animation-fill-mode: none;
-    animation-play-state: running;
-    animation-name: fluidrotate_4; }
+    position: static;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    animation: none; }
 
 /*------------------------------
 NEWS
@@ -1288,8 +1264,10 @@ footer small {
 
   .toppage #service .image_wrap img,
   section#recruit .cont_wrap .image_wrap img {
-    position: relative;
+    position: static;
     width: 100%;
+    height: 100%;
+    object-fit: cover;
     left: 0; }
 
   section#company .tx_wrap {

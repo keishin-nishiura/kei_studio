@@ -39,7 +39,7 @@ mocks/
 | `kiraha-resort/` | キラハリゾート | index |
 | `hoshikusa-place/` | ホシクサプレイス | index, v2 |
 | `restaurant-corp/` | レストランコープ | index |
-| `retribes/` | リトライブス | index + assets |
+| `nexloom/` | ネクスルーム株式会社（NEXLOOM Inc.） | index + assets |
 
 ---
 
